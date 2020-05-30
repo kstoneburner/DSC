@@ -1,0 +1,21 @@
+{
+  "200" : { "name" : "Thunderstorm with light rain", "asset" :  ""},
+  "201" : { "name" : "Thunderstorm with rain", "asset" :  ""},
+  "202" : { "name" : "Thunderstorm with heavy rain", "asset" :  ""},
+  "210" : { "name" : "Light thunderstorm", "asset" :  ""},
+  "211" : { "name" : "Thunderstorm", "asset" :  ""},
+  "212" : { "name" : "Heavy Thunderstorm", "asset" :  ""},
+  "221" : { "name" : "Ragged Thunderstorm", "asset" :  ""},
+  "230" : { "name" : "Thunderstorm with light drizzle", "asset" :  ""},
+  "231" : { "name" : "Thunderstorm with drizzle", "asset" :  ""},
+  "232" : { "name" : "Thunderstorm with heavy drizzle", "asset" :  ""},
+  "300" : { "name" : "light intensity drizzle", "asset" :  ""},
+  "301" : { "name" : "drizzle", "asset" :  ""},
+  "302" : { "name" : "heavy intensity drizzle", "asset" :  ""},
+  "310" : { "name" : "light intensity drizzle rain", "asset" :  ""},
+  "311" : { "name" : "drizzle rain", "asset" :  ""},
+  "312" : { "name" : "heavy intensity drizzle rain", "asset" :  ""},
+  "313" : { "name" : "shower rain and drizzle", "asset" :  ""},
+  "314" : { "name" : "heavy shower rain and drizzle", "asset" :  ""},
+  "321" : { "name" : "shower drizzle", "asset" :  ""}
+}
