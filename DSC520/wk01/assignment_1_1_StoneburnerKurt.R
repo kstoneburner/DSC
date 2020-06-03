@@ -46,17 +46,23 @@ scores_df
 
 section_sports_df <- scores_df[scores_df$Section == "Sports",]
 section_sports_df
+sum(section_sports_df$Count)
 
 section_regular_df <- scores_df[scores_df$Section == "Regular",]
 section_regular_df
 str(section_regular_df)
 class(section_regular_df)
-#scores_df["Score"]
+sum(section_regular_df$Count)
 
 regular_score <- section_regular_df[,c("Score")]
 regular_count <- section_regular_df[,c("Count")]
 
-plot(section_regular_df[,c("Score")], section_regular_df[,c("Count")], type="p")
-plot(section_sports_df[,c("Score")], section_sports_df[,c("Count")], type="p")
+plot(section_regular_df[,c("Score")], section_regular_df[,c("Count")], type="l")
+plot(section_sports_df[,c("Score")], section_sports_df[,c("Count")], type="l")
 #plot(regular_count, regular_score)
-
+reg_mode_count <- section_regular_df$Count
+reg_mode_count
+reg_mode_scores <- section_regular_df$Score
+reg_mode_scores
+mean(reg_mode_scores)
+median(reg_mode_scores)
