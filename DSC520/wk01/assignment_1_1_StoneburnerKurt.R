@@ -90,3 +90,5 @@ reg_mode_scores <- section_regular_df$Score
 reg_mode_scores
 mean(reg_mode_scores)
 median(reg_mode_scores)
+
+sum(reg_mode_count)
