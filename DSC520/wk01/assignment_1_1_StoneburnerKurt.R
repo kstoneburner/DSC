@@ -29,13 +29,10 @@
 # Date: 2020-06-01
 
 getwd()
-setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github\\data")
 
-## R interpreted names as factors, which is not the behavior we want
-## Load the same file to person_df2 using `read.csv` and setting `stringsAsFactors` to `FALSE`
-## Examine the structure of `person_df2` using `str()`
-person_df2 <- read.csv("tidynomicon\\person.csv", stringsAsFactors = FALSE)
-str(person_df2)
+#setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github\\data")
+setwd("L:\\stonk\\projects\\DSC\\dsc520\\data")
+
 
 ## Read the file `data/scores.csv` to `scores_df`
 ## Display summary statistics using the `summary()` function
@@ -44,21 +41,48 @@ summary(scores_df)
 str(scores_df)
 scores_df
 
+### Build Data Frame with only the Sports Section
 section_sports_df <- scores_df[scores_df$Section == "Sports",]
-section_sports_df
-sum(section_sports_df$Count)
+summary(section_sports_df)
+summary(section_sports_df$Count)
 
+### Build Data Frame with only the Regular Section
 section_regular_df <- scores_df[scores_df$Section == "Regular",]
 section_regular_df
-str(section_regular_df)
-class(section_regular_df)
-sum(section_regular_df$Count)
+summary(section_regular_df)
 
-regular_score <- section_regular_df[,c("Score")]
-regular_count <- section_regular_df[,c("Count")]
 
-plot(section_regular_df[,c("Score")], section_regular_df[,c("Count")], type="l")
-plot(section_sports_df[,c("Score")], section_sports_df[,c("Count")], type="l")
+weighted_scores <- scores_df[,c("Score")] * scores_df[,c("Count")]
+weighted_regular_section <- section_regular_df[,c("Score")] * section_regular_df[,c("Count")]
+weighted_sports_section <- section_sports_df[,c("Score")] * section_sports_df[,c("Count")]
+
+summary(weighted_scores)
+summary(weighted_regular_section)
+summary(weighted_sports_section)
+
+iqr_weighted_scores <- IQR(weighted_scores)
+iqr_weighted_regular_section <- IQR(weighted_regular_section)
+iqr_weighted_sports_section <- IQR(weighted_sports_section)
+
+
+summary(weighted_scores)
+summary(iqr_weighted_scores)
+summary(weighted_regular_section)
+summary(iqr_weighted_regular_section)
+summary(weighted_sports_section)
+summary(iqr_weighted_sports_section)
+
+#Plot each dataframe. Each Axis must be converted to a vector first
+#Draws Two plots. Red plot is the Sports Section. Blue Plot is the Regular Section.
+plot(section_sports_df[,c("Score")], section_sports_df[,c("Count")], type="b", col="red", xlab="Scores", ylab="Score Frequency")
+lines(section_regular_df[,c("Score")], section_regular_df[,c("Count")], type="b", col="blue", xlab="yyy")
+legend("topleft", pch=c(2,2), legend=c("Section: Regular","Section: Sports"), text.col=c("blue","red"), bty="7")
+
+summary(section_regular_df)
+summary(section_sports_df)
+
+plot(section_sports_df[,c("Score")], section_sports_df[,c("Count")], type="b")
+plot(scores_df[,c("Score")], scores_df[,c("Count")], type="b")
 #plot(regular_count, regular_score)
 reg_mode_count <- section_regular_df$Count
 reg_mode_count
