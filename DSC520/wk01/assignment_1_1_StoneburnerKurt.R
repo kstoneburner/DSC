@@ -1,6 +1,6 @@
-# Assignment: ASSIGNMENT 1
+# Assignment: ASSIGNMENT 1.1
 # Name: Stoneburner, Kurt
-# Date: 2020-06-01
+# Date: 01-06-2020
 
 getwd()
 
@@ -29,71 +29,37 @@ lines(section_regular_df[,c("Score")], section_regular_df[,c("Count")], type="b"
 legend("topleft", pch=c(2,2), legend=c("Section: Regular","Section: Sports"), text.col=c("blue","red"), bty="7")
 
 
-summary(section_sports_df$Count)
-summary(section_regular_df$Count)
-
-range(section_sports_df$Score)
-range(section_regular_df$Score)
-395-200
-380-265
-sum(section_sports_df$Count)
-sum(section_regular_df$Count)
-
+#Build vectors of weighted scores, score * frequency
 weighted_scores <- scores_df[,c("Score")] * scores_df[,c("Count")]
+
+#Weighted Regular Section
 weighted_regular_section <- section_regular_df[,c("Score")] * section_regular_df[,c("Count")]
+
+#Weighted Sports Section
 weighted_sports_section <- section_sports_df[,c("Score")] * section_sports_df[,c("Count")]
 
+### Display Summaries of Weighted Values for comparison
 summary(weighted_scores)
 summary(weighted_regular_section)
 summary(weighted_sports_section)
 
-
-
-
+#Find the Mean and Median values within the mid-spread (2nd & 3rd quartiles)
 #Create a new Data Frame with the weighted Scores and the Section
 weighted_df <- scores_df
 weighted_df$Score <- scores_df[,c("Score")] * scores_df[,c("Count")]
-weighted_df$Score
-weighted_df
-weighted_df$Score <- scores_df[( weighted_df$Score > 3050 && weighted_df$Score < 6550) ,]
 
-weighted_df$Score
-
-summary(weighted_df$Score)
-summary(weighted_df$Score)
-
-class(weighted_df$Score)
-IQR(weighted_df$Score)
-summary(tWeight)
-summary(weighted_df)
-tapply(weighted_df, weighted_df[1], summary)
-
-class(weighted_df)
-
-iqr_weighted_scores <- IQR(weighted_scores)
-iqr_weighted_regular_section <- IQR(weighted_regular_section)
-iqr_weighted_sports_section <- IQR(weighted_sports_section)
+# Get the midspread of all scores with the values between 3050 and 6550.
+# These values were found in summary(weighted_scores)
+mid_spread_weighted_df <- weighted_df[ weighted_df$Score > 3050 & weighted_df$Score < 6550,]
+mid_spread_regular_df <- weighted_df[ weighted_df$Score > 3050 & weighted_df$Score < 6550 & scores_df$Section == "Regular" ,]
+mid_spread_sports_df <- weighted_df[ weighted_df$Score > 3050 & weighted_df$Score < 6550 & scores_df$Section == "Sports" ,]
 
 
-summary(weighted_scores)
-summary(iqr_weighted_scores)
-summary(weighted_regular_section)
-summary(iqr_weighted_regular_section)
-summary(weighted_sports_section)
-summary(iqr_weighted_sports_section)
+### Display Summaries of Mid Spread Weighted Values for comparison
+summary(mid_spread_weighted_df$Score)
+summary(mid_spread_regular_df$Score)
+summary(mid_spread_sports_df$Score)
 
 
-summary(section_regular_df)
-summary(section_sports_df)
 
-plot(section_sports_df[,c("Score")], section_sports_df[,c("Count")], type="b")
-plot(scores_df[,c("Score")], scores_df[,c("Count")], type="b")
-#plot(regular_count, regular_score)
-reg_mode_count <- section_regular_df$Count
-reg_mode_count
-reg_mode_scores <- section_regular_df$Score
-reg_mode_scores
-mean(reg_mode_scores)
-median(reg_mode_scores)
 
-sum(reg_mode_count)

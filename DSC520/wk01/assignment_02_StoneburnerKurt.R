@@ -1,6 +1,6 @@
 # Assignment: ASSIGNMENT 2
 # Name: Stoneburner, Kurt
-# Date: 2020-06-01
+# Date: 01-06-2020
 
 ## Check your current working directory using `getwd()`
 getwd()
@@ -99,3 +99,4 @@ scores_json
 ## Convert the scores dataframe to JSON using the `toJSON()` function with the `pretty=TRUE` option
 scores_pretty_json <- toJSON(scores_df,pretty=TRUE)
 scores_pretty_json
+

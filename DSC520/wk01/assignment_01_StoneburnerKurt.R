@@ -1,6 +1,6 @@
 # Assignment: ASSIGNMENT 1
 # Name: Stoneburner, Kurt
-# Date: 2020-06-01
+# Date: 01-06-2020
 
 ## Create a numeric vector with the values of 3, 2, 1 using the `c()` function
 ## Assign the value to a variable named `num_vector`
@@ -44,7 +44,7 @@ total_sleep_week2
 total_sleep_week1 < total_sleep_week2
 
 ## Calculate the mean hours slept in week 1 using the `mean()` function
-mean(total_sleep_week1)
+mean(week1_sleep)
 
 ## Create a vector called `days` containing the days of the week.
 ## Start with Sunday and end with Saturday
@@ -158,7 +158,7 @@ age <- c(88, 129, 51, 7000, 36, 2019, 2931, 7052, 589)
 characters_df <- data.frame(name, race, in_fellowship, ring_bearer, age)
 
 ## Sorting the characters_df by age using the order function and assign the result to the sorted_characters_df
-sorted_characters_df <- characters_df[order(age),1]
+sorted_characters_df <- characters_df[order(age),]
 ## Use `head()` to output the first few rows of `sorted_characters_df`
 head(sorted_characters_df)
 
