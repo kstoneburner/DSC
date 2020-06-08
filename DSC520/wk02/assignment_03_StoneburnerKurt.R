@@ -1,6 +1,6 @@
 # Assignment: ASSIGNMENT 3
-# Name: Lastname, Firstname
-# Date: 2010-02-14
+# Name: Stoneburner, Kurt
+# Date: 2020-06-08
 
 ## Load the ggplot2 package
 library(ggplot2)
