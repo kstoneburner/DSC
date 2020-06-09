@@ -55,3 +55,37 @@ head(survey_df)
 str(survey_df)
 nrow(survey_df)
 ncol(survey_df)
+
+HSDegree_histogram_plot <- ggplot(survey_df, aes(HSDegree)) + geom_histogram(aes(y=..density..), bins = 30)
+#HSDegree_histogram_plot <- ggplot(survey_df, aes(HSDegree)) + geom_histogram(bins = 100)
+
+HSDegree_histogram_plot + stat_function(fun = dnorm, args = list(mean = mean(survey_df$HSDegree), sd = sd(survey_df$HSDegree)),color="red", size=1, ) + geom_density(color="light blue", size=1)
+HSDegree_probability_plot <- ggplot(survey_df, aes(HSDegree))+ geom_density(color="yellow")
+HSDegree_probability_plot
+stat.desc
+
+#HSDegree_histogram_plot <- ggplot(survey_df, aes(x=HSDegree)) + geom_histogram (bins = 10)
+HSDegree_histogram_plot
+
+#HSDegree_histogram_plot + geom_smooth(aes(y=HSDegree))
+
+norm_plot <- dnorm(survey_df$HSDegree, mean=survey_df$HSDegree, sd=survey_df$HSDegree)
+norm_plot * 100
+plot( ( norm_plot * 100 ) )
+ggplot(norm_plot)
+HSDegree_histogram_plot + stat_function(fun = dnorm, args = list(mean = mean(survey_df$HSDegree, na.rm = TRUE), sd = sd(survey_df$HSDegree, na.rm = TRUE)) )
+
+library("pastecs")
+
+#stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE)
+#stat.desc(survey_df$HSDegree, basic=FALSE, norm=FALSE)
+round(stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE), digits = 3)
+#stat.desc(survey_df$HSDegree, basic=TRUE, norm=FALSE)
+
+sd(survey_df$HSDegree)
+mean(survey_df$HSDegree)
+
+summary(survey_df$HSDegree)
+
+
+shapiro.test(survey_df$HSDegree)
