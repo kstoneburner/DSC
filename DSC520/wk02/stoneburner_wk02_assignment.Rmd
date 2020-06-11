@@ -9,16 +9,11 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(pastecs)
+
+
 readDir <- "C:\\Users\\newcomb\\DSCProjects\\dsc520_github"
 #readDir <- "L:\\stonk\\projects\\DSC\\dsc520"
 
-
-survey_df <- read.csv(paste(readDir,"\\data\\acs-14-1yr-s0201.csv",sep=""))
-
-head(survey_df)
-str(survey_df)
-nrow(survey_df)
-ncol(survey_df)
 ```
 ## R Markdown
 
