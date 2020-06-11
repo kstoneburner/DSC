@@ -40,27 +40,42 @@
 # Name: Stoneburner, Kurt
 # Date: 2020-06-08
 
-## Load the ggplot2 package
 library(ggplot2)
 library(pastecs)
-#theme_set(theme_minimal())
+
 
 ## Set the working directory to the root of your DSC 520 directory
+## My working directory varies by my physical working environment
+
 #setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
 setwd("L:\\stonk\\projects\\DSC\\dsc520")
 
-## Load the `acs-14-1yr-s0201.csv` to
+
 survey_df <- read.csv("data/acs-14-1yr-s0201.csv")
 head(survey_df)
 str(survey_df)
 nrow(survey_df)
 ncol(survey_df)
-myBins <- 20
+
+#########################################################################
+### Set bins using Rice's Rule - Cube Root of Observations squared
+### Thanks to  Scott Breitbach for sharing this on the boards
+#########################################################################
+myBins <- as.integer((length(survey_df$HSDegree)^(1/3))^2)
+
 x_label_plot <- "% High School Degree"
 ########################################
 ### Histogram, frequency Distribution
 ########################################
-ggplot(survey_df, aes(HSDegree)) + geom_histogram(aes(y=..density..), bins = myBins, color = 'WHITE')  + theme_dark()  + theme(panel.background = element_rect(fill = "linen")) +
+ggplot(survey_df, aes(HSDegree)) + 
+  geom_histogram(
+    aes(y=..density..), 
+    bins = myBins, color = 'WHITE'
+    )  + 
+  theme_dark()  + 
+  theme(
+    panel.background = element_rect(fill = "linen")
+    ) +
   labs(
     title= "Distribution of Population with a High School Degree",
     x=x_label_plot, 
@@ -68,7 +83,7 @@ ggplot(survey_df, aes(HSDegree)) + geom_histogram(aes(y=..density..), bins = myB
   )
 
 ################################################################################
-### Combined Plot: Frquency Histogram, Normal Distribution, Probability Density
+### Combined Plot: Frequency Histogram, Normal Distribution, Probability Density
 ### The lines are smooshed, so the y Scale is wrong
 ################################################################################
 ggplot(survey_df, aes(HSDegree)) +
@@ -125,7 +140,7 @@ ggplot(survey_df, aes(HSDegree)) +
   ###########
   labs(
     title= "Distribution of Population with a High School Degree",
-    subtitle = "Green - Probability Distribution    Red - Normal Curve\nScale Seems smooshed",
+    subtitle = "Green - Probability Distribution    Red - Normal Curve",
     x=x_label_plot, 
     y="Distribution Density"
   )+
@@ -149,16 +164,22 @@ ggplot(survey_df, aes(HSDegree)) +
   ############################################
   geom_density(color="green", size=1)
 
-
+### Using Round on stat.desc() to keep the values more readable. 
+round(stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE), digits = 5)
 #stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE)
 #stat.desc(survey_df$HSDegree, basic=FALSE, norm=FALSE)
-round(stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE), digits = 5)
 #stat.desc(survey_df$HSDegree, basic=TRUE, norm=FALSE)
+shapiro.test(survey_df$HSDegree)
 
-sd(survey_df$HSDegree)
-mean(survey_df$HSDegree)
+### Exploring the dnorm function to figure it out
+norm_plot <- dnorm(survey_df$HSDegree, mean=mean(survey_df$HSDegree), sd=sd(survey_df$HSDegree))
+norm_plot
+plot( ( norm_plot ) )
+
 
 summary(survey_df$HSDegree)
 
 
-shapiro.test(survey_df$HSDegree)
+
+
+
