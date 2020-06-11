@@ -56,13 +56,13 @@ str(survey_df)
 nrow(survey_df)
 ncol(survey_df)
 
-HSDegree_histogram_plot <- ggplot(survey_df, aes(HSDegree)) + geom_histogram(aes(y=..density..), bins = 30)
-#HSDegree_histogram_plot <- ggplot(survey_df, aes(HSDegree)) + geom_histogram(bins = 100)
+ggplot(survey_df, aes(HSDegree)) + geom_histogram( bins = 30)
+HSDegree_histogram_plot <- ggplot(survey_df, aes(HSDegree)) + geom_histogram( bins = 30)
+HSDegree_histogram_plot + stat_function(fun = dnorm, args = list(mean = mean(survey_df$HSDegree), sd = sd(survey_df$HSDegree)),color="red", size=1, ) + geom_density(color="black", size=1)
 
-HSDegree_histogram_plot + stat_function(fun = dnorm, args = list(mean = mean(survey_df$HSDegree), sd = sd(survey_df$HSDegree)),color="red", size=1, ) + geom_density(color="light blue", size=1)
-HSDegree_probability_plot <- ggplot(survey_df, aes(HSDegree))+ geom_density(color="yellow")
-HSDegree_probability_plot
-stat.desc
+
+HSDegree_histogram_plot <- ggplot(survey_df, aes(HSDegree)) + geom_histogram(aes(y=..density..), bins = 30)
+HSDegree_histogram_plot + stat_function(fun = dnorm, args = list(mean = mean(survey_df$HSDegree), sd = sd(survey_df$HSDegree)),color="red", size=1, ) + geom_density(color="black", size=1)
 
 #HSDegree_histogram_plot <- ggplot(survey_df, aes(x=HSDegree)) + geom_histogram (bins = 10)
 HSDegree_histogram_plot
