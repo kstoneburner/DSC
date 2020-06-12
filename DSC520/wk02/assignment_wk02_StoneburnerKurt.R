@@ -44,10 +44,11 @@ library(ggplot2)
 library(pastecs)
 
 # install the R package
-install.packages('tinytex')
 
-# setup the external stuff and configure
-tinytex::install_tinytex()
+
+#tinytex::install_tinytex()
+#tinytex:::is_tinytex()
+
 
 ## Set the working directory to the root of your DSC 520 directory
 ## My working directory varies by my physical working environment
@@ -127,7 +128,6 @@ stat_function(
 ############################################
 geom_density(color="green", size=1)
 
-  
 
 ################################################################################
 ### Combined Plot: Density Histogram, Normal Distribution, Probabilty Density
