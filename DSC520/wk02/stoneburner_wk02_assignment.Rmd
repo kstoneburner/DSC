@@ -62,11 +62,7 @@ survey_df <- read.csv(paste(readDir,"\\data\\acs-14-1yr-s0201.csv",sep=""))
   - BachDegree      : Quantitative
 
 2. 
-&nbsp;&nbsp;&nbsp;&nbsp;**head(survey_df)**
 
-```{r head, echo=FALSE}
-head(survey_df)
-```
 &nbsp;&nbsp;&nbsp;&nbsp;**str(survey_df)**
 ```{r str, echo=FALSE}
 str(survey_df)
@@ -112,7 +108,35 @@ ggplot(survey_df, aes(HSDegree)) +
 ```
 4.
 
-  - a. The Data appears to be modal. The measured values are continuous the degree of unimodality is directly related to the bins size. Once the bins setting is greater than 28, the data no longer appears to be unimodal. Sampling with a higher bins value doesn't seem to have significance since the range of values is fairly small.
+  - a. The Data appears to be modal. The measured values are continuous with a specificity that is generally greater than what is needed for categorical evaluation (There isn't a difference between 98% and 98.3%). The degree of unimodality is directly related to the bins size. Once the bins setting is greater than 30, the data no longer appears to be unimodal. Sampling with a higher bins value doesn't seem to have significance since it distorts the histogram by highlighting the variance (and making the graph noisy).
+
+  Example:
+
+``` {r high bins example, echo = FALSE}
+highBins <- 30
+
+x_label_plot <- "% High School Degree"
+########################################
+### Histogram, frequency Distribution
+########################################
+ggplot(survey_df, aes(HSDegree)) + 
+  geom_histogram(
+    aes(y=..density..), 
+    bins = highBins, color = 'WHITE'
+    )  + 
+  theme_dark()  + 
+  theme(
+    panel.background = element_rect(fill = "linen")
+    ) +
+  labs(
+    title= "Distribution of Population with a High School Degree",
+    subtitle = paste("bins =",highBins),
+    x=x_label_plot, 
+    y="Count"
+  )
+
+```
+  
 
   - b. The distribution does not appear to be symmetrical
   - c. The distribution does not appear to be bell shaped.
@@ -122,6 +146,7 @@ ggplot(survey_df, aes(HSDegree)) +
   - f. 
   
 ``` {r section 4f, echo=FALSE}
+
 ################################################################################
 ### Combined Plot: Density Histogram, Normal Distribution, Probabilty Density
 ################################################################################
@@ -209,7 +234,7 @@ ggplot(survey_df, aes(HSDegree)) +
 
 
 6.
-  - a.The probability plot is not approximately normal. The shape of the probability plot has a sharper, more peaked curve compared to the normal curve. I plotted both and the differences are readily apparent.
+  - a. The probability plot is not approximately normal. The shape of the probability plot has a sharper, more peaked curve compared to the normal curve. I plotted both and the differences are readily apparent.
   
   - b. The probability plot is negatively skewed because it trails off to the left. There isn't enough data to finish the plot to the right of the peak which adds to the appearance of negative skewness.
 
@@ -220,11 +245,11 @@ stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE)
 ```
 8. In a normal distribution the values for skew and kurtosis are 0. The further the values are from 0, the more likely the data is not normally distributed. The data has a kurtosis 4.352 and a skewness of -1.674. These values indicate the data is not normally distributed.
 
-The data may be skewed because the sample size is not sufficiently large to represent a normal distribution according to the Central Limit Theorem. Increasing the sample size to 200 may result in a more normal distribution. 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The data may be skewed because the sample size is not sufficiently large to represent a normal distribution according to the Central Limit Theorem. Increasing the sample size to 200 may result in a more normal distribution. 
 
-Non-statistically speaking the data is measuring the frequency of a high school education across sub-section of the US population. the quality of education varies greatly by geography in the United States and is directly linked to individual prosperity or the lack thereof measured by inequality. Given socio-economic issues endemic to the United States I hypothesize that basic education levels are not normally distributed (in the statistical sense) as a whole.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Non-statistically speaking, the data is measuring the frequency of a high school education across sub-section of the US population. the quality of education varies greatly by geography in the United States and is directly linked to individual prosperity or the lack thereof measured by inequality. Given socio-economic issues endemic to the United States I hypothesize that basic education levels are not normally distributed (in the statistical sense) as a whole.
 
-I am unsure of how to interpret the z-scores in this context. I understand an individual z-scores can be used to indicate the probability of an individual score. But I'm unclear on how to use and interpret the z-scores as a whole. I plotted the z-scores below, but that didn't seem significant.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I am unsure of how to interpret the z-scores in this context. I understand an individual z-scores can be used to indicate the probability of an individual score. But I'm unclear on how to use and interpret the z-scores as a whole. I plotted the z-scores below, but that didn't seem significant.
 
 ``` {r zScore, echo=FALSE}
 zScores <- (survey_df$HSDegree - mean(survey_df$HSDegree)) / sd(survey_df$HSDegree)

@@ -68,7 +68,7 @@ ncol(survey_df)
 ### Thanks to  Scott Breitbach for sharing this on the boards
 #########################################################################
 myBins <- as.integer((length(survey_df$HSDegree)^(1/3))*2)
-#myBins <- 28
+highBins <- 30
 
 x_label_plot <- "% High School Degree"
 ########################################
@@ -77,7 +77,7 @@ x_label_plot <- "% High School Degree"
 ggplot(survey_df, aes(HSDegree)) + 
   geom_histogram(
     aes(y=..density..), 
-    bins = myBins, color = 'WHITE'
+    bins = highBins, color = 'WHITE'
     )  + 
   theme_dark()  + 
   theme(
@@ -85,7 +85,7 @@ ggplot(survey_df, aes(HSDegree)) +
     ) +
   labs(
     title= "Distribution of Population with a High School Degree",
-    subtitle = paste("bins =",myBins),
+    subtitle = paste("bins =",highBins),
     x=x_label_plot, 
     y="Count"
   )
