@@ -53,8 +53,8 @@ library(pastecs)
 ## Set the working directory to the root of your DSC 520 directory
 ## My working directory varies by my physical working environment
 
-#setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
-setwd("L:\\stonk\\projects\\DSC\\dsc520")
+setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
+#setwd("L:\\stonk\\projects\\DSC\\dsc520")
 
 
 survey_df <- read.csv("data/acs-14-1yr-s0201.csv")
@@ -67,7 +67,8 @@ ncol(survey_df)
 ### Set bins using Rice's Rule - Cube Root of Observations squared
 ### Thanks to  Scott Breitbach for sharing this on the boards
 #########################################################################
-myBins <- as.integer((length(survey_df$HSDegree)^(1/3))^2)
+myBins <- as.integer((length(survey_df$HSDegree)^(1/3))*2)
+#myBins <- 28
 
 x_label_plot <- "% High School Degree"
 ########################################
@@ -84,6 +85,7 @@ ggplot(survey_df, aes(HSDegree)) +
     ) +
   labs(
     title= "Distribution of Population with a High School Degree",
+    subtitle = paste("bins =",myBins),
     x=x_label_plot, 
     y="Count"
   )
@@ -105,7 +107,7 @@ theme_dark() +
 ###########
 labs(
   title= "Distribution of Population with a High School Degree",
-  subtitle = "Green - Probability Distribution    Red - Normal Curve",
+  subtitle = paste( paste("bins =",myBins), "Green - Probability Distribution    Red - Normal Curve"),
   x=x_label_plot, 
   y="Distribution Density"
 )+
@@ -145,7 +147,7 @@ ggplot(survey_df, aes(HSDegree)) +
   ###########
   labs(
     title= "Distribution of Population with a High School Degree",
-    subtitle = "Green - Probability Distribution    Red - Normal Curve",
+    subtitle = paste( paste("bins =",myBins), ", Green - Probability Distribution    Red - Normal Curve"),
     x=x_label_plot, 
     y="Distribution Density"
   )+
@@ -163,19 +165,23 @@ ggplot(survey_df, aes(HSDegree)) +
   stat_function(
     fun = dnorm, 
     args = list(mean = mean(survey_df$HSDegree), sd = sd(survey_df$HSDegree)),color="red", size=1, 
-  ) + 
+  )  +
   ############################################
   # Add Line: Probability Density - Red
   ############################################
   geom_density(color="green", size=1)
 
+qplot(sample=survey_df$HSDegree) 
+
+
+qplot(sample=norm_plot, color = "red")
+
 ### Using Round on stat.desc() to keep the values more readable. 
-round(stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE), digits = 5)
+stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE)
 #stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE)
 #stat.desc(survey_df$HSDegree, basic=FALSE, norm=FALSE)
 #stat.desc(survey_df$HSDegree, basic=TRUE, norm=FALSE)
 shapiro.test(survey_df$HSDegree)
-
 ### Exploring the dnorm function to figure it out
 norm_plot <- dnorm(survey_df$HSDegree, mean=mean(survey_df$HSDegree), sd=sd(survey_df$HSDegree))
 norm_plot
@@ -184,7 +190,33 @@ plot( ( norm_plot ) )
 
 summary(survey_df$HSDegree)
 
-
-
-
-
+#z-score skew: each score - mean / std dev
+hsDegree <- survey_df$HSDegree
+hsDegree
+mean(hsDegree)
+sd(hsDegree)
+zScores <- (survey_df$HSDegree - mean(survey_df$HSDegree)) / sd(survey_df$HSDegree)
+myBins <- 20
+mean(zScores)
+sum(zScores)
+median(zScores)
+survey_df <- cbind(survey_df,zScores)
+survey_df
+ggplot(survey_df, aes(zScores)) + 
+          geom_histogram(
+            aes(), 
+            bins = myBins, color = 'WHITE'
+          )  + 
+          theme_dark()  + 
+          theme(
+            panel.background = element_rect(fill = "linen")
+          ) +
+          labs(
+            title= "Distribution of Population with a High School Degree",
+            subtitle = paste("bins =",myBins),
+            x=x_label_plot, 
+            y="Count"
+          )
+        
+stat.desc(survey_df$HSDegree, basic=FALSE, norm=TRUE)
+stat.desc(survey_df$zScores, basic=FALSE, norm=TRUE)
