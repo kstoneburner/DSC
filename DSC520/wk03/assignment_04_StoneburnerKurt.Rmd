@@ -35,7 +35,7 @@ bibliography: bibliography.bib
 
 ## Add an Equation
 
-$r=\frac{\sum(x_i-\bar{x})(y_i-\bar{y})}{(N-1)s_xs_y}$
+$r=\frac{\sum(x_i-\bar{x})(y_i-\bar{y})}{(N-1)s_xs_y}$\newline\newline\newline
 
 \pagebreak
 
@@ -121,7 +121,11 @@ ggplot(data=heights_df, aes(x=height, y=earn)) +
 
 # Tables
 
+
+
 ## Knitr Table with Kable
+
+
 
 ``` {r table section, echo=FALSE}
 
@@ -135,7 +139,7 @@ ring_bearer <- c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
 age <- c(88, 129, 51, 7000, 36, 2019, 2931, 7052, 589)
 
 characters_df <- data.frame(name, race, in_fellowship, ring_bearer, age)
-kable(characters_df, format="latex", caption = "One Ring to Rule Them All")
+kable(characters_df, format="markdown", caption = "One Ring to Rule Them All")
 
 ```
 
