@@ -1,0 +1,73 @@
+---
+title: "Week 4 Assignment"
+author: "Kurt Stoneburner"
+date: June 22nd 2020
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+## Note Should output Word Doc
+
+
+# 4.1 Assignment: Student Survey
+# 
+# As a data science intern with newly learned knowledge in skills in statistical correlation and R programming, you will analyze the results of a survey recently given to college students. You learn that the research question being investigated is: “Is there a significant relationship between the amount of time spent reading and the time spent watching television?” You are also interested if there are other significant relationships that can be discovered? The survey data is located in this StudentSurvey.csv file.
+# 
+#     Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.
+#     Examine the Survey data variables. What measurement is being used for the variables? Explain what effect changing the measurement being used for the variables would have on the covariance calculation. Would this be a problem? Explain and provide a better alternative if needed.
+#     Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?
+#     Perform a correlation analysis of:
+#         All variables
+#         A single correlation between two a pair of the variables
+#         Repeat your correlation test in step 2 but set the confidence interval at 99%
+#         Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.
+#     Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.
+#     Based on your analysis can you say that watching more TV caused students to read less? Explain.
+#     Pick three variables and perform a partial correlation, documenting which variable you are “controlling”. Explain how this changes your interpretation and explanation of the results.
+
+```
+# “Is there a significant relationship between the amount of time spent reading and the time spent watching television?”
+
+#     Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.
+
+#     Examine the Survey data variables. What measurement is being used for the variables? Explain what effect changing the measurement being used for the variables would have on the covariance calculation. Would this be a problem? Explain and provide a better alternative if needed.
+
+#     Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?
+
+#     Perform a correlation analysis of:
+
+#         All variables
+
+#         A single correlation between two a pair of the variables
+
+#         Repeat your correlation test in step 2 but set the confidence interval at 99%
+
+#         Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.
+
+#     Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.
+
+#     Based on your analysis can you say that watching more TV caused students to read less? Explain.
+
+#     Pick three variables and perform a partial correlation, documenting which variable you are “controlling”. Explain how this changes your interpretation and explanation of the results.
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## References
+
