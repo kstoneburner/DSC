@@ -27,11 +27,7 @@ bibliography: bibliography.bib
 
 -- *To a Mouse*, Robert Burns
 
->"The path of the righteous man and defender is beset on all sides by the iniquity of the selfish and the tyranny of evil men. Blessed is he, who in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper, and the father of lost children. And I will execute great vengeance upon them with furious anger, who poison and destroy my brothers; and they shall know that I am Chiba the Bodyguard when I shall lay my vengeance upon them!"
-\newline
->-- ezekiel 25:17 [^2]
 
--- *The Bodyguard*, 1976
 
 ## Add an Equation
 
@@ -40,6 +36,13 @@ $r=\frac{\sum(x_i-\bar{x})(y_i-\bar{y})}{(N-1)s_xs_y}$\newline\newline\newline
 \pagebreak
 
 ## Add a Footnote
+
+>"The path of the righteous man and defender is beset on all sides by the iniquity of the selfish and the tyranny of evil men. Blessed is he, who in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper, and the father of lost children. And I will execute great vengeance upon them with furious anger, who poison and destroy my brothers; and they shall know that I am Chiba the Bodyguard when I shall lay my vengeance upon them!"
+\newline
+>-- ezekiel 25:17 [^2]
+
+-- *The Bodyguard*, 1976
+
 [^1]: *"The best-laid schemes o' mice an' men Gang aft agley, An' lea'e us nought but grief an' pain, For promis'd joy!"* 
 
 [^2]: Starring Sonny Chiba. If you thought these lines made famous by Samuel L. Jackson in *Pulp Fiction* were original, you'd be wrong. If it were'nt for Quentin Tarantino I wouldn't know this genre of film existed.
@@ -146,6 +149,20 @@ kable(characters_df, format="markdown", caption = "One Ring to Rule Them All")
 
 
 ## Pandoc Table
+
++-----------+-----------+----------------+-----------------+--------+
+| Name      | Race      | In Fellowship? | Is Ring Bearer? | Age    |
++===========+===========+================+=================+========+
+| Aragon    | Men       | Yes            | No              | 88     |
++-----------+-----------+----------------+-----------------+--------+
+| Bilbo     | Hobbit    | No             | Yes             | 129    |
++-----------+-----------+----------------+-----------------+--------+
+| Frodo     | Hobbit    | Yes            | Yes             | 51     |
++-----------+-----------+----------------+-----------------+--------+
+| Sam       | Hobbit    | Yes            | Yes             | 36     |
++-----------+-----------+----------------+-----------------+--------+
+| Sauron    | Maia      | No             | Yes             | 7052   |
++-----------+-----------+----------------+-----------------+--------+
 
 # References
 
