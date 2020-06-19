@@ -37,6 +37,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #     Examine the Survey data variables. What measurement is being used for the variables? Explain what effect changing the measurement being used for the variables would have on the covariance calculation. Would this be a problem? Explain and provide a better alternative if needed.
 
+Variables being used are:
+  Time Spent Reading - Quantitative, Discrete
+  Time Spent Watching TV - Quantitative, Discrete
+  Happiness - Quantitative, Continuous
+  Gender - Boolean Categorical
+  
+  What units of measurement are being used for time Reading and and Time TV? Are they the same units over 
+
 #     Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?
 
 #     Perform a correlation analysis of:
