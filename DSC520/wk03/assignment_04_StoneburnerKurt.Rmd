@@ -62,6 +62,7 @@ library(ggplot2)
 
 ### Build File Paths to Covid and heights CSV files
 rootPath <- "C:\\Users\\newcomb\\DSCProjects\\dsc520_github\\data\\"
+rootPath <- "L:\\stonk\\projects\\DSC\\\\dsc520\\data\\"
 heightsPath <- paste(rootPath,"r4ds\\heights.csv", sep = "")
 covidPath <- paste(rootPath, "nytimes\\covid-19-data\\us-states.csv", sep="")
 
