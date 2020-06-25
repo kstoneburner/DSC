@@ -8,19 +8,20 @@ setwd("L:\\stonk\\projects\\DSC\\dsc520")
 survey_df <- read.csv("data/student-survey.csv")
 survey_df
 stat.desc(survey_df)
+cov(survey_df)
+cor(survey_df,method="kendall")
+cor(survey_df,method="spearman")
 
+#cor_df <- data.frame(timeReading_cor,timeTV_cor,happiness_cor,gender_cor)
+#colnames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
+#rownames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
+#cor_df
+#abs(cor_df) >.25 & cor_df < .99
 
-
-cor_df <- data.frame(timeReading_cor,timeTV_cor,happiness_cor,gender_cor)
-colnames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-rownames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-cor_df
-abs(cor_df) >.25 & cor_df < .99
-
-cov_df <- data.frame(timeReading_cov,timeTV_cov,happiness_cov,gender_cov)
-colnames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-rownames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-cov_df
+#cov_df <- data.frame(timeReading_cov,timeTV_cov,happiness_cov,gender_cov)
+#colnames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
+#rownames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
+#cov_df
 
 
 print("Pearson")
@@ -33,6 +34,15 @@ cor(survey_df,method="spearman")
 
 
 cov(survey_df)
+
+mins_reading_df <- data.frame(
+  survey_df$TimeReading*60,
+  survey_df$TimeTV,
+  survey_df$Happiness,
+  survey_df$Gender)
+colnames(mins_reading_df) <- c("TimeReading(mins)","TimeTV(mins)","Happiness","Gender")
+mins_reading_df
+cov(mins_reading_df)
 
 mins_survey_df <- cbind(survey_df,(survey_df$TimeReading * 60) )
 colnames(mins_survey_df) <- c("TimeReading","TimeTv","Happiness","Gender","readingMins")
