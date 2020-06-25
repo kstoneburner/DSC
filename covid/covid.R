@@ -1,3 +1,5 @@
+
+
 library(ggplot2)
 library(pastecs)
 
@@ -19,6 +21,17 @@ ca_covid_df$Most.Recent.Date <- as.Date(ca_covid_df$Most.Recent.Date,"%m/%d/%y")
 
 head(ca_covid_df)
 
+###########################################################################################
+#Generate a vector of colors
+#n = number of colors in vector
+library(RColorBrewer)
+n <- 60
+qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+#pie(rep(1,n), col=sample(col_vector, n))
+#col_vector
+###########################################################################################
+
 
 ca_covid_df$Total.Count.Deaths
 
@@ -38,12 +51,12 @@ date <- unique(ca_covid_df$Most.Recent.Date)
 
 county <- unique(ca_covid_df$County.Name)
 
-county_df <- data.frame(date)
-county_df
+county_total_confirmed_df <- data.frame(date)
+
 
 length(date)
 length(county)
-
+### Build County Confirmed 
 for (x in 1:length(county)){
   temp_count <- ca_covid_df [ which( ca_covid_df$County.Name == county[x]), ]
   temp_count <- temp_count$Total.Count.Confirmed
@@ -63,11 +76,41 @@ for (x in 1:length(county)){
   print(length(temp_count))
   print(temp_count)
   name <- gsub(" ","_",county[x])
-  county_df[name] <- temp_count
+  county_total_confirmed_df[name] <- temp_count
+}
+head(county_total_confirmed_df)
+
+### Build a separate county vector of County Names with spaces replaced by _
+county_ <- c()
+for (x in 1:length(county)){
+  temp_val <- gsub(" ","_",county[x])
+  print(temp_val)
+  county_ <- append(county_,temp_val)
+
 }
 
+### Build county_daily_confirmed_df
+### New confirmed Cases per day, total cases of the day, minus the previous day
 
-head(county_df)
+county_daily_confirmed_df <- data.frame(date)
+
+for (n in 1:length(county_)){
+  i <- 0
+  temp_df <- sapply(county_total_confirmed_df[county_[n]], function(x){
+    temp_col <- c(0)
+    for (i in 2:length(x)){
+      
+      temp_col <- append(temp_col,x[i] - x[i-1])
+      
+    }
+    return(temp_col)
+  },simplify="array")
+  county_daily_confirmed_df[county_[n]] <- temp_df
+}
+
+county_daily_confirmed_df$Los_Angeles
+
+
 
 ### get all values on a specific day
 #oneDay <- ca_covid_df [ which( ca_covid_df$Most.Recent.Date == datefactor[1]), ]$Total.Count.Confirmed
@@ -126,7 +169,7 @@ daily_deaths <- sapply(total_deaths, function(x) {
 daily_deaths
 
 state_df <- data.frame(date,total_confirmed,total_deaths,total_active_patients,total_active_icu,daily_confirmed)
-
+state_df
 numeric_df <- data.frame(total_confirmed,daily_confirmed,total_deaths,daily_deaths,total_active_patients,total_active_icu)
 
 pairs(numeric_df)
@@ -164,17 +207,14 @@ cov_frame
 sum(county_df[,-1])
 
 pairs(cov_frame)
-ggplot(data=county_df, aes(x=date, group=1)) +
+ggplot(data=county_total_confirmed_df, aes(x=date, group=1)) +
     geom_line(aes(y=Los_Angeles, color = "Los_Angeles" ) ) +
     geom_line(aes(y=San_Francisco, color = "San_Francisco" ) ) +
     geom_line(aes(y=Alameda, color = "Alameda" ) ) 
 
-column_names <- names(county_df)[2:(ncol(county_df))]
+column_names <- names(county_total_confirmed_df)[2:(ncol(county_total_confirmed_df))]
 
-
-
-
-command <- "ggplot(data=county_df, aes(x=date)) +"
+command <- "ggplot(data=county_total_confirmed_df, aes(x=date)) +"
 #command <- paste(command,"geom_line(aes(y=Los_Angeles, color = 'Los_Angeles' ) )")
 #eval(parse(text=command))
 count <- 0
@@ -186,16 +226,29 @@ for (i in column_names){
     }
  
 }
-command <- paste(command,"+ scale_colour_manual('',labels=column_names,breaks=column_names,values=col_vector) + theme_dark()  + theme( panel.background = element_rect(fill = 'black') )")
- 
-  
+command <- paste(command,"+ scale_colour_manual('',labels=column_names,breaks=column_names,values=col_vector) + theme_dark()  + theme( panel.background = element_rect(fill = 'black'), legend.position='top' )")
+#command <- paste(command,"+ scale_colour_manual('',labels=column_names,breaks=column_names,values=col_vector) + theme_dark()  + theme( panel.background = element_rect(fill = 'black') )")
+#+ theme(legend.position="top")
+command <- gsub(" ","",command)
 print(command)
 eval(parse(text=command))
 
-library(RColorBrewer)
-n <- 60
-qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
-col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
-pie(rep(1,n), col=sample(col_vector, n))
-col_vector
-?scale_color_distiller
+column_names <- names(county_daily_confirmed_df)[3:(ncol(county_daily_confirmed_df))]
+
+command <- "ggplot(data=county_daily_confirmed_df, aes(x=date)) +"
+count <- 0
+for (i in column_names){
+  count <<- count + 1
+  command <- paste(command,"geom_line(aes(y=",i,", colour=\"",i,"\") )") 
+  if ( count < length(column_names) ) {
+    command <- paste(command," + ")
+  }
+  
+}
+command <- paste(command,"+ scale_colour_manual('',labels=column_names,breaks=column_names,values=col_vector) + theme_dark()  + theme( panel.background = element_rect(fill = 'black'), legend.position='top' )")
+#command <- paste(command,"+ scale_colour_manual('',labels=column_names,breaks=column_names,values=col_vector) + theme_dark()  + theme( panel.background = element_rect(fill = 'black') )")
+#+ theme(legend.position="top")
+command <- gsub(" ","",command)
+print(command)
+eval(parse(text=command))
+
