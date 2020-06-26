@@ -1,6 +1,7 @@
 library(ggplot2)
 library(pastecs)
-
+library(boot)
+library(Hmisc)
 ## Set the working directory to the root of your DSC 520 directory
 #setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
 setwd("L:\\stonk\\projects\\DSC\\dsc520")
@@ -11,6 +12,17 @@ stat.desc(survey_df)
 cov(survey_df)
 cor(survey_df,method="kendall")
 cor(survey_df,method="spearman")
+
+bootTau <- function(survey_df,i)cor(survey_df$TimeReading[i],survey_df$TimeTV[i],use="complete.obs",method="kendall")
+boot_kendall <- boot(survey_df, bootTau, 2000)
+boot_kendall
+boot.ci(boot_kendall, conf = 0.99)
+cor.test(survey_df$D,survey_df$TimeTV,method="kendall", conf.level = 0.95, exact = FALSE)
+cor.test(survey_df$TimeReading,survey_df$TimeTV,method="kendall", conf.level = 0.50, exact = FALSE)
+cor.test(survey_df$TimeReading,survey_df$Happiness, conf.level = 0.95)
+cor.test(survey_df$TimeReading,survey_df$Happiness, conf.level = 0.99)
+
+rcorr(survey_df$TimeReading,survey_df$TimeTV)
 
 #cor_df <- data.frame(timeReading_cor,timeTV_cor,happiness_cor,gender_cor)
 #colnames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
@@ -29,6 +41,8 @@ cor(survey_df,method="pearson")
 cor(survey_df,method="pearson") > .25 & cor(survey_df,method="pearson") < .99
 print("Kendall")
 cor(survey_df,method="kendall")
+round(cor(survey_df,method="kendall")^2*100,2)
+
 print("Spearman")
 cor(survey_df,method="spearman")
 
@@ -44,10 +58,21 @@ colnames(mins_reading_df) <- c("TimeReading(mins)","TimeTV(mins)","Happiness","G
 mins_reading_df
 cov(mins_reading_df)
 
+hours_reading_df <- data.frame(
+  survey_df$TimeReading,
+  survey_df$TimeTV/60,
+  survey_df$Happiness,
+  survey_df$Gender)
+colnames(hours_reading_df) <- c("TimeReading(hours)","TimeTV(hours)","Happiness","Gender")
+hours_reading_df
+cov(hours_reading_df)
+
+
 mins_survey_df <- cbind(survey_df,(survey_df$TimeReading * 60) )
 colnames(mins_survey_df) <- c("TimeReading","TimeTv","Happiness","Gender","readingMins")
 cov(survey_df)
-cov(mins_survey_df)
+cov(mins_survey_df) <- cbind(survey_df,(survey_df$TimeReading * 60) )
+
 
 readByTime <- survey_df$TimeReading / survey_df$TimeTV
 readByTime
@@ -56,7 +81,6 @@ cor(readByTime, survey_df$Happiness)
 
 cohappiness_cov / cov(survey_df$Happiness,survey_df$Happiness,)
 
-?cor
 
 timeReading_cov = c(
   cov(survey_df$TimeReading,survey_df$TimeReading),

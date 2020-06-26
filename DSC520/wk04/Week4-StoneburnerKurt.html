@@ -370,7 +370,7 @@ summary {
 
 
 <div id="a.-use-r-to-calculate-the-covariance-of-the-survey-variables-and-provide-an-explanation-of-why-you-would-use-this-calculation-and-what-the-results-indicate." class="section level4">
-<h4>a. Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.</h4>
+<h4>A. Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.</h4>
 <p>Covariance</p>
 <pre><code>##             TimeReading TimeTV Happiness Gender
 ## TimeReading        3.05 -20.36    -10.35  -0.08
@@ -380,10 +380,10 @@ summary {
 <p>The covariance is a measure of how one variable varies compared to another variable. A primary purpose of this calculation is to measure if a variable has varies positively or negatively compared to another variable. For example, in the Student Survery covariance table, TimeReading has a negative covariance with both TimeTV and Happiness. This can be interpreted as the surveyed students reported increased reading time, there were decreases in Television Time and Happiness.</p>
 <p>The covariance is suitable for measuring if one variable affects another positively or negatively which helps describe the relationship between variables. However, it is difficult to ascertain the strength of the relationship unless all the values are in the same unit of measurement.</p>
 <p>The results indicate: As TimeReading Increases - TimeTV Decreases &amp; Happiness Decreases As TimeTV Increases - TimeReading Decreases &amp; Happiness Increases As Happiness Increases - TimeReading Decreases &amp; TimeTV Increases</p>
-<p>Gender does not appear to significantly affect: TimeReading, TimeTV, &amp; Happiness.</p>
+<p>Gender does not appear to significantly affect: TimeReading, TimeTV, or Happiness.</p>
 </div>
-<div id="b-examine-the-survey-data-variables.-what-measurement-is-being-used-for-the-variables" class="section level4">
-<h4>b Examine the Survey data variables. What measurement is being used for the variables?</h4>
+<div id="b.-examine-the-survey-data-variables.-what-measurement-is-being-used-for-the-variables" class="section level4">
+<h4>B. Examine the Survey data variables. What measurement is being used for the variables?</h4>
 <p>TimeReading and TimeTV appear to be discrete measurements of time. The units of measured time are unknown. Nor can it be assumed that both variables are using the same units of time. Likely, TimeReading is in Hours per day, and TimeTV is in minutes per day. But this is purely a guess.</p>
 </div>
 <div id="explain-what-effect-changing-the-measurement-being-used-for-the-variables-would-have-on-the-covariance-calculation.-would-this-be-a-problem-explain-and-provide-a-better-alternative-if-needed." class="section level4">
@@ -408,7 +408,54 @@ summary {
 ## TimeTV(mins)               -1221.82       174.09    114.38   0.05
 ## Happiness                   -621.01       114.38    185.45   1.12
 ## Gender                        -4.91         0.05      1.12   0.27</code></pre>
-<p>I do not believe changing the units of measurement would affect the interpretation of covariance. Since it is difficult to measure the intensity of the covariance the relative values themselves appear to be less important. However, the relationships of whether a variable postively or negatively affects another is still intact. All the prior observations remain, just at a different unit of measurement.</p>
+<p>I do not believe changing the units of measurement would affect the interpretation of covariance. Since it is difficult to measure the intensity of the covariance the relative values themselves appear to be less important. The prior observations remain true (whether a variable positively or negatively affects another), just at a different unit of measurement.</p>
+</div>
+<div id="c.-choose-the-type-of-correlation-test-to-perform-explain-why-you-chose-this-test-and-make-a-prediction-if-the-test-yields-a-positive-or-negative-correlation" class="section level4">
+<h4>C. Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?</h4>
+<p>I would correlate happiness and TimeReading. In relative units, correlating TimeReading and happiness generated a greater difference in value from correlating Happiness with itself. Happiness had a self correlated value of 185, and happiness correlated with TimeReading was -10. I predict that TimeReading has a negative correlation on Happiness. I would use Kendall’s tau to generate a correlation coefficient since it works best with small data sets of non-parametric data.</p>
+</div>
+<div id="d1.-perform-a-correlation-analysis-of-all-variables" class="section level4">
+<h4>D1. Perform a correlation analysis of all variables:</h4>
+<pre><code>##             TimeReading      TimeTV   Happiness      Gender
+## TimeReading  1.00000000 -0.80454045 -0.28894280 -0.07824608
+## TimeTV      -0.80454045  1.00000000  0.46304237 -0.02507849
+## Happiness   -0.28894280  0.46304237  1.00000000  0.09847319
+## Gender      -0.07824608 -0.02507849  0.09847319  1.00000000</code></pre>
+</div>
+<div id="d2.-a-single-correlation-between-a-pair-of-the-variables" class="section level4">
+<h4>D2. A single correlation between a pair of the variables</h4>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  survey_df$TimeReading and survey_df$Happiness
+## t = -1.4488, df = 9, p-value = 0.1813
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  -0.8206596  0.2232458
+## sample estimates:
+##        cor 
+## -0.4348663</code></pre>
+</div>
+<div id="d3.-repeat-your-correlation-test-in-step-2-but-set-the-confidence-interval-at-99" class="section level4">
+<h4>D3. Repeat your correlation test in step 2 but set the confidence interval at 99%</h4>
+<pre><code>## 
+##  Pearson&#39;s product-moment correlation
+## 
+## data:  survey_df$TimeReading and survey_df$Happiness
+## t = -1.4488, df = 9, p-value = 0.1813
+## alternative hypothesis: true correlation is not equal to 0
+## 99 percent confidence interval:
+##  -0.8801821  0.4176242
+## sample estimates:
+##        cor 
+## -0.4348663</code></pre>
+</div>
+<div id="d4.-describe-what-the-calculations-in-the-correlation-matrix-suggest-about-the-relationship-between-the-variables.-be-specific-with-your-explanation." class="section level4">
+<h4>D4. Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.</h4>
+<p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p>
+</div>
+<div id="d5.-calculate-the-correlation-coefficient-and-the-coefficient-of-determination-describe-what-you-conclude-about-the-results." class="section level4">
+<h4>D5. Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.</h4>
 </div>
 
 
