@@ -8,95 +8,33 @@ survey_df <- read.csv("data/student-survey.csv")
 survey_df
 stat.desc(survey_df)
 
-cov(survey_df$Happiness,survey_df$TimeReading)
-cor(survey_df$Happiness,survey_df$TimeReading)
+library(Hmisc)
+## Set the working directory to the root of your DSC 520 directory
+#setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
+setwd("L:\\stonk\\projects\\DSC\\dsc520")
 
-cov(survey_df$Happiness,survey_df$TimeTV)
-cor(survey_df$Happiness,survey_df$TimeTV)
+cor(survey_df,method="kendall")
+cor(survey_df,method="spearman")
 
-cov(survey_df$Happiness,survey_df$Gender)
-cor(survey_df$Happiness,survey_df$Gender)
+bootTau <- function(survey_df,i)cor(survey_df$TimeReading[i],survey_df$TimeTV[i],use="complete.obs",method="kendall")
+boot_kendall <- boot(survey_df, bootTau, 2000)
+boot_kendall
+boot.ci(boot_kendall, conf = 0.99)
+cor.test(survey_df$D,survey_df$TimeTV,method="kendall", conf.level = 0.95, exact = FALSE)
+cor.test(survey_df$TimeReading,survey_df$TimeTV,method="kendall", conf.level = 0.50, exact = FALSE)
+cor.test(survey_df$TimeReading,survey_df$Happiness, conf.level = 0.95)
+cor.test(survey_df$TimeReading,survey_df$TimeTV, method="kendall", exact=FALSE)
 
-cov(survey_df$TimeReading,survey_df$TimeTV)
-cor(survey_df$TimeReading,survey_df$TimeTV)
+rcorr(survey_df$TimeReading,survey_df$TimeTV)
 
-cov(survey_df$TimeReading,survey_df$Gender)
-cor(survey_df$TimeReading,survey_df$Gender)
-
-cov(survey_df$TimeReading,survey_df$Gender)
-cor(survey_df$TimeReading,survey_df$Gender)
-
-timeReading_cov = c(
-  cov(survey_df$TimeReading,survey_df$TimeReading),
-  cov(survey_df$TimeReading,survey_df$TimeTV),
-  cov(survey_df$TimeReading,survey_df$Happiness),
-  cov(survey_df$TimeReading,survey_df$Gender) )
-
-timeReading_cov
-
-timeTV_cov = c(
-  cov(survey_df$TimeTV,survey_df$TimeReading),
-  cov(survey_df$TimeTV,survey_df$TimeTV),
-  cov(survey_df$TimeTV,survey_df$Happiness),
-  cov(survey_df$TimeTV,survey_df$Gender) )
-timeTV_cov
-
-happiness_cov = c(
-  cov(survey_df$Happiness,survey_df$TimeReading),
-  cov(survey_df$Happiness,survey_df$TimeTV),
-  cov(survey_df$Happiness,survey_df$Happiness),
-  cov(survey_df$Happiness,survey_df$Gender) )
-happiness_cov
-
-gender_cov = c(
-  cov(survey_df$Gender,survey_df$TimeReading),
-  cov(survey_df$Gender,survey_df$TimeTV),
-  cov(survey_df$Gender,survey_df$Happiness),
-  cov(survey_df$Gender,survey_df$Gender) )
-gender_cov
-
-timeReading_cor = c(
-  cor(survey_df$TimeReading,survey_df$TimeReading),
-  cor(survey_df$TimeReading,survey_df$TimeTV),
-  cor(survey_df$TimeReading,survey_df$Happiness),
-  cor(survey_df$TimeReading,survey_df$Gender) )
-
-timeReading_cor
-
-timeTV_cor = c(
-  cor(survey_df$TimeTV,survey_df$TimeReading),
-  cor(survey_df$TimeTV,survey_df$TimeTV),
-  cor(survey_df$TimeTV,survey_df$Happiness),
-  cor(survey_df$TimeTV,survey_df$Gender) )
-timeTV_cor
-
-happiness_cor = c(
-  cor(survey_df$Happiness,survey_df$TimeReading),
-  cor(survey_df$Happiness,survey_df$TimeTV),
-  cor(survey_df$Happiness,survey_df$Happiness),
-  cor(survey_df$Happiness,survey_df$Gender) )
-happiness_cor
-
-gender_cor = c(
-  cor(survey_df$Gender,survey_df$TimeReading),
-  cor(survey_df$Gender,survey_df$TimeTV),
-  cor(survey_df$Gender,survey_df$Happiness),
-  cor(survey_df$Gender,survey_df$Gender) )
-gender_cor
-
-cor_df <- data.frame(timeReading_cor,timeTV_cor,happiness_cor,gender_cor)
-colnames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-rownames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-cor_df
-abs(cor_df) >.25 & cor_df < .99
-
-cov_df <- data.frame(timeReading_cov,timeTV_cov,happiness_cov,gender_cov)
-colnames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-rownames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
-cov_df
-
-survey_df$Reading_mins <- survey_df$TimeReading * 60
-survey_df
+#cor_df <- data.frame(timeReading_cor,timeTV_cor,happiness_cor,gender_cor)
+#colnames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
+#rownames(cor_df) <- c("TimeReading","TimeTv","Happiness","Gender")
+cor(survey_df,method="pearson")
+cor(survey_df,method="pearson") > .25 & cor(survey_df,method="pearson") < .99
+print("Kendall")
+cor(survey_df,method="kendall")
+round(cor(survey_df,method="kendall")^2*100,2)
 
 pairs(cov(survey_df))
 pairs(cor(survey_df))

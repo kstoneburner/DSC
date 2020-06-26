@@ -13,7 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 #require("knitr")
 #opts_knit$set(root.dir = "L:\\stonk\\projects\\DSC\\dsc520")
 #setwd("L:\\stonk\\projects\\DSC\\dsc520")
-rootDir <- "L:\\stonk\\projects\\DSC\\dsc520"
+rootDir <-"C:\\users\\newcomb\\DSCProjects\\dsc520_github"
+#rootDir <- "L:\\stonk\\projects\\DSC\\dsc520"
 filePath <- paste(rootDir,"\\data\\student-survey.csv",sep="")
 survey_df <- read.csv(filePath)
 ```
@@ -88,6 +89,27 @@ cor.test(survey_df$TimeReading,survey_df$Happiness, conf.level = 0.99)
 
 
 #### D4. Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+The correlation matrix suggests the following relationships:
+
+- TimeTV and Happiness: Moderate positive relationship 
+
+- TimeTV and TimeReading: Strong negative relationship.
+
+- TimeReading and Happiness: Weak negative relationship.
 
 #### D5. Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.
+Using Kendall's Tau the correlation coefficient of TimeTV and TimeReading is:
+``` {r Correlate_TimeTV_TimeReading, echo=FALSE}
+cor(survey_df$TimeReading,survey_df$TimeTV, method="kendall")
+```
+The coefficient of determination for TimeTV and TimeReading is:
+``` {r Coefficient_of_determination, echo=FALSE}
+round( cor(survey_df$TimeReading,survey_df$TimeTV, method="kendall")^2 *100,2 )
+```
+
+#### D6. Based on your analysis can you say that watching more TV caused students to read less? Explain.
+There is a strong negative correlation between Watching Tv and Time spent reading. Time spent on one activity correlates to less time spent on the other. This makes intuitive sense since time spent on one activity cannot be spent on another (assuming only one task is performed at a time). However, the time allotments for TV and Reading represent a small portion of the day. Time spent engaged in watching TV or Reading does not necessarily represent the totality of a student's available time (at least one would certainly hope not), performing one activity (Watching TV) may limit the opportunity to access another (Reading), it cannot be the sole determinant of how a student's time is spent. The coefficient of determination of 64.73% represents the shared variance between TimeReading and TimeTV. This suggests a moderately strong negative relationship between reading and watching TV. This isn't a perfect relationship, there are other factors that influence how a student spends their time. These unaccounted factors (tertium quid) represent an influence 35.27% on student time.
+
+I believe, the more time spent watching decreases the likelihood that a student will spend time reading.
+
+#### D7. Pick three variables and perform a partial correlation, documenting which variable you are “controlling”. Explain how this changes your interpretation and explanation of the results.
