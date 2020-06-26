@@ -1,8 +1,8 @@
 library(pastecs)
 
 ## Set the working directory to the root of your DSC 520 directory
-#setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
-setwd("L:\\stonk\\projects\\DSC\\dsc520")
+setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
+#setwd("L:\\stonk\\projects\\DSC\\dsc520")
 
 survey_df <- read.csv("data/student-survey.csv")
 survey_df
@@ -94,3 +94,10 @@ cov_df <- data.frame(timeReading_cov,timeTV_cov,happiness_cov,gender_cov)
 colnames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
 rownames(cov_df) <- c("TimeReading","TimeTv","Happiness","Gender")
 cov_df
+
+survey_df$Reading_mins <- survey_df$TimeReading * 60
+survey_df
+
+pairs(cov(survey_df))
+pairs(cor(survey_df))
+?cor
