@@ -1,4 +1,5 @@
-
+### Look at calculating accurate infection dates
+### Add Phased reopening data and correlate subsequent infections hospitalizations and deaths. Correlate
 
 library(ggplot2)
 library(pastecs)

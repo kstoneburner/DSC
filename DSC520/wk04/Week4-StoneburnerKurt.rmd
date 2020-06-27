@@ -17,6 +17,7 @@ rootDir <-"C:\\users\\newcomb\\DSCProjects\\dsc520_github"
 #rootDir <- "L:\\stonk\\projects\\DSC\\dsc520"
 filePath <- paste(rootDir,"\\data\\student-survey.csv",sep="")
 survey_df <- read.csv(filePath)
+library(ggm) #for pcorr
 ```
 #### A. Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.
 
@@ -104,12 +105,45 @@ cor(survey_df$TimeReading,survey_df$TimeTV, method="kendall")
 ```
 The coefficient of determination for TimeTV and TimeReading is:
 ``` {r Coefficient_of_determination, echo=FALSE}
-round( cor(survey_df$TimeReading,survey_df$TimeTV, method="kendall")^2 *100,2 )
+paste(round( cor(survey_df$TimeReading,survey_df$TimeTV, method="kendall")^2 *100,2 ),"%",sep="")
 ```
 
 #### D6. Based on your analysis can you say that watching more TV caused students to read less? Explain.
 There is a strong negative correlation between Watching Tv and Time spent reading. Time spent on one activity correlates to less time spent on the other. This makes intuitive sense since time spent on one activity cannot be spent on another (assuming only one task is performed at a time). However, the time allotments for TV and Reading represent a small portion of the day. Time spent engaged in watching TV or Reading does not necessarily represent the totality of a student's available time (at least one would certainly hope not), performing one activity (Watching TV) may limit the opportunity to access another (Reading), it cannot be the sole determinant of how a student's time is spent. The coefficient of determination of 64.73% represents the shared variance between TimeReading and TimeTV. This suggests a moderately strong negative relationship between reading and watching TV. This isn't a perfect relationship, there are other factors that influence how a student spends their time. These unaccounted factors (tertium quid) represent an influence 35.27% on student time.
 
-I believe, the more time spent watching decreases the likelihood that a student will spend time reading.
+I believe, the more time spent watching TV decreases the likelihood that a student will spend time reading.
 
 #### D7. Pick three variables and perform a partial correlation, documenting which variable you are “controlling”. Explain how this changes your interpretation and explanation of the results.
+
+The survey does not reflect how a student's happiness may affect Time spent reading or watching TV. Happiness can be used as a control in a partial correlation between TimeTV and TimeReading which results in an R value of:
+``` {r partial_correlation_1, echo=FALSE}
+
+pc1 <- pcor(c("TimeTV","TimeReading","Happiness"), var(survey_df))
+pc1
+```
+Which indicates a small increase in correlation.
+
+The resulting coefficient of determination
+``` {r partial_correlation_2, echo=FALSE}
+
+paste(round(pc1^2*100,2),"%", sep="")
+```
+
+indicates a stronger link between TimeTV and TimeReading.
+
+The resulting p value
+
+``` {r partial_correlation_3, echo=FALSE}
+pcor.test(pc1,1,11)
+```
+is less than .05 indicating this measure is significant.
+
+When controlling for happiness the negative correlation between TimeTV and TimeReading slightly increases from -0.804 to -0.872 [^1]. However, there is a significant increase in the coefficient of determination from 64.73% to 76.2%.
+
+By these measures, I'd feel comfortable stating that there is a strong indication that Time spent reading decreases the time spent watching TV[^2].
+
+
+
+[^1]: I realize -0.872 is actually smaller than -0.804. The only way the value increases is if I'm using a double negative: Negative correlation and a negative number.
+
+[^2]: The reverse is true as well. Time spent watching TV reduces reading time.</br> ![One of my favorite shirts](read.jpg)
