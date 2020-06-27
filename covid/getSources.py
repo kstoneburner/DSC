@@ -13,16 +13,18 @@ except:
     quit()
 
 getFiles = {
-    "CDC_all_mortality" : {
-        "name" : "Dowloading CDC Mortality Data",
-        "url" : "https://data.cdc.gov/api/views/hc4f-j6nb/rows.csv?accessType=DOWNLOAD&bom=true&format=true",
-        "file" : "cdcMortality.csv",
-    },
-    "CA_Covid_Cases": {
-        "name": "Downloading CA Covid Info",
-        "url": "https://data.chhs.ca.gov/dataset/6882c390-b2d7-4b9a-aefa-2068cee63e47/resource/6cd8d424-dfaa-4bdd-9410-a3d656e1176e/download/covid19data.csv",
-        "file": "ca_covid_cases.csv"
-    }
+    #"CDC_all_mortality" : {
+    #    "name" : "Dowloading CDC Mortality Data",
+    #    "url" : "https://data.cdc.gov/api/views/hc4f-j6nb/rows.csv?accessType=DOWNLOAD&bom=true&format=true",
+    #    "file" : "cdcMortality.csv",
+    #},
+   "CA_covid_Hospitalization.csv": {
+       "name": "Dowloading California Hospital Data",
+       "url": "https://data.ca.gov/dataset/529ac907-6ba1-4cb7-9aae-8966fc96aeef/resource/42d33765-20fd-44b8-a978-b083b7542225/download/hospitals_by_county.csv",
+       "file": "CA_covid_Hospitalization.csv",
+   }
+
+
 }
 
 #### Download each file in getFiles
@@ -30,11 +32,8 @@ for x in getFiles.keys():
     print(getFiles[x]["name"])
     response = requests.get(getFiles[x]["url"],stream=True)
     f = open(getFiles[x]["file"], 'w')
-    thisOut = response.text.replace("\ufeff","")
-    thisOut = thisOut.replace("\r\n\r\n","\r\n")
-    #f.write(str(response.text.encode('utf-16')))
-    f.write(thisOut)
+    #f.write(str(response.text.encode('utf-8')))
+    f.write(response.text)
     f.close()
-    #print(response.text)
+    print(response.text)
     print(getFiles[x]["name"])
-

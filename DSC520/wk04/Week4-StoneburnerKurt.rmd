@@ -3,8 +3,8 @@ title: "Week 4 Assignment"
 author: "Kurt Stoneburner"
 date: June 22nd 2020
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
   word_document: default
 ---
 
@@ -19,14 +19,14 @@ filePath <- paste(rootDir,"\\data\\student-survey.csv",sep="")
 survey_df <- read.csv(filePath)
 library(ggm) #for pcorr
 ```
-#### A. Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.
+#### A. Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.\newline\newline
 
 Covariance
 ```{r cov, echo=FALSE}
 round(cov(survey_df),2)
 ```
 
-The covariance is a measure of how one variable varies compared to another variable. A primary purpose of this calculation is to measure if a variable has varies positively or negatively compared to another variable. For example, in the Student Survery covariance table, TimeReading has a negative covariance with both TimeTV and Happiness. This can be interpreted as the surveyed students reported increased reading time, there were decreases in Television Time and Happiness. 
+The covariance is a measure of how one variable varies compared to another variable. A primary purpose of this calculation is to measure if a variable varies positively or negatively compared to another variable. For example, in the student survey covariance table, TimeReading has a negative covariance with both TimeTV and Happiness. This can be interpreted as increased time reading, resulted in decreased Television Time and Happiness. 
 
 The covariance is suitable for measuring if one variable affects another positively or negatively which helps describe the relationship between variables. However, it is difficult to ascertain the strength of the relationship unless all the values are in the same unit of measurement. 
 

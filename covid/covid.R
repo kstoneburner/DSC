@@ -5,22 +5,69 @@ library(ggplot2)
 library(pastecs)
 
 ## Set the working directory to the root of your DSC 520 directory
-#setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
 #setwd("L:\\stonk\\projects\\DSC\\dsc520")
 
-covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
+covidRootPath <- "c:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\"
+#covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
 
-caCovidPath <- "ca_covid_cases.csv"
+caCovidHospitalizationPath <- "CA_covid_Hospitalization.csv"
 cdcDeathsPath <- "cdcMortality.csv"
 
-ca_covid_filePath <- paste(covidRootPath,caCovidPath,sep="")
-ca_covid_filePath
+ca_covid_hospitalization_filePath <- paste(covidRootPath,caCovidHospitalizationPath,sep="")
+ca_covid_hospitalization_filePath
 
-ca_covid_df <- read.csv(ca_covid_filePath)
+ca_hospital_df <- read.csv(ca_covid_hospitalization_filePath)
+head(ca_hospital_df)
+
 ### Convert Date to a Date object
-ca_covid_df$Most.Recent.Date <- as.Date(ca_covid_df$Most.Recent.Date,"%m/%d/%y")
+ca_hospital_df$Most.Recent.Date <- as.Date(ca_covid_df$todays_date,"%y/%d/%m")
 
-head(ca_covid_df)
+### Get Date Column name
+dateCol <- colnames(ca_hospital_df[2])
+dateCol
+
+### Get county Column name
+countyCol <- colnames(ca_hospital_df[1])
+countyCol
+
+hospitalCol <-colnames(ca_hospital_df)
+hospitalCol_nums_only
+##########################################################################################
+### Convert NA to 0
+##########################################################################################
+### Hospital Data Frame - ca_hospital_df
+##########################################################################################
+for (colCount in 3:length(colnames(ca_hospital_df) ) ) {
+  thisColName = colnames(ca_hospital_df[colCount][1])
+  print(thisColName)
+  ### Looping through each column
+  thisColumn <- c(ca_hospital_df[colCount])
+  print(length(thisColumn))
+  print(class(thisColumn))
+  #str(thisColumn)  
+
+  
+}#//END Each Column
+
+
+##########################################################################################
+### Build combined tables
+##########################################################################################
+### Hospital Data Frame - ca_hospital_df
+##########################################################################################
+
+### combine icu_confirmed with icu_suspected
+### Get the daily confirmed totals
+### Outer counter, used for index
+i <- 0
+all_icu <- sapply(ca_hospital_df, function(x) {
+  ### Increment the outer counter
+  i <<- i+1
+  return(ca_hospital_df$icu_covid_confirmed_patients[i] + total_confirmed[i-1])
+  
+},simplify = "array")
+
 
 ###########################################################################################
 #Generate a vector of colors
@@ -34,18 +81,7 @@ col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_co
 ###########################################################################################
 
 
-ca_covid_df$Total.Count.Deaths
 
-la_df <- ca_covid_df [ which( ca_covid_df$County.Name == "Los Angeles"), ]
-
-sf_df <- ca_covid_df [ which( ca_covid_df$County.Name == "San Francisco"), ]
-sf_df
-alameda_df <- ca_covid_df [ which( ca_covid_df$County.Name == "Alameda"), ]
-alameda_df
-
-temp_count <- ca_covid_df [ which( ca_covid_df$County.Name == "Alameda"), ]
-temp_count <- temp_count$Total.Count.Confirmed
-temp_count
 
 ### Build a list of Unique Dates
 date <- unique(ca_covid_df$Most.Recent.Date)
