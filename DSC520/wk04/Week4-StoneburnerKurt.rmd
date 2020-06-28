@@ -26,9 +26,9 @@ Covariance
 round(cov(survey_df),2)
 ```
 
-The covariance is a measure of how one variable varies compared to another variable. A primary purpose of this calculation is to measure if a variable varies positively or negatively compared to another variable. For example, in the student survey covariance table, TimeReading has a negative covariance with both TimeTV and Happiness. This can be interpreted as increased time reading, resulted in decreased Television Time and Happiness. 
+The covariance is a measure of how one variable varies compared to another variable. A primary purpose of this calculation is to measure if a variable varies positively or negatively in relation to another variable. For example, TimeReading has a negative covariance with both TimeTV and Happiness. This can be interpreted as the more time is spent reading, the less time is used watching Television and Happiness is decreased. 
 
-The covariance is suitable for measuring if one variable affects another positively or negatively which helps describe the relationship between variables. However, it is difficult to ascertain the strength of the relationship unless all the values are in the same unit of measurement. 
+The covariance is suitable for measuring how one variable does or does not influence another variables. This is one method used to observe how one variable may affect another. However, it is difficult to ascertain the strength of the relationship unless all the values are in the same unit of measurement. 
 
 The results indicate:
   As TimeReading Increases - TimeTV Decreases & Happiness Decreases
@@ -43,7 +43,7 @@ TimeReading and TimeTV appear to be discrete measurements of time. The units of 
 
 #### Explain what effect changing the measurement being used for the variables would have on the covariance calculation. Would this be a problem? Explain and provide a better alternative if needed.
 
-Changing values will affect the covariance calculation. For example, if TimeReading was in hours, it could be converted to minutes by multiplying each value by 60. The actual covariance values increase greatly as well.
+Changing values will affect the covariance values. For example, if TimeReading was in hours, it could be converted to minutes by multiplying each value by 60. The actual covariance values increase greatly as well.
 
 The student survey would look like this:
 ``` {r mins_survey, echo=FALSE}
@@ -69,11 +69,11 @@ round(cov(mins_reading_df),2)
 
 I do not believe changing the units of measurement would affect the interpretation of covariance. Since it is difficult to measure the intensity of the covariance the relative values themselves appear to be less important. The prior observations remain true (whether a variable positively or negatively affects another), just at a different unit of measurement.
 
-#### C. Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?
+#### C. Choose the type of correlation test to perform, explain why you chose this test, and make a prediction if the test yields a positive or negative correlation?\newline
 
 I would correlate happiness and TimeReading. In relative units, correlating TimeReading and happiness generated a greater difference in value from correlating Happiness with itself. Happiness had a self correlated value of 185, and happiness correlated with TimeReading was -10. I predict that TimeReading has a negative correlation on Happiness. I would use Kendall's tau to generate a correlation coefficient since it works best with small data sets of non-parametric data.
 
-#### D1. Perform a correlation analysis of all variables:
+#### D1. Perform a correlation analysis of all variables:\newline
 ``` {r Correlate_all_variables, echo=FALSE}
 cor(survey_df,method="kendall")
 ```
@@ -89,7 +89,7 @@ cor.test(survey_df$TimeReading,survey_df$Happiness, conf.level = 0.99)
 ```
 
 
-#### D4. Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.
+#### D4. Describe what the calculations in the correlation matrix suggest about the relationship between the variables. Be specific with your explanation.\newline
 The correlation matrix suggests the following relationships:
 
 - TimeTV and Happiness: Moderate positive relationship 
@@ -98,7 +98,7 @@ The correlation matrix suggests the following relationships:
 
 - TimeReading and Happiness: Weak negative relationship.
 
-#### D5. Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.
+#### D5. Calculate the correlation coefficient and the coefficient of determination, describe what you conclude about the results.\newline
 Using Kendall's Tau the correlation coefficient of TimeTV and TimeReading is:
 ``` {r Correlate_TimeTV_TimeReading, echo=FALSE}
 cor(survey_df$TimeReading,survey_df$TimeTV, method="kendall")
@@ -108,7 +108,7 @@ The coefficient of determination for TimeTV and TimeReading is:
 paste(round( cor(survey_df$TimeReading,survey_df$TimeTV, method="kendall")^2 *100,2 ),"%",sep="")
 ```
 
-#### D6. Based on your analysis can you say that watching more TV caused students to read less? Explain.
+#### D6. Based on your analysis can you say that watching more TV caused students to read less? Explain.\newline
 There is a strong negative correlation between Watching Tv and Time spent reading. Time spent on one activity correlates to less time spent on the other. This makes intuitive sense since time spent on one activity cannot be spent on another (assuming only one task is performed at a time). However, the time allotments for TV and Reading represent a small portion of the day. Time spent engaged in watching TV or Reading does not necessarily represent the totality of a student's available time (at least one would certainly hope not), performing one activity (Watching TV) may limit the opportunity to access another (Reading), it cannot be the sole determinant of how a student's time is spent. The coefficient of determination of 64.73% represents the shared variance between TimeReading and TimeTV. This suggests a moderately strong negative relationship between reading and watching TV. This isn't a perfect relationship, there are other factors that influence how a student spends their time. These unaccounted factors (tertium quid) represent an influence 35.27% on student time.
 
 I believe, the more time spent watching TV decreases the likelihood that a student will spend time reading.
@@ -131,12 +131,11 @@ paste(round(pc1^2*100,2),"%", sep="")
 
 indicates a stronger link between TimeTV and TimeReading.
 
-The resulting p value
 
 ``` {r partial_correlation_3, echo=FALSE}
 pcor.test(pc1,1,11)
 ```
-is less than .05 indicating this measure is significant.
+The resulting p value is less than .05 indicating this measure is significant.
 
 When controlling for happiness the negative correlation between TimeTV and TimeReading slightly increases from -0.804 to -0.872 [^1]. However, there is a significant increase in the coefficient of determination from 64.73% to 76.2%.
 
