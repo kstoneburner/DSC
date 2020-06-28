@@ -4,6 +4,44 @@
 library(ggplot2)
 library(pastecs)
 
+sum_and_remove_DF_Columns <- function(data_df,col1,col2,sumColName){
+  ### Adds the row values of column1 and column. The new values are stored in sumColName
+  ### SumColName added to data_df, col1 and col2 are removed.
+  ### Effectively two columns are summed and replaced with a column of the summed value
+  ### This is mostly used for combining suspected and confirmed cases
+  
+  i <- 0
+  
+  temp_col <- sapply(data_df[col1], function(x) {
+    ### Increment the outer counter
+    i <<- i + 1
+    
+    return(data_df[col1][i] + data_df[col2][i])
+    
+    
+  },simplify = "array")
+  #print(temp_col)
+  #length(temp_col)
+  ### remove old columns
+  remove_columns = c(col1,col2)
+  data_df <- data_df[, ! names(data_df) %in% remove_columns, drop = F]
+  
+  data_df[sumColName] <- temp_col
+  
+  return(data_df)
+  
+
+}
+
+removeCols <- function(data_df,col_vector){
+  ### col_vector is a vector of column names to remove
+  data_df <- data_df[, ! names(data_df) %in% col_vector, drop = F]
+  
+  return(data_df)
+}
+
+
+
 ## Set the working directory to the root of your DSC 520 directory
 setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
 #setwd("L:\\stonk\\projects\\DSC\\dsc520")
@@ -21,7 +59,10 @@ ca_hospital_df <- read.csv(ca_covid_hospitalization_filePath)
 head(ca_hospital_df)
 
 ### Convert Date to a Date object
-ca_hospital_df$Most.Recent.Date <- as.Date(ca_covid_df$todays_date,"%y/%d/%m")
+#ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%y/%d/%m")
+ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%Y-%m-%d")
+head(ca_hospital_df)
+?as.Date
 
 ### Get Date Column name
 dateCol <- colnames(ca_hospital_df[2])
@@ -32,23 +73,32 @@ countyCol <- colnames(ca_hospital_df[1])
 countyCol
 
 hospitalCol <-colnames(ca_hospital_df)
-hospitalCol_nums_only
+
 ##########################################################################################
 ### Convert NA to 0
 ##########################################################################################
 ### Hospital Data Frame - ca_hospital_df
 ##########################################################################################
-for (colCount in 3:length(colnames(ca_hospital_df) ) ) {
-  thisColName = colnames(ca_hospital_df[colCount][1])
-  print(thisColName)
-  ### Looping through each column
-  thisColumn <- c(ca_hospital_df[colCount])
-  print(length(thisColumn))
-  print(class(thisColumn))
-  #str(thisColumn)  
-
+for (colCount in 1:length(ca_hospital_df ) ) {
   
+  ### Looping through each column
+  ### Unlist converts data_frame list to vector
+  thisColumn <- unlist(ca_hospital_df[colCount])
+  
+  ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
+  new_column <- sapply(thisColumn, function(x){
+    if (is.na(x) ) {
+      return(0)
+    } else { return(x) }
+  },simplify="array")
+  
+  ca_hospital_df[colCount] <- new_column
+  
+  
+
 }#//END Each Column
+
+head(ca_hospital_df)
 
 
 ##########################################################################################
@@ -59,14 +109,31 @@ for (colCount in 3:length(colnames(ca_hospital_df) ) ) {
 
 ### combine icu_confirmed with icu_suspected
 ### Get the daily confirmed totals
-### Outer counter, used for index
-i <- 0
-all_icu <- sapply(ca_hospital_df, function(x) {
-  ### Increment the outer counter
-  i <<- i+1
-  return(ca_hospital_df$icu_covid_confirmed_patients[i] + total_confirmed[i-1])
-  
-},simplify = "array")
+ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"icu_suspected_covid_patients","icu_covid_confirmed_patients","icu_combined")
+ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"previous_days_covid_confirmed_patients","previous_days_suspected_covid_patients","confirmed_combined")
+
+### remove hospitalized confirmed and suspected cases since these are already summarized
+ca_hospital_df <- removeCols(ca_hospital_df,c("hospitalized_covid_confirmed_patients","hospitalized_suspected_covid_patients"))
+
+head(ca_hospital_df)
+
+
+
+#cor(ca_hospital_df[3:length(ca_hospital_df)], method="spearman")
+
+
+
+
+fresno_df <- ca_hospital_df [ which( ca_hospital_df[countyCol] == "Fresno"), ]
+head(fresno_df)
+
+### Basic plotting of two inputs
+ggplot(data=fresno_df, aes(x=todays_date, group=1)) +
+  geom_line(aes(y=icu_available_beds , color = "icu_available_beds"  ) )
+
+ggplot(data=fresno_df, aes(x=todays_date, group=1)) +
+  geom_line(aes(y=icu_combined , color = "icu_combined "  ) ) + 
+  geom_line(aes(y=icu_available_beds , color = "icu_available_beds"  ) )
 
 
 ###########################################################################################
