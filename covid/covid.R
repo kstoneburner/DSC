@@ -55,8 +55,14 @@ cdcDeathsPath <- "cdcMortality.csv"
 ca_covid_hospitalization_filePath <- paste(covidRootPath,caCovidHospitalizationPath,sep="")
 ca_covid_hospitalization_filePath
 
+hopkinsPath <- "C:\\Users\\newcomb\\DSCProjects\\COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
+hopkins_us_confirmed_path <- paste(hopkinsPath,"time_series_covid19_confirmed_US.csv",sep="")
+  
 ca_hospital_df <- read.csv(ca_covid_hospitalization_filePath)
 head(ca_hospital_df)
+
+hopkins_us_confirmed <- read.csv(hopkins_us_confirmed_path)
+head(hopkins_us_confirmed)
 
 ### Convert Date to a Date object
 #ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%y/%d/%m")
@@ -118,9 +124,51 @@ ca_hospital_df <- removeCols(ca_hospital_df,c("hospitalized_covid_confirmed_pati
 head(ca_hospital_df)
 
 
+###########################################################################################
+###########################################################################################
+##### Hopkins data
+###########################################################################################
+###########################################################################################
 
-#cor(ca_hospital_df[3:length(ca_hospital_df)], method="spearman")
+### Get a list of the states
+hopkins_states <- unique(hopkins_us_confirmed$Province_State)
+hopkins_states
 
+hopkins_confirmed_condensed <- data.frame()
+
+### Sum county values into state Values
+### Loop through states
+for (stateCount in 1:length(hopkins_states)){
+  thisStateName <- hopkins_states[stateCount]
+  print(thisStateName)
+  ### Looping through each column
+  ### Unlist converts data_frame list to vector
+  #thisColumn <- unlist(hopkins_us_confirmed[stateCount])
+  
+  print(hopkins_us_confirmed[ which( hopkins_us_confirmed$Province_State==thisStateName, ) ])
+  
+  
+
+ 
+  
+  ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
+  #new_column <- sapply(thisColumn, function(x){
+  #  if (is.na(x) ) {
+  #    return(0)
+  #  } else { return(x) }
+  #},simplify="array")
+  
+  #hopkins_us_confirmed[stateCount] <- new_column
+  
+  
+}###///
+
+
+###########################################################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
 
 
 
