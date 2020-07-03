@@ -43,85 +43,27 @@ removeCols <- function(data_df,col_vector){
 
 
 ## Set the working directory to the root of your DSC 520 directory
-setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
-#setwd("L:\\stonk\\projects\\DSC\\dsc520")
+#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
+setwd("L:\\stonk\\projects\\DSC\\dsc520")
 
-covidRootPath <- "c:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\"
-#covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
+#covidRootPath <- "c:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\"
+covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
 
-caCovidHospitalizationPath <- "CA_covid_Hospitalization.csv"
-cdcDeathsPath <- "cdcMortality.csv"
-
-ca_covid_hospitalization_filePath <- paste(covidRootPath,caCovidHospitalizationPath,sep="")
-ca_covid_hospitalization_filePath
 
 hopkinsPath <- "C:\\Users\\newcomb\\DSCProjects\\COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
 hopkins_us_confirmed_path <- paste(hopkinsPath,"time_series_covid19_confirmed_US.csv",sep="")
   
-ca_hospital_df <- read.csv(ca_covid_hospitalization_filePath)
-head(ca_hospital_df)
-
 hopkins_us_confirmed <- read.csv(hopkins_us_confirmed_path)
 head(hopkins_us_confirmed)
 
-### Convert Date to a Date object
-#ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%y/%d/%m")
-ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%Y-%m-%d")
-head(ca_hospital_df)
-?as.Date
 
-### Get Date Column name
-dateCol <- colnames(ca_hospital_df[2])
-dateCol
 
-### Get county Column name
-countyCol <- colnames(ca_hospital_df[1])
-countyCol
-
-hospitalCol <-colnames(ca_hospital_df)
-
-##########################################################################################
-### Convert NA to 0
-##########################################################################################
-### Hospital Data Frame - ca_hospital_df
-##########################################################################################
-for (colCount in 1:length(ca_hospital_df ) ) {
-  
-  ### Looping through each column
-  ### Unlist converts data_frame list to vector
-  thisColumn <- unlist(ca_hospital_df[colCount])
-  
-  ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
-  new_column <- sapply(thisColumn, function(x){
-    if (is.na(x) ) {
-      return(0)
-    } else { return(x) }
-  },simplify="array")
-  
-  ca_hospital_df[colCount] <- new_column
-  
-  
-
-}#//END Each Column
-
-head(ca_hospital_df)
 
 
 ##########################################################################################
 ### Build combined tables
 ##########################################################################################
-### Hospital Data Frame - ca_hospital_df
-##########################################################################################
 
-### combine icu_confirmed with icu_suspected
-### Get the daily confirmed totals
-ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"icu_suspected_covid_patients","icu_covid_confirmed_patients","icu_combined")
-ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"previous_days_covid_confirmed_patients","previous_days_suspected_covid_patients","confirmed_combined")
-
-### remove hospitalized confirmed and suspected cases since these are already summarized
-ca_hospital_df <- removeCols(ca_hospital_df,c("hospitalized_covid_confirmed_patients","hospitalized_suspected_covid_patients"))
-
-head(ca_hospital_df)
 
 
 ###########################################################################################
@@ -169,7 +111,12 @@ for (stateCount in 1:length(hopkins_states)){
 ###########################################################################################
 ###########################################################################################
 ###########################################################################################
-
+### LEgacy Code for reference because we did good work 
+###########################################################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
+###########################################################################################
 
 
 fresno_df <- ca_hospital_df [ which( ca_hospital_df[countyCol] == "Fresno"), ]

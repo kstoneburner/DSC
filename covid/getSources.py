@@ -22,7 +22,14 @@ getFiles = {
        "name": "Dowloading California Hospital Data",
        "url": "https://data.ca.gov/dataset/529ac907-6ba1-4cb7-9aae-8966fc96aeef/resource/42d33765-20fd-44b8-a978-b083b7542225/download/hospitals_by_county.csv",
        "file": "CA_covid_Hospitalization.csv",
-   }
+   },
+   "CA_covid_Cases.csv": {
+       "name": "Dowloading California Covid Data",
+       "url": "https://data.ca.gov/dataset/590188d5-8545-4c93-a9a0-e230f0db7290/resource/926fd08f-cc91-4828-af38-bd45de97f8c3/download/statewide_cases.csv",
+       "file": "CA_covid_Cases.csv",
+   },
+
+
 
 
 }

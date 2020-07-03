@@ -54,8 +54,6 @@ for (i in 1:length(county)){
   
 }
 head(population_df)
-### Build County percentage of population / sum(population)
-round( population_df$popuni/sum(population_df$popuni),6)
 
 population_df <- cbind(population_df, round( population_df[2]/sum(population_df[2]),6))
 colnames(population_df) <- c("county","population",
@@ -72,16 +70,21 @@ colnames(population_df) <- c("county","population",
                              "three_rf__predrt",
                              "three_rf_predrt_moe",
                              "pop_percent")
-population_df
 
 
 ### Cleanup County name
-for (i in 1:length(population_df$ctname)){
-  population_df$ctname[i] <- gsub(" County, CA", "",population_df$ctname[i])
+for (i in 1:length(population_df$county)){
+  population_df$county[i] <- gsub(" County, CA", "",population_df$county[i])
 }
+head(population_df)
+
+### convert county name to lower case
+population_df$county <- sapply(population_df$county, tolower,simplify = "array")
+
+head(population_df)
 
 ### Write to File
-write.csv(population_df,"CA_county_population.csv")
+write.csv(population_df,"final_CA_county_population.csv")
 
 
 #Should be close to 100
@@ -89,4 +92,16 @@ sum(population_df$pop_percent)
 
 sum(population_df$three_rf_prednum)
 sum(population_df$population)
-sum(population_df$three_rf_prednum) / sum(population_df$population)
+round(sum(population_df$three_rf_prednum) / sum(population_df$population),4)*100
+
+sum(population_df$onetwo_rf_prednum)
+round(sum(population_df$onetwo_rf_prednum) / sum(population_df$population),4)*100
+
+sum(population_df$no_rf_prednum)
+round(sum(population_df$no_rf_prednum) / sum(population_df$population),4)*100
+
+alameda_df <- population_df [ which( population_df$county == "alameda"),]
+
+losAngeles_df <- population_df [ which( population_df$county == "los angeles"),]
+alameda_df
+losAngeles_df

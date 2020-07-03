@@ -1,0 +1,769 @@
+"","county","Demographic","Total_CT","SMHS1_CT","SMHS5_CT"
+"1","alameda","A1 Adults 21-44",162690,5799,3677
+"2","alameda","A2 Adults 45-64",94189,4188,3037
+"3","alameda","A3 Adults 65+",61551,801,611
+"4","alameda","R1 Alaskan Native or American Indian",844,49,22
+"5","alameda","R2 Asian or Pacific Islander",81202,985,762
+"6","alameda","R3 Black",53702,3248,2096
+"7","alameda","R4 Hispanic",73884,1326,801
+"8","alameda","R5 White",42345,2305,1630
+"9","alameda","R6 Other",49986,1952,1348
+"10","alameda","S1 Female",176855,5257,3665
+"11","alameda","S2 Male",141574,5531,3660
+"12","alameda","Z1 ALL",318430,10788,7325
+"13","alpine","A1 Adults 21-44",124,18,11
+"14","alpine","A2 Adults 45-64",80,0,0
+"15","alpine","A3 Adults 65+",33,0,0
+"16","alpine","R1 Alaskan Native or American Indian",119,22,14
+"17","alpine","R2 Asian or Pacific Islander",0,0,0
+"18","alpine","R3 Black",0,0,0
+"19","alpine","R4 Hispanic",11,0,0
+"20","alpine","R5 White",83,0,0
+"21","alpine","R6 Other",0,0,0
+"22","alpine","S1 Female",126,18,15
+"23","alpine","S2 Male",111,13,0
+"24","alpine","Z1 ALL",237,31,20
+"25","amador","A1 Adults 21-44",2829,263,134
+"26","amador","A2 Adults 45-64",2129,250,150
+"27","amador","A3 Adults 65+",749,34,20
+"28","amador","R1 Alaskan Native or American Indian",115,0,0
+"29","amador","R2 Asian or Pacific Islander",81,0,0
+"30","amador","R3 Black",45,0,0
+"31","amador","R4 Hispanic",554,37,23
+"32","amador","R5 White",4430,453,252
+"33","amador","R6 Other",67,0,0
+"34","amador","S1 Female",3172,355,202
+"35","amador","S2 Male",2535,192,102
+"36","amador","Z1 ALL",5707,547,304
+"37","butte","A1 Adults 21-44",32602,2243,1396
+"38","butte","A2 Adults 45-64",18360,1504,1082
+"39","butte","A3 Adults 65+",7188,252,169
+"40","butte","R1 Alaskan Native or American Indian",989,59,34
+"41","butte","R2 Asian or Pacific Islander",3205,145,107
+"42","butte","R3 Black",1557,121,84
+"43","butte","R4 Hispanic",9492,386,242
+"44","butte","R5 White",37167,2845,1853
+"45","butte","R6 Other",1176,52,37
+"46","butte","S1 Female",30587,2112,1457
+"47","butte","S2 Male",27563,1887,1190
+"48","butte","Z1 ALL",58150,3999,2647
+"49","calaveras","A1 Adults 21-44",4473,307,182
+"50","calaveras","A2 Adults 45-64",3263,222,130
+"51","calaveras","A3 Adults 65+",1026,39,21
+"52","calaveras","R1 Alaskan Native or American Indian",139,0,0
+"53","calaveras","R2 Asian or Pacific Islander",121,0,0
+"54","calaveras","R3 Black",74,0,0
+"55","calaveras","R4 Hispanic",1018,56,38
+"56","calaveras","R5 White",6810,461,268
+"57","calaveras","R6 Other",117,0,0
+"58","calaveras","S1 Female",4716,336,186
+"59","calaveras","S2 Male",4046,232,147
+"60","calaveras","Z1 ALL",8762,568,333
+"61","colusa","A1 Adults 21-44",2937,229,153
+"62","colusa","A2 Adults 45-64",1533,158,115
+"63","colusa","A3 Adults 65+",779,30,21
+"64","colusa","R1 Alaskan Native or American Indian",65,0,0
+"65","colusa","R2 Asian or Pacific Islander",84,0,0
+"66","colusa","R3 Black",45,0,0
+"67","colusa","R4 Hispanic",3376,164,105
+"68","colusa","R5 White",1194,199,148
+"69","colusa","R6 Other",48,0,0
+"70","colusa","S1 Female",3064,250,170
+"71","colusa","S2 Male",2185,167,119
+"72","colusa","Z1 ALL",5249,417,289
+"73","contra costa","A1 Adults 21-44",100233,4377,1997
+"74","contra costa","A2 Adults 45-64",54958,2964,1351
+"75","contra costa","A3 Adults 65+",29551,605,307
+"76","contra costa","R1 Alaskan Native or American Indian",600,40,19
+"77","contra costa","R2 Asian or Pacific Islander",24121,430,211
+"78","contra costa","R3 Black",24443,1502,641
+"79","contra costa","R4 Hispanic",53081,1204,537
+"80","contra costa","R5 White",37946,2498,1189
+"81","contra costa","R6 Other",34022,1626,731
+"82","contra costa","S1 Female",105662,4398,2085
+"83","contra costa","S2 Male",79080,3548,1570
+"84","contra costa","Z1 ALL",184742,7946,3655
+"85","del norte","A1 Adults 21-44",4385,343,192
+"86","del norte","A2 Adults 45-64",3036,225,128
+"87","del norte","A3 Adults 65+",998,20,11
+"88","del norte","R1 Alaskan Native or American Indian",746,46,20
+"89","del norte","R2 Asian or Pacific Islander",277,0,0
+"90","del norte","R3 Black",62,0,0
+"91","del norte","R4 Hispanic",875,37,20
+"92","del norte","R5 White",5640,443,259
+"93","del norte","R6 Other",139,0,0
+"94","del norte","S1 Female",4388,326,191
+"95","del norte","S2 Male",4031,262,140
+"96","del norte","Z1 ALL",8419,588,331
+"97","el dorado","A1 Adults 21-44",15003,470,298
+"98","el dorado","A2 Adults 45-64",9463,298,186
+"99","el dorado","A3 Adults 65+",3053,40,28
+"100","el dorado","R1 Alaskan Native or American Indian",216,13,0
+"101","el dorado","R2 Asian or Pacific Islander",801,0,0
+"102","el dorado","R3 Black",253,11,0
+"103","el dorado","R4 Hispanic",4094,59,34
+"104","el dorado","R5 White",18333,0,376
+"105","el dorado","R6 Other",573,15,0
+"106","el dorado","S1 Female",14595,407,249
+"107","el dorado","S2 Male",12924,401,263
+"108","el dorado","Z1 ALL",27519,808,512
+"109","fresno","A1 Adults 21-44",175632,7338,4152
+"110","fresno","A2 Adults 45-64",84591,4518,2639
+"111","fresno","A3 Adults 65+",36872,589,309
+"112","fresno","R1 Alaskan Native or American Indian",2116,180,98
+"113","fresno","R2 Asian or Pacific Islander",23223,672,374
+"114","fresno","R3 Black",16924,1230,647
+"115","fresno","R4 Hispanic",145308,3980,2287
+"116","fresno","R5 White",44086,3169,1822
+"117","fresno","R6 Other",42691,1831,1051
+"118","fresno","S1 Female",164248,6796,3914
+"119","fresno","S2 Male",132847,5649,3186
+"120","fresno","Z1 ALL",297095,12445,7100
+"121","glenn","A1 Adults 21-44",4265,267,154
+"122","glenn","A2 Adults 45-64",2367,164,111
+"123","glenn","A3 Adults 65+",1043,29,21
+"124","glenn","R1 Alaskan Native or American Indian",171,0,0
+"125","glenn","R2 Asian or Pacific Islander",297,17,0
+"126","glenn","R3 Black",70,0,0
+"127","glenn","R4 Hispanic",3465,102,54
+"128","glenn","R5 White",3256,288,191
+"129","glenn","R6 Other",59,0,0
+"130","glenn","S1 Female",4333,283,183
+"131","glenn","S2 Male",3342,177,103
+"132","glenn","Z1 ALL",7675,460,286
+"133","humboldt","A1 Adults 21-44",25314,1011,579
+"134","humboldt","A2 Adults 45-64",12019,672,429
+"135","humboldt","A3 Adults 65+",3977,155,114
+"136","humboldt","R1 Alaskan Native or American Indian",2733,95,52
+"137","humboldt","R2 Asian or Pacific Islander",1241,22,0
+"138","humboldt","R3 Black",835,48,24
+"139","humboldt","R4 Hispanic",4585,102,61
+"140","humboldt","R5 White",26277,1274,0
+"141","humboldt","R6 Other",723,28,17
+"142","humboldt","S1 Female",21308,891,545
+"143","humboldt","S2 Male",20002,947,577
+"144","humboldt","Z1 ALL",41310,1838,1122
+"145","imperial","A1 Adults 21-44",30461,2002,1281
+"146","imperial","A2 Adults 45-64",17812,1235,909
+"147","imperial","A3 Adults 65+",12798,341,184
+"148","imperial","R1 Alaskan Native or American Indian",401,19,13
+"149","imperial","R2 Asian or Pacific Islander",389,13,12
+"150","imperial","R3 Black",742,109,75
+"151","imperial","R4 Hispanic",52059,2716,1782
+"152","imperial","R5 White",4142,483,320
+"153","imperial","R6 Other",334,25,17
+"154","imperial","S1 Female",35284,2086,1410
+"155","imperial","S2 Male",25787,1492,964
+"156","imperial","Z1 ALL",61071,3578,2374
+"157","inyo","A1 Adults 21-44",2025,101,46
+"158","inyo","A2 Adults 45-64",1347,90,43
+"159","inyo","A3 Adults 65+",618,42,18
+"160","inyo","R1 Alaskan Native or American Indian",746,14,0
+"161","inyo","R2 Asian or Pacific Islander",42,0,0
+"162","inyo","R3 Black",21,0,0
+"163","inyo","R4 Hispanic",877,23,12
+"164","inyo","R5 White",2088,176,83
+"165","inyo","R6 Other",33,0,0
+"166","inyo","S1 Female",2125,118,57
+"167","inyo","S2 Male",1865,115,50
+"168","inyo","Z1 ALL",3990,233,107
+"169","kern","A1 Adults 21-44",154651,5664,3103
+"170","kern","A2 Adults 45-64",76029,2972,1894
+"171","kern","A3 Adults 65+",26621,395,223
+"172","kern","R1 Alaskan Native or American Indian",877,38,21
+"173","kern","R2 Asian or Pacific Islander",11359,158,93
+"174","kern","R3 Black",17720,950,545
+"175","kern","R4 Hispanic",144074,3355,1941
+"176","kern","R5 White",63086,3708,2116
+"177","kern","R6 Other",2935,90,40
+"178","kern","S1 Female",144458,4934,2886
+"179","kern","S2 Male",112843,4097,2334
+"180","kern","Z1 ALL",257301,9031,5220
+"181","kings","A1 Adults 21-44",21159,1026,634
+"182","kings","A2 Adults 45-64",9639,559,387
+"183","kings","A3 Adults 65+",4146,84,56
+"184","kings","R1 Alaskan Native or American Indian",143,11,0
+"185","kings","R2 Asian or Pacific Islander",940,29,23
+"186","kings","R3 Black",1844,147,81
+"187","kings","R4 Hispanic",22102,722,0
+"188","kings","R5 White",6946,616,422
+"189","kings","R6 Other",496,21,15
+"190","kings","S1 Female",19772,938,633
+"191","kings","S2 Male",15172,731,444
+"192","kings","Z1 ALL",34944,1669,1077
+"193","lake","A1 Adults 21-44",11658,396,174
+"194","lake","A2 Adults 45-64",8639,248,123
+"195","lake","A3 Adults 65+",3307,68,31
+"196","lake","R1 Alaskan Native or American Indian",729,16,0
+"197","lake","R2 Asian or Pacific Islander",271,0,0
+"198","lake","R3 Black",640,31,15
+"199","lake","R4 Hispanic",4558,57,23
+"200","lake","R5 White",15768,542,248
+"201","lake","R6 Other",281,0,0
+"202","lake","S1 Female",12219,344,156
+"203","lake","S2 Male",11385,368,172
+"204","lake","Z1 ALL",23604,712,328
+"205","large counties","A1 Adults 21-44",2414494,85942,49893
+"206","large counties","A2 Adults 45-64",1352017,63519,41877
+"207","large counties","A3 Adults 65+",683277,11126,7442
+"208","large counties","R1 Alaskan Native or American Indian",16891,1100,669
+"209","large counties","R2 Asian or Pacific Islander",638821,11552,7705
+"210","large counties","R3 Black",342650,21226,12745
+"211","large counties","R4 Hispanic",1728261,38075,22495
+"212","large counties","R5 White",901930,52377,32657
+"213","large counties","R6 Other",513096,21118,13060
+"214","large counties","S1 Female",2500854,82087,51062
+"215","large counties","S2 Male",1948933,78500,48150
+"216","large counties","Z1 ALL",4449788,160587,99212
+"217","lassen","A1 Adults 21-44",3083,351,171
+"218","lassen","A2 Adults 45-64",1827,189,112
+"219","lassen","A3 Adults 65+",666,24,11
+"220","lassen","R1 Alaskan Native or American Indian",211,18,0
+"221","lassen","R2 Asian or Pacific Islander",147,0,0
+"222","lassen","R3 Black",90,16,0
+"223","lassen","R4 Hispanic",557,32,15
+"224","lassen","R5 White",3976,443,229
+"225","lassen","R6 Other",58,0,0
+"226","lassen","S1 Female",2979,320,175
+"227","lassen","S2 Male",2597,244,119
+"228","lassen","Z1 ALL",5576,564,294
+"229","los angeles","A1 Adults 21-44",1437225,58063,34794
+"230","los angeles","A2 Adults 45-64",859340,47770,31229
+"231","los angeles","A3 Adults 65+",477348,8626,5215
+"232","los angeles","R1 Alaskan Native or American Indian",4125,414,272
+"233","los angeles","R2 Asian or Pacific Islander",313646,7110,5032
+"234","los angeles","R3 Black",291340,27225,16471
+"235","los angeles","R4 Hispanic",1456108,41069,25463
+"236","los angeles","R5 White",445131,26191,16198
+"237","los angeles","R6 Other",58535,2357,1463
+"238","los angeles","S1 Female",1552923,58885,37132
+"239","los angeles","S2 Male",1220990,55574,34106
+"240","los angeles","Z1 ALL",2773913,114459,71238
+"241","madera","A1 Adults 21-44",24566,960,471
+"242","madera","A2 Adults 45-64",11979,627,397
+"243","madera","A3 Adults 65+",4500,122,66
+"244","madera","R1 Alaskan Native or American Indian",319,16,0
+"245","madera","R2 Asian or Pacific Islander",847,24,13
+"246","madera","R3 Black",1008,89,57
+"247","madera","R4 Hispanic",26037,668,309
+"248","madera","R5 White",8967,717,0
+"249","madera","R6 Other",469,24,11
+"250","madera","S1 Female",22991,1000,525
+"251","madera","S2 Male",18054,709,409
+"252","madera","Z1 ALL",41045,1709,934
+"253","marin","A1 Adults 21-44",17771,661,417
+"254","marin","A2 Adults 45-64",10971,701,536
+"255","marin","A3 Adults 65+",4746,256,215
+"256","marin","R1 Alaskan Native or American Indian",72,0,0
+"257","marin","R2 Asian or Pacific Islander",2127,75,59
+"258","marin","R3 Black",1651,120,73
+"259","marin","R4 Hispanic",13103,191,133
+"260","marin","R5 White",13270,0,0
+"261","marin","R6 Other",932,37,17
+"262","marin","S1 Female",18187,775,561
+"263","marin","S2 Male",15301,843,607
+"264","marin","Z1 ALL",33488,1618,1168
+"265","mariposa","A1 Adults 21-44",1719,156,91
+"266","mariposa","A2 Adults 45-64",1411,157,107
+"267","mariposa","A3 Adults 65+",482,27,22
+"268","mariposa","R1 Alaskan Native or American Indian",102,0,0
+"269","mariposa","R2 Asian or Pacific Islander",35,0,0
+"270","mariposa","R3 Black",19,0,0
+"271","mariposa","R4 Hispanic",396,19,0
+"272","mariposa","R5 White",2835,292,194
+"273","mariposa","R6 Other",42,0,0
+"274","mariposa","S1 Female",1907,191,128
+"275","mariposa","S2 Male",1705,149,92
+"276","mariposa","Z1 ALL",3612,340,220
+"277","medium counties","A1 Adults 21-44",690329,23693,13111
+"278","medium counties","A2 Adults 45-64",351926,15947,10054
+"279","medium counties","A3 Adults 65+",151220,3045,1982
+"280","medium counties","R1 Alaskan Native or American Indian",6786,380,216
+"281","medium counties","R2 Asian or Pacific Islander",86313,2136,1241
+"282","medium counties","R3 Black",56749,3228,1826
+"283","medium counties","R4 Hispanic",518701,10297,5659
+"284","medium counties","R5 White",364679,19199,11577
+"285","medium counties","R6 Other",82937,3080,1794
+"286","medium counties","S1 Female",666226,22010,12894
+"287","medium counties","S2 Male",527249,20675,12253
+"288","medium counties","Z1 ALL",1193475,42685,25147
+"289","mendocino","A1 Adults 21-44",16279,741,466
+"290","mendocino","A2 Adults 45-64",9268,510,327
+"291","mendocino","A3 Adults 65+",3742,100,57
+"292","mendocino","R1 Alaskan Native or American Indian",1520,64,39
+"293","mendocino","R2 Asian or Pacific Islander",630,11,0
+"294","mendocino","R3 Black",333,18,11
+"295","mendocino","R4 Hispanic",7352,138,87
+"296","mendocino","R5 White",17033,975,0
+"297","mendocino","R6 Other",474,24,15
+"298","mendocino","S1 Female",15358,669,407
+"299","mendocino","S2 Male",13931,682,443
+"300","mendocino","Z1 ALL",29289,1351,850
+"301","merced","A1 Adults 21-44",47926,1594,785
+"302","merced","A2 Adults 45-64",22066,1086,618
+"303","merced","A3 Adults 65+",9621,143,74
+"304","merced","R1 Alaskan Native or American Indian",216,11,0
+"305","merced","R2 Asian or Pacific Islander",4837,139,74
+"306","merced","R3 Black",3605,250,128
+"307","merced","R4 Hispanic",49313,1057,528
+"308","merced","R5 White",16404,1067,0
+"309","merced","R6 Other",2161,95,54
+"310","merced","S1 Female",45184,1552,823
+"311","merced","S2 Male",34429,1271,654
+"312","merced","Z1 ALL",79613,2823,1477
+"313","modoc","A1 Adults 21-44",1139,151,90
+"314","modoc","A2 Adults 45-64",895,107,82
+"315","modoc","A3 Adults 65+",325,13,12
+"316","modoc","R1 Alaskan Native or American Indian",156,12,0
+"317","modoc","R2 Asian or Pacific Islander",17,0,0
+"318","modoc","R3 Black",11,0,0
+"319","modoc","R4 Hispanic",308,21,16
+"320","modoc","R5 White",1574,212,144
+"321","modoc","R6 Other",15,0,0
+"322","modoc","S1 Female",1245,170,120
+"323","modoc","S2 Male",1114,101,64
+"324","modoc","Z1 ALL",2359,271,184
+"325","mono","A1 Adults 21-44",1651,68,32
+"326","mono","A2 Adults 45-64",711,24,15
+"327","mono","A3 Adults 65+",173,0,0
+"328","mono","R1 Alaskan Native or American Indian",80,0,0
+"329","mono","R2 Asian or Pacific Islander",38,0,0
+"330","mono","R3 Black",0,0,0
+"331","mono","R4 Hispanic",860,22,11
+"332","mono","R5 White",0,51,27
+"333","mono","R6 Other",37,0,0
+"334","mono","S1 Female",1274,53,28
+"335","mono","S2 Male",1261,39,19
+"336","mono","Z1 ALL",2535,92,47
+"337","monterey","A1 Adults 21-44",67746,2908,1677
+"338","monterey","A2 Adults 45-64",28358,1520,1009
+"339","monterey","A3 Adults 65+",12216,286,203
+"340","monterey","R1 Alaskan Native or American Indian",160,18,11
+"341","monterey","R2 Asian or Pacific Islander",4421,132,93
+"342","monterey","R3 Black",2164,239,159
+"343","monterey","R4 Hispanic",77536,2389,1331
+"344","monterey","R5 White",15325,1430,950
+"345","monterey","R6 Other",1446,69,37
+"346","monterey","S1 Female",61329,2597,1605
+"347","monterey","S2 Male",46991,2117,1284
+"348","monterey","Z1 ALL",108320,4714,2889
+"349","napa","A1 Adults 21-44",10027,442,213
+"350","napa","A2 Adults 45-64",6227,343,186
+"351","napa","A3 Adults 65+",3506,90,54
+"352","napa","R1 Alaskan Native or American Indian",67,11,0
+"353","napa","R2 Asian or Pacific Islander",1355,19,12
+"354","napa","R3 Black",368,33,14
+"355","napa","R4 Hispanic",9570,178,84
+"356","napa","R5 White",7235,518,257
+"357","napa","R6 Other",283,20,0
+"358","napa","S1 Female",11169,406,220
+"359","napa","S2 Male",8591,469,233
+"360","napa","Z1 ALL",19760,875,453
+"361","nevada","A1 Adults 21-44",10618,525,293
+"362","nevada","A2 Adults 45-64",6395,377,248
+"363","nevada","A3 Adults 65+",2159,73,48
+"364","nevada","R1 Alaskan Native or American Indian",153,0,0
+"365","nevada","R2 Asian or Pacific Islander",247,11,0
+"366","nevada","R3 Black",119,0,0
+"367","nevada","R4 Hispanic",1716,67,38
+"368","nevada","R5 White",14882,757,450
+"369","nevada","R6 Other",293,16,12
+"370","nevada","S1 Female",10083,474,285
+"371","nevada","S2 Male",9089,501,304
+"372","nevada","Z1 ALL",19172,975,589
+"373","orange","A1 Adults 21-44",308409,6726,3918
+"374","orange","A2 Adults 45-64",189772,4628,2956
+"375","orange","A3 Adults 65+",104211,467,309
+"376","orange","R1 Alaskan Native or American Indian",1245,76,48
+"377","orange","R2 Asian or Pacific Islander",135562,1437,947
+"378","orange","R3 Black",10428,522,312
+"379","orange","R4 Hispanic",232145,2802,1652
+"380","orange","R5 White",119218,4366,2638
+"381","orange","R6 Other",61892,1328,748
+"382","orange","S1 Female",341598,5729,3460
+"383","orange","S2 Male",260794,6092,3723
+"384","orange","Z1 ALL",602392,11821,7183
+"385","placer","A1 Adults 21-44",23208,920,592
+"386","placer","A2 Adults 45-64",13263,660,482
+"387","placer","A3 Adults 65+",6154,99,62
+"388","placer","R1 Alaskan Native or American Indian",419,27,20
+"389","placer","R2 Asian or Pacific Islander",3196,29,25
+"390","placer","R3 Black",882,47,34
+"391","placer","R4 Hispanic",5980,132,92
+"392","placer","R5 White",23988,1126,759
+"393","placer","R6 Other",3928,120,82
+"394","placer","S1 Female",23803,859,582
+"395","placer","S2 Male",18822,820,554
+"396","placer","Z1 ALL",42625,1679,1136
+"397","plumas","A1 Adults 21-44",2388,206,81
+"398","plumas","A2 Adults 45-64",1692,151,80
+"399","plumas","A3 Adults 65+",613,28,16
+"400","plumas","R1 Alaskan Native or American Indian",129,0,0
+"401","plumas","R2 Asian or Pacific Islander",44,0,0
+"402","plumas","R3 Black",77,0,0
+"403","plumas","R4 Hispanic",477,23,0
+"404","plumas","R5 White",3484,315,146
+"405","plumas","R6 Other",46,0,0
+"406","plumas","S1 Female",2549,213,105
+"407","plumas","S2 Male",2144,172,72
+"408","plumas","Z1 ALL",4693,385,177
+"409","riverside","A1 Adults 21-44",295808,11306,6726
+"410","riverside","A2 Adults 45-64",158289,7335,4895
+"411","riverside","A3 Adults 65+",64350,1182,803
+"412","riverside","R1 Alaskan Native or American Indian",1631,89,54
+"413","riverside","R2 Asian or Pacific Islander",26338,481,309
+"414","riverside","R3 Black",39805,2487,1574
+"415","riverside","R4 Hispanic",271629,6948,4257
+"416","riverside","R5 White",121375,7378,4634
+"417","riverside","R6 Other",8280,274,170
+"418","riverside","S1 Female",299202,10240,6507
+"419","riverside","S2 Male",219245,9583,5917
+"420","riverside","Z1 ALL",518447,19823,12424
+"421","sacramento","A1 Adults 21-44",209151,6460,4010
+"422","sacramento","A2 Adults 45-64",111375,5728,4386
+"423","sacramento","A3 Adults 65+",50261,881,663
+"424","sacramento","R1 Alaskan Native or American Indian",2849,149,115
+"425","sacramento","R2 Asian or Pacific Islander",56259,930,735
+"426","sacramento","R3 Black",50718,2528,1721
+"427","sacramento","R4 Hispanic",68296,1343,885
+"428","sacramento","R5 White",95704,4690,3223
+"429","sacramento","R6 Other",77160,2423,1652
+"430","sacramento","S1 Female",203558,7274,5024
+"431","sacramento","S2 Male",167229,5795,4035
+"432","sacramento","Z1 ALL",370787,13069,9059
+"433","san benito","A1 Adults 21-44",6841,394,240
+"434","san benito","A2 Adults 45-64",3228,207,144
+"435","san benito","A3 Adults 65+",1442,41,30
+"436","san benito","R1 Alaskan Native or American Indian",23,0,0
+"437","san benito","R2 Asian or Pacific Islander",266,0,0
+"438","san benito","R3 Black",62,0,0
+"439","san benito","R4 Hispanic",7887,355,221
+"440","san benito","R5 White",2162,212,146
+"441","san benito","R6 Other",132,18,14
+"442","san benito","S1 Female",6619,381,261
+"443","san benito","S2 Male",4892,261,153
+"444","san benito","Z1 ALL",11511,642,414
+"445","san bernardino","A1 Adults 21-44",322206,10463,5156
+"446","san bernardino","A2 Adults 45-64",166248,6860,4138
+"447","san bernardino","A3 Adults 65+",65257,798,416
+"448","san bernardino","R1 Alaskan Native or American Indian",1658,81,43
+"449","san bernardino","R2 Asian or Pacific Islander",31094,464,289
+"450","san bernardino","R3 Black",62597,3391,1755
+"451","san bernardino","R4 Hispanic",287435,6395,3304
+"452","san bernardino","R5 White",120400,5942,3277
+"453","san bernardino","R6 Other",7140,173,85
+"454","san bernardino","S1 Female",316767,9391,5016
+"455","san bernardino","S2 Male",236944,8730,4694
+"456","san bernardino","Z1 ALL",553711,18121,9710
+"457","san diego","A1 Adults 21-44",331882,11855,6706
+"458","san diego","A2 Adults 45-64",191347,9775,6019
+"459","san diego","A3 Adults 65+",90770,1463,815
+"460","san diego","R1 Alaskan Native or American Indian",2809,183,103
+"461","san diego","R2 Asian or Pacific Islander",57017,1279,786
+"462","san diego","R3 Black",35757,2172,1303
+"463","san diego","R4 Hispanic",205451,3842,2267
+"464","san diego","R5 White",141798,8149,4751
+"465","san diego","R6 Other",130852,5260,2919
+"466","san diego","S1 Female",344950,11254,6613
+"467","san diego","S2 Male",269049,11839,6927
+"468","san diego","Z1 ALL",613999,23093,13540
+"469","san francisco","A1 Adults 21-44",74443,4617,3001
+"470","san francisco","A2 Adults 45-64",57936,5341,4017
+"471","san francisco","A3 Adults 65+",48033,1872,1466
+"472","san francisco","R1 Alaskan Native or American Indian",585,75,54
+"473","san francisco","R2 Asian or Pacific Islander",65860,1890,1457
+"474","san francisco","R3 Black",15418,1809,1205
+"475","san francisco","R4 Hispanic",28065,1257,903
+"476","san francisco","R5 White",24237,2808,2012
+"477","san francisco","R6 Other",37630,3210,2282
+"478","san francisco","S1 Female",93308,5321,3954
+"479","san francisco","S2 Male",87104,6509,4530
+"480","san francisco","Z1 ALL",180412,11830,8484
+"481","san joaquin","A1 Adults 21-44",104266,3854,1967
+"482","san joaquin","A2 Adults 45-64",53720,2909,1478
+"483","san joaquin","A3 Adults 65+",24376,539,292
+"484","san joaquin","R1 Alaskan Native or American Indian",644,44,19
+"485","san joaquin","R2 Asian or Pacific Islander",31092,953,457
+"486","san joaquin","R3 Black",18621,1035,515
+"487","san joaquin","R4 Hispanic",74091,1863,960
+"488","san joaquin","R5 White",37723,2364,1177
+"489","san joaquin","R6 Other",4154,150,82
+"490","san joaquin","S1 Female",103184,3920,1928
+"491","san joaquin","S2 Male",79178,3382,1809
+"492","san joaquin","Z1 ALL",182362,7302,3737
+"493","san luis obispo","A1 Adults 21-44",23102,1077,631
+"494","san luis obispo","A2 Adults 45-64",12824,790,529
+"495","san luis obispo","A3 Adults 65+",4855,153,77
+"496","san luis obispo","R1 Alaskan Native or American Indian",266,16,0
+"497","san luis obispo","R2 Asian or Pacific Islander",1034,21,17
+"498","san luis obispo","R3 Black",535,49,32
+"499","san luis obispo","R4 Hispanic",9822,180,113
+"500","san luis obispo","R5 White",19450,1143,0
+"501","san luis obispo","R6 Other",6805,395,245
+"502","san luis obispo","S1 Female",22463,1055,648
+"503","san luis obispo","S2 Male",18318,965,589
+"504","san luis obispo","Z1 ALL",40781,2020,1237
+"505","san mateo","A1 Adults 21-44",54773,2403,1588
+"506","san mateo","A2 Adults 45-64",32116,2213,1658
+"507","san mateo","A3 Adults 65+",19629,722,552
+"508","san mateo","R1 Alaskan Native or American Indian",191,26,15
+"509","san mateo","R2 Asian or Pacific Islander",23049,603,433
+"510","san mateo","R3 Black",3158,445,327
+"511","san mateo","R4 Hispanic",43946,1143,719
+"512","san mateo","R5 White",15970,1836,1377
+"513","san mateo","R6 Other",12368,644,448
+"514","san mateo","S1 Female",59512,2700,1933
+"515","san mateo","S2 Male",47006,2638,1865
+"516","san mateo","Z1 ALL",106518,5338,3798
+"517","santa barbara","A1 Adults 21-44",54432,1636,854
+"518","santa barbara","A2 Adults 45-64",25054,1153,744
+"519","santa barbara","A3 Adults 65+",10721,259,172
+"520","santa barbara","R1 Alaskan Native or American Indian",435,33,21
+"521","santa barbara","R2 Asian or Pacific Islander",2336,55,30
+"522","santa barbara","R3 Black",1516,134,87
+"523","santa barbara","R4 Hispanic",24256,458,262
+"524","santa barbara","R5 White",46898,1666,953
+"525","santa barbara","R6 Other",9814,446,252
+"526","santa barbara","S1 Female",51047,1529,910
+"527","santa barbara","S2 Male",39160,1519,860
+"528","santa barbara","Z1 ALL",90207,3048,1770
+"529","santa clara","A1 Adults 21-44",139550,6226,3930
+"530","santa clara","A2 Adults 45-64",90300,4678,3078
+"531","santa clara","A3 Adults 65+",66247,970,662
+"532","santa clara","R1 Alaskan Native or American Indian",1095,94,61
+"533","santa clara","R2 Asian or Pacific Islander",96557,2081,1195
+"534","santa clara","R3 Black",9557,779,499
+"535","santa clara","R4 Hispanic",100521,2900,1785
+"536","santa clara","R5 White",40531,3393,2368
+"537","santa clara","R6 Other",29724,1492,984
+"538","santa clara","S1 Female",166017,5988,3906
+"539","santa clara","S2 Male",130080,5886,3764
+"540","santa clara","Z1 ALL",296097,11874,7670
+"541","santa cruz","A1 Adults 21-44",30072,1025,457
+"542","santa cruz","A2 Adults 45-64",16379,627,356
+"543","santa cruz","A3 Adults 65+",6737,171,123
+"544","santa cruz","R1 Alaskan Native or American Indian",295,25,12
+"545","santa cruz","R2 Asian or Pacific Islander",1280,32,21
+"546","santa cruz","R3 Black",559,38,20
+"547","santa cruz","R4 Hispanic",23168,287,131
+"548","santa cruz","R5 White",17317,887,452
+"549","santa cruz","R6 Other",7493,319,158
+"550","santa cruz","S1 Female",28672,762,375
+"551","santa cruz","S2 Male",24516,1061,561
+"552","santa cruz","Z1 ALL",53188,1823,936
+"553","shasta","A1 Adults 21-44",24579,953,393
+"554","shasta","A2 Adults 45-64",15280,646,339
+"555","shasta","A3 Adults 65+",5713,125,49
+"556","shasta","R1 Alaskan Native or American Indian",1266,30,16
+"557","shasta","R2 Asian or Pacific Islander",1749,43,28
+"558","shasta","R3 Black",796,32,14
+"559","shasta","R4 Hispanic",3759,104,43
+"560","shasta","R5 White",33543,1282,0
+"561","shasta","R6 Other",514,14,0
+"562","shasta","S1 Female",24476,916,396
+"563","shasta","S2 Male",21096,808,385
+"564","shasta","Z1 ALL",45572,1724,781
+"565","sierra","A1 Adults 21-44",258,0,0
+"566","sierra","A2 Adults 45-64",228,0,0
+"567","sierra","A3 Adults 65+",133,0,0
+"568","sierra","R1 Alaskan Native or American Indian",0,0,0
+"569","sierra","R2 Asian or Pacific Islander",0,0,0
+"570","sierra","R3 Black",0,0,0
+"571","sierra","R4 Hispanic",55,0,0
+"572","sierra","R5 White",506,0,0
+"573","sierra","R6 Other",0,0,0
+"574","sierra","S1 Female",337,0,0
+"575","sierra","S2 Male",282,0,0
+"576","sierra","Z1 ALL",619,12,0
+"577","siskiyou","A1 Adults 21-44",6975,326,194
+"578","siskiyou","A2 Adults 45-64",4788,290,194
+"579","siskiyou","A3 Adults 65+",1823,66,48
+"580","siskiyou","R1 Alaskan Native or American Indian",610,24,14
+"581","siskiyou","R2 Asian or Pacific Islander",314,11,0
+"582","siskiyou","R3 Black",244,21,14
+"583","siskiyou","R4 Hispanic",1400,37,26
+"584","siskiyou","R5 White",9321,496,0
+"585","siskiyou","R6 Other",199,12,0
+"586","siskiyou","S1 Female",7098,390,245
+"587","siskiyou","S2 Male",6488,292,191
+"588","siskiyou","Z1 ALL",13586,682,436
+"589","small counties","A1 Adults 21-44",237554,11022,6035
+"590","small counties","A2 Adults 45-64",134496,7317,4596
+"591","small counties","A3 Adults 65+",58568,1525,862
+"592","small counties","R1 Alaskan Native or American Indian",8372,330,176
+"593","small counties","R2 Asian or Pacific Islander",16989,409,238
+"594","small counties","R3 Black",8593,624,358
+"595","small counties","R4 Hispanic",163377,5701,3398
+"596","small counties","R5 White",194658,10649,5977
+"597","small counties","R6 Other",5649,279,159
+"598","small counties","S1 Female",235622,10781,6269
+"599","small counties","S2 Male",194996,9083,5224
+"600","small counties","Z1 ALL",430618,19864,11493
+"601","small-rural counties","A1 Adults 21-44",40063,2900,1616
+"602","small-rural counties","A2 Adults 45-64",26691,2131,1342
+"603","small-rural counties","A3 Adults 65+",9945,368,234
+"604","small-rural counties","R1 Alaskan Native or American Indian",3509,187,96
+"605","small-rural counties","R2 Asian or Pacific Islander",1585,56,24
+"606","small-rural counties","R3 Black",789,80,46
+"607","small-rural counties","R4 Hispanic",14378,582,345
+"608","small-rural counties","R5 White",49271,4017,2401
+"609","small-rural counties","R6 Other",945,50,22
+"610","small-rural counties","S1 Female",41163,3140,1894
+"611","small-rural counties","S2 Male",35536,2259,1298
+"612","small-rural counties","Z1 ALL",76699,5399,3192
+"613","solano","A1 Adults 21-44",45789,1657,948
+"614","solano","A2 Adults 45-64",24744,1256,796
+"615","solano","A3 Adults 65+",11325,227,139
+"616","solano","R1 Alaskan Native or American Indian",466,34,22
+"617","solano","R2 Asian or Pacific Islander",11570,223,132
+"618","solano","R3 Black",14460,703,411
+"619","solano","R4 Hispanic",20526,358,212
+"620","solano","R5 White",18649,1045,629
+"621","solano","R6 Other",11478,479,297
+"622","solano","S1 Female",46736,1605,956
+"623","solano","S2 Male",35122,1535,927
+"624","solano","Z1 ALL",81858,3140,1883
+"625","sonoma","A1 Adults 21-44",43601,1092,677
+"626","sonoma","A2 Adults 45-64",26372,745,497
+"627","sonoma","A3 Adults 65+",11227,202,153
+"628","sonoma","R1 Alaskan Native or American Indian",941,21,0
+"629","sonoma","R2 Asian or Pacific Islander",3185,40,26
+"630","sonoma","R3 Black",1491,57,40
+"631","sonoma","R4 Hispanic",25811,229,143
+"632","sonoma","R5 White",31375,1076,0
+"633","sonoma","R6 Other",14040,418,259
+"634","sonoma","S1 Female",45371,963,597
+"635","sonoma","S2 Male",35829,1076,730
+"636","sonoma","Z1 ALL",81200,2039,1327
+"637","stanislaus","A1 Adults 21-44",88037,2319,1244
+"638","stanislaus","A2 Adults 45-64",45778,1342,834
+"639","stanislaus","A3 Adults 65+",18812,200,155
+"640","stanislaus","R1 Alaskan Native or American Indian",476,25,17
+"641","stanislaus","R2 Asian or Pacific Islander",10225,138,90
+"642","stanislaus","R3 Black",5607,234,138
+"643","stanislaus","R4 Hispanic",73563,1062,548
+"644","stanislaus","R5 White",47999,1820,1077
+"645","stanislaus","R6 Other",2791,71,34
+"646","stanislaus","S1 Female",85443,1886,1054
+"647","stanislaus","S2 Male",67184,1975,1179
+"648","stanislaus","Z1 ALL",152627,3861,2233
+"649","statewide","A1 Adults 21-44",4819665,181620,105449
+"650","statewide","A2 Adults 45-64",2724470,136684,89098
+"651","statewide","A3 Adults 65+",1380358,24690,15735
+"652","statewide","R1 Alaskan Native or American Indian",39683,2411,1429
+"653","statewide","R2 Asian or Pacific Islander",1057354,21263,14240
+"654","statewide","R3 Black",700121,52383,31446
+"655","statewide","R4 Hispanic",3880825,95724,57360
+"656","statewide","R5 White",1955669,112433,68810
+"657","statewide","R6 Other",661162,26884,16498
+"658","statewide","S1 Female",4996788,176903,109251
+"659","statewide","S2 Male",3927704,166091,101031
+"660","statewide","Z1 ALL",8924493,342994,210282
+"661","sutter","A1 Adults 21-44",14653,629,319
+"662","sutter","A2 Adults 45-64",8098,469,253
+"663","sutter","A3 Adults 65+",4194,95,41
+"664","sutter","R1 Alaskan Native or American Indian",150,0,0
+"665","sutter","R2 Asian or Pacific Islander",6456,113,54
+"666","sutter","R3 Black",626,41,22
+"667","sutter","R4 Hispanic",8706,220,107
+"668","sutter","R5 White",9125,0,363
+"669","sutter","R6 Other",418,22,0
+"670","sutter","S1 Female",15027,690,360
+"671","sutter","S2 Male",11918,503,253
+"672","sutter","Z1 ALL",26945,1193,613
+"673","tehama","A1 Adults 21-44",9638,489,227
+"674","tehama","A2 Adults 45-64",5899,333,192
+"675","tehama","A3 Adults 65+",2204,59,33
+"676","tehama","R1 Alaskan Native or American Indian",263,13,0
+"677","tehama","R2 Asian or Pacific Islander",269,0,0
+"678","tehama","R3 Black",134,0,0
+"679","tehama","R4 Hispanic",4614,113,52
+"680","tehama","R5 White",10942,644,334
+"681","tehama","R6 Other",121,0,0
+"682","tehama","S1 Female",9741,508,264
+"683","tehama","S2 Male",8000,373,188
+"684","tehama","Z1 ALL",17741,881,452
+"685","trinity","A1 Adults 21-44",1812,108,83
+"686","trinity","A2 Adults 45-64",1384,89,66
+"687","trinity","A3 Adults 65+",484,12,11
+"688","trinity","R1 Alaskan Native or American Indian",116,0,0
+"689","trinity","R2 Asian or Pacific Islander",79,0,0
+"690","trinity","R3 Black",19,0,0
+"691","trinity","R4 Hispanic",149,0,0
+"692","trinity","R5 White",2891,169,132
+"693","trinity","R6 Other",73,0,0
+"694","trinity","S1 Female",1850,111,87
+"695","trinity","S2 Male",1830,98,73
+"696","trinity","Z1 ALL",3680,209,160
+"697","tulare","A1 Adults 21-44",89238,2199,1139
+"698","tulare","A2 Adults 45-64",42812,1250,812
+"699","tulare","A3 Adults 65+",17959,171,97
+"700","tulare","R1 Alaskan Native or American Indian",1084,40,23
+"701","tulare","R2 Asian or Pacific Islander",4358,117,88
+"702","tulare","R3 Black",2532,121,54
+"703","tulare","R4 Hispanic",98101,1524,846
+"704","tulare","R5 White",27449,1263,704
+"705","tulare","R6 Other",11472,349,193
+"706","tulare","S1 Female",82490,1898,1078
+"707","tulare","S2 Male",67519,1722,970
+"708","tulare","Z1 ALL",150009,3620,2048
+"709","tuolumne","A1 Adults 21-44",4994,334,164
+"710","tuolumne","A2 Adults 45-64",3636,304,203
+"711","tuolumne","A3 Adults 65+",1410,48,35
+"712","tuolumne","R1 Alaskan Native or American Indian",121,0,0
+"713","tuolumne","R2 Asian or Pacific Islander",135,0,0
+"714","tuolumne","R3 Black",46,0,0
+"715","tuolumne","R4 Hispanic",872,40,28
+"716","tuolumne","R5 White",7959,572,332
+"717","tuolumne","R6 Other",105,0,0
+"718","tuolumne","S1 Female",5470,385,231
+"719","tuolumne","S2 Male",4570,301,171
+"720","tuolumne","Z1 ALL",10040,686,402
+"721","ventura","A1 Adults 21-44",85066,2708,1929
+"722","ventura","A2 Adults 45-64",44867,2319,1809
+"723","ventura","A3 Adults 65+",19924,381,306
+"724","ventura","R1 Alaskan Native or American Indian",391,20,16
+"725","ventura","R2 Asian or Pacific Islander",7180,142,114
+"726","ventura","R3 Black",2423,163,120
+"727","ventura","R4 Hispanic",74426,1580,1157
+"728","ventura","R5 White",35234,2135,1620
+"729","ventura","R6 Other",18416,815,602
+"730","ventura","S1 Female",84719,2805,2099
+"731","ventura","S2 Male",65138,2603,1945
+"732","ventura","Z1 ALL",149857,5408,4044
+"733","very large counties (la)","A1 Adults 21-44",1437225,58063,34794
+"734","very large counties (la)","A2 Adults 45-64",859340,47770,31229
+"735","very large counties (la)","A3 Adults 65+",477348,8626,5215
+"736","very large counties (la)","R1 Alaskan Native or American Indian",4125,414,272
+"737","very large counties (la)","R2 Asian or Pacific Islander",313646,7110,5032
+"738","very large counties (la)","R3 Black",291340,27225,16471
+"739","very large counties (la)","R4 Hispanic",1456108,41069,25463
+"740","very large counties (la)","R5 White",445131,26191,16198
+"741","very large counties (la)","R6 Other",58535,2357,1463
+"742","very large counties (la)","S1 Female",1552923,58885,37132
+"743","very large counties (la)","S2 Male",1220990,55574,34106
+"744","very large counties (la)","Z1 ALL",2773913,114459,71238
+"745","yolo","A1 Adults 21-44",22539,508,327
+"746","yolo","A2 Adults 45-64",11225,404,281
+"747","yolo","A3 Adults 65+",5283,87,51
+"748","yolo","R1 Alaskan Native or American Indian",323,19,11
+"749","yolo","R2 Asian or Pacific Islander",3447,37,22
+"750","yolo","R3 Black",1569,80,51
+"751","yolo","R4 Hispanic",13939,181,118
+"752","yolo","R5 White",11665,464,311
+"753","yolo","R6 Other",5247,80,47
+"754","yolo","S1 Female",21730,497,320
+"755","yolo","S2 Male",17317,502,339
+"756","yolo","Z1 ALL",39047,999,659
+"757","yuba","A1 Adults 21-44",11764,650,283
+"758","yuba","A2 Adults 45-64",6914,489,273
+"759","yuba","A3 Adults 65+",2417,84,36
+"760","yuba","R1 Alaskan Native or American Indian",268,15,0
+"761","yuba","R2 Asian or Pacific Islander",1393,93,55
+"762","yuba","R3 Black",787,50,27
+"763","yuba","R4 Hispanic",5466,162,80
+"764","yuba","R5 White",11344,765,0
+"765","yuba","R6 Other",433,29,21
+"766","yuba","S1 Female",11510,686,327
+"767","yuba","S2 Male",9585,537,265
+"768","yuba","Z1 ALL",21095,1223,592

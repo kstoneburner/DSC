@@ -1,0 +1,2 @@
+py getSources.py
+pause
