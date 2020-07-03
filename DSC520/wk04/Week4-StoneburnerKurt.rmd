@@ -22,7 +22,7 @@ library(ggm) #for pcorr
 #### A. Use R to calculate the covariance of the Survey variables and provide an explanation of why you would use this calculation and what the results indicate.\newline\newline
 
 Covariance
-```{r cov, echo=FALSE}
+```{r  echo=FALSE}
 round(cov(survey_df),2)
 ```
 
