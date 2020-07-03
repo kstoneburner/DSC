@@ -19,6 +19,10 @@ age_lm <-  lm(earn ~ age, data=heights_df)
 
 ## View the summary of your model using `summary()`
 summary(age_lm)
+##r-Squared is 0.006561 the sqrt() is an R coefficient of .081. Showing little correlation
+##The p-value is greater than .001 so this prediction is not significant
+##The F-Value is low representaing a 92.3% chance the null hypothesis is true.
+##The Null hypothesis would be that age does not affect earnings in a meaningful way(?)
 
 ## Creating predictions using `predict()`
 age_predict_df <- data.frame(earn = predict(age_lm, newdata=heights_df), age=heights_df$age)
@@ -35,19 +39,21 @@ mean_earn <- mean(heights_df$earn)
 
 ## Corrected Sum of Squares Total
 ## mean_earn - each value of earn (measures the distance from the mean, which
-## is the expected value). The difference is squared (two eliminate negatives canceling out positives).
+## is the expected value). The difference is squared (to eliminate negatives canceling out positives).
 ## The differences for each data point are added.
 ## A Large value represents a large error, or many points are distant from the mean
+## sst - Sum of Squares - Total
 sst <- sum((mean_earn - heights_df$earn)^2)
 
 ## Corrected Sum of Squares for Model
-## Calculate Sum of the Squares for the prediction model. Error increases with the error
+## Calculate Sum of the Squares for the prediction model. Greater the number, the greater the error.
 ssm <- sum((mean_earn - age_predict_df$earn)^2)
 
 ## Since ssm < sst i'm predicting ssm has significance. I would be wrong.
 
 ## Residuals
 ## Difference between the data and the model.
+## The difference for each value between the data and the model
 residuals <- heights_df$earn - age_predict_df$earn
 
 ## Sum of Squares for Error
@@ -88,6 +94,7 @@ mst <- sst / dft
 
 ## F Statistic F = MSM/MSE
 f_score <- msm/mse
+f_score
 
 ## Adjusted R Squared R2 = 1 - (1 - R2)(n - 1) / (n - p)
 adjusted_r_squared <- 1 - (1 - r_squared ) * dft / dfe
@@ -96,3 +103,5 @@ adjusted_r_squared
 ## Calculate the p-value from the F distribution
 p_value <- pf(f_score, dfm, dft, lower.tail=F)
 p_value
+
+summary(age_predict_df)
