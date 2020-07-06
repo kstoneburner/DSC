@@ -356,9 +356,39 @@ june_offset_14_residual
 ## Red Offset_9
 ## Black Offset_16
 ggplot(data = june_offset_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
-  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  geom_line(color='red'   ,data = june_CD_offset_14_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+#  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  geom_line(color='red'   ,data = june_CD_offset_14_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  xlab("Total Covid Deaths") + ylab("Total Confirmed Cases")
 
 
 ggplot(data = offset_daily_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
   geom_line(color='red'   ,data = june_CD_offset_14_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
+
+nrow(june_CD_offset_14_predict_df)
+
+### Average Deaths per confirmed from 14 days prior
+mean(june_CD_offset_14_predict_df$daily_total_deaths / june_CD_offset_14_predict_df$daily_total_confirmed)
+
+sum(june_offset_df$daily_total_deaths)^2
+june_offset_14_residual
+## Number of observations
+## method: str(heights_df)
+n <- 33
+## Number of regression parameters
+p <- 2
+## Corrected Degrees of Freedom for Model (p-1)
+dfm <- p-1
+## Degrees of Freedom for Error (n-p)
+dfe <- n-p
+## Corrected Degrees of Freedom Total:   DFT = n - 1
+dft <- n-1
+
+## Corrected Sum of Squares for Model
+## Calculate Sum of the Squares for the prediction model. Greater the number, the greater the error.
+ssm <- sum((mean(june_offset_df$daily_total_deaths) - june_CD_offset_14_predict_df$daily_total_deaths)^2)
+ssm
+## Mean of Squares for Error:   MSE = SSE / DFE
+mse <- june_offset_14_residual / dfe
+mse
+
