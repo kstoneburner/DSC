@@ -3,8 +3,8 @@
 # Date: 2020-06-29
 
 ## Set the working directory to the root of your DSC 520 directory
-#setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
-setwd("L:\\stonk\\projects\\DSC\\dsc520")
+setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github")
+#setwd("L:\\stonk\\projects\\DSC\\dsc520")
 
 ## Load the `data/r4ds/heights.csv` to
 heights_df <- read.csv("data/r4ds/heights.csv")
@@ -104,4 +104,3 @@ adjusted_r_squared
 p_value <- pf(f_score, dfm, dft, lower.tail=F)
 p_value
 
-summary(age_predict_df)

@@ -109,10 +109,19 @@ date <- covid_dates
 #### Build summarized totals by date
 daily_covid_df <- data.frame(date,daily_total_confirmed,daily_total_deaths)
 
+#############################################################
+### Correlation
+#############################################################
+ggplot(data = daily_covid_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+
+cor(daily_covid_df$daily_total_confirmed,daily_covid_df$daily_total_deaths)
+
+
 ############################################################
 ### build confirmed offset columns from 1 to 21
 ############################################################
-
+daily_covid_df
 offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",1:21)
 
 ### Correlate Daily Total row
@@ -161,7 +170,7 @@ state_CD_offset_9_lm <-  lm(daily_total_deaths ~ offset_9, data=offset_daily_df)
 state_CD_offset_9_predict_df <- data.frame(
   daily_total_deaths = predict(state_CD_offset_9_lm, 
                                newdata=offset_daily_df), 
-  offset_9=offset_daily_df$offset_9)
+  daily_total_confirmed=offset_daily_df$daily_total_confirmed)
 
 ### Analyze Offset_9
 ## View the summary of your model using `summary()`
@@ -185,7 +194,7 @@ state_CD_offset_15_lm <-  lm(daily_total_deaths ~ offset_15, data=offset_daily_d
 state_CD_offset_15_predict_df <- data.frame(
   daily_total_deaths = predict(state_CD_offset_15_lm, 
                                newdata=offset_daily_df), 
-  offset_15=offset_daily_df$offset_15)
+  daily_total_confirmed=offset_daily_df$daily_total_confirmed)
 
 
 ### Analyze Offset_15
@@ -196,12 +205,11 @@ sqrt(.9564) ## R=0.9779571
 #### Get residuals from prediction - Subtract Death data from death prediction
 offset_15_residual <- offset_daily_df$daily_total_deaths - state_CD_offset_15_predict_df$daily_total_deaths
 ### Base Error
-offset_15_residual <- sum(offset_15_residuals^2)
+offset_15_residual <- sum(offset_15_residual^2)
 
 ### TRUE! Less Error than base Model, but visually....not quite aligning
 offset_15_residual < base_residual
 
-  
 
 ############################################################
 ############################################################
@@ -220,8 +228,8 @@ offset_15_residual < base_residual
 ggplot(data = offset_daily_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) +
   geom_point(color='blue') +
   geom_line(color='blue',data = state_CD_base_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  geom_line(color='red',data = state_CD_offset_9_predict_df, aes(y=offset_9, x=daily_total_deaths)) +
-  geom_line(color='black',data = state_CD_offset_15_predict_df, aes(y=offset_15, x=daily_total_deaths)) 
+  geom_line(color='red',data = state_CD_offset_9_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
+  #geom_line(color='black',data = state_CD_offset_15_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
 
 
 ######################################################################################
@@ -349,9 +357,8 @@ june_offset_14_residual
 ## Black Offset_16
 ggplot(data = june_offset_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
   geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  geom_line(color='black' ,data = june_CD_offset_9_predict_df,  aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  geom_line(color='red'   ,data = june_CD_offset_13_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
+  geom_line(color='red'   ,data = june_CD_offset_14_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
 
 
-
-june_CD_base_predict_df
+ggplot(data = offset_daily_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  geom_line(color='red'   ,data = june_CD_offset_14_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 

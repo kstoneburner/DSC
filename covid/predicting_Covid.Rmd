@@ -1,0 +1,327 @@
+---
+title: "Linear Predictions between COVID Cases and COVID Deaths"
+author: "Kurt Stoneburner"
+date: "7/4/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+build_offset_columns <- function(input_df,target_col,range_vector){
+  
+  ### Unlist the Target column to get a vector. Otherwise we spin our wheels in a df
+  process_col <- unlist(input_df[target_col])
+  
+  #### Build a series of columns that offset the values of the target_col by the range vector
+  for (offset_count in 1:length(range_vector))
+  {
+    offset_value <- range_vector[offset_count]
+    i <- 0
+    offset_col <- sapply(process_col,function(x){
+      i <<- i + 1
+      ### Return nothing for first 21 days
+      if (i <= offset_value) { return(0) }
+      return(process_col[i-offset_value])
+      
+    },simplify="array")
+    
+    thisColName <- paste("offset_",offset_value,sep="")
+    
+    input_df <- cbind(input_df,offset_col)
+    
+    colnames(input_df)[length(colnames(input_df))] <- thisColName
+    
+    
+  }### END each vector elements
+  
+  return(input_df)  
+  
+}### END build_minus_column
+
+library(ggplot2)
+
+### Read CSV is same folder
+ca_covid_df <- read.csv("final_CA_Confirmed.csv")
+
+### strip out the first column since it is a duplicate of the row index value. This is related to saving
+### the file back to a CSV from R. The file was lightly processed to standardized the field names, dates, and convert
+### NAs to zeros
+ca_covid_df <- ca_covid_df[,2:length(ca_covid_df)]
+
+############################################################
+### build statewide Numbers - daily_covid_df
+############################################################
+
+#### Crunch the data frame to daily sums
+covid_dates <- unique(ca_covid_df$date)
+
+### build statewide confirmed numbers
+daily_total_confirmed <- sapply(covid_dates,function(x){
+  ### Build data frame for each date
+  this_df <- (ca_covid_df [which(ca_covid_df$date == x),])
+  ### Sum confirmed for daily total
+  return(sum(this_df$totalcountconfirmed) )
+},simplify="array")
+
+daily_total_deaths <- sapply(covid_dates,function(x){
+  this_df <- (ca_covid_df [which(ca_covid_df$date == x),])
+  ### Sum deaths for daily total
+  return(sum(this_df$totalcountdeaths) )
+},simplify="array")
+
+#### Assign friendly date column name
+date <- covid_dates
+
+#### Build summarized totals by date
+daily_covid_df <- data.frame(date,daily_total_confirmed,daily_total_deaths)
+
+```
+
+## It all starts with correlation
+
+We know that some portion of confirmed COVID cases will result in death. I spent my Saturday looking at the State of California COVID confirmed and Death numbers. The values are represent the number of people confirmed with COVID and those whose deaths are attributed to COVID. Any person dying on a given day, should be represented by a confirmed test on a previous day. This is an attempt to explore that relationship with the tools we have discovered so far.
+
+Like any project the data must be collected and cleaned. The initial data values are date, county, total confirmed and total deaths. This paper focuses on statewide numbers, all values by county were summed to provide the statewide totals for the day.
+
+
+Looking at the numbers from the State of California [^1]. There is a strong Pearson's correlation between confirmed cases and deaths.
+
+[^1]: The official numbers from the State are available at:\newline https://data.ca.gov/group/covid-19
+
+``` {r corellation 1, echo=TRUE}
+
+cor(daily_covid_df$daily_total_confirmed,daily_covid_df$daily_total_deaths)
+
+```
+
+Plotting the total confirmed cases vs the total deaths shows a strong relationship between the values
+
+``` {r corellation 2, echo=FALSE}
+
+#############################################################
+### Basic Correlation
+#############################################################
+ggplot(data = daily_covid_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
+
+```
+
+## Baseline linear modeling
+People don't die when they are confirmed as COVID positive [^2]. Death generally occurs at some interval after testing. Can deaths be predicted from confirmed cases using a simple linear model?
+
+[^2]: People are generally tested when displaying symptoms. Although some tests are performed post mortem.
+
+``` {r initial baseline model 1, echo=FALSE}
+
+### Base Model comparing confirmed and deaths on the same day. There is a lag between the two
+### Predicting: Deaths based on confirmed
+state_CD_base_lm <-  lm(daily_total_deaths ~ daily_total_confirmed, data=daily_covid_df)
+
+
+### Created Prediction data frame using the base model
+### Build prediction based on Model
+### State Confirmed/Deaths - state_CD_base_predict_df
+state_CD_base_predict_df <- data.frame(
+  daily_total_deaths = predict(state_CD_base_lm, 
+                               newdata=daily_covid_df), 
+  daily_total_confirmed=daily_covid_df$daily_total_confirmed)
+
+#### Get residuals from prediction
+base_residual <- daily_covid_df$daily_total_deaths - state_CD_base_predict_df$daily_total_deaths
+### Base Error
+base_residual <- sum(base_residual^2)
+
+```
+
+Using the unaltered data, the linear model has very significant R vale
+
+``` {r initial baseline model 2, echo=TRUE}
+### R value. R^2 taken from Summary
+sqrt(.9467) ## R=.9729851
+```
+
+This is a baseline plot. It's confirmed cases vs deaths (by date). The solid blue line is a base line prediction of deaths. Visually, we can tell the baseline model isn't very helpful in predicting deaths based on confirmed cases, Correlation is not causation.
+
+``` {r initial baseline model 3, echo=FALSE}
+### R value. R^2 taken from Summary
+ggplot(data = daily_covid_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) +
+  geom_point(color='blue') + scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(color='blue',data = state_CD_base_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths))
+```
+
+## The Hunt for a better correlation
+Predicting deaths by the number of confirmed on the same day is clearly not a good way to go about it. The next step is to correlate deaths on a given day with confirmed on a previous. But over what range? I have been working under the assumption that death occurs around 21 days from infection.[^3] Assuming this was true, symptoms don't typically present for at least 5 days. If someone was tested immediately, results may be reported at plus 7 days from infection. An offset of 14 or 15 is likely at the outer end of offsets. But for completeness I calculated from 21.
+
+[^3]: I could not find the original article where I sourced that information. Right or wrong it's a place to start
+
+I wrote a function that addded offset columns from 1 to 21. Example: An offset of 5 would align the COVID Death value with a COVID confirmed value from 5 days prior. By plotting all the plausible offsets the resulting correlation values can be analyzed. 
+
+``` {r Build offset tables, echo=FALSE} 
+############################################################
+### build confirmed offset columns from 1 to 21
+############################################################
+offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",1:21)
+
+```
+
+The resulting correlation table was quite interesting.
+
+``` {r offset correlation, echo=TRUE}
+### Correlate Daily Total row
+### Looking for column with highest correlation value
+### Looks like offset_9 
+cor(offset_daily_df[2:length(colnames(offset_daily_df))])[2,]
+```
+It looks like offset_9 has the highest correlation between confirmed cases and deaths. This is worth examining further.
+
+Let's look at the Linear Model and Predicted Data Frame.
+
+``` {r offset 9 model, echo=TRUE}
+
+### Build Model off of offset_9. This offset had the highest correlation value between confirmed and deaths.
+state_CD_offset_9_lm <-  lm(daily_total_deaths ~ offset_9, data=offset_daily_df)
+
+### Created Prediction data frame using offset_15
+### Build prediction based on Model
+state_CD_offset_9_predict_df <- data.frame(
+  daily_total_deaths = predict(state_CD_offset_9_lm, 
+                               newdata=offset_daily_df), 
+  daily_total_confirmed=offset_daily_df$daily_total_confirmed)
+```
+
+The R value has higher than the baseline R value
+``` {r offset 9 R, echo=TRUE}
+sqrt(.9619) 
+```
+
+Looking at the residuals (which is a total error value). The Offset 9 residuals have a smaller error value than the baseline prediction. 
+
+``` {r offset 9 residuals, echo=FALSE}
+
+#### Get residuals from prediction
+base_residual <- offset_daily_df$daily_total_deaths - state_CD_base_predict_df$daily_total_deaths
+### Base Error
+base_residual <- sum(base_residual^2)
+
+#### Get residuals from prediction - Subtract Death data from death prediction
+offset_9_residual <- offset_daily_df$daily_total_deaths - state_CD_offset_9_predict_df$daily_total_deaths
+### Base Error
+offset_9_residual <- sum(offset_9_residual^2)
+
+paste0("Base Residual: ",round(base_residual,2))
+paste0("Offset 9 Residual: ",round(offset_9_residual,2))
+paste0("offfset 9 < Base: ", (offset_9_residual < base_residual )) 
+
+```
+
+Plotting the results. Blue is the baseline prediction, red is our offset 9 linear model prediction.
+``` {r offset 9 plot, echo=FALSE}
+######################################################################################
+#### Verify work with Plot
+######################################################################################
+## Blue Base plot: Confirmed by deaths over time -
+## Red Offset_9
+## Black Offset_16
+ggplot(data = offset_daily_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) +
+  geom_point(color='blue') + scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(color='blue',data = state_CD_base_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  geom_line(color='red',data = state_CD_offset_9_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
+
+```
+The resulting predictions are better. Not great and certainly not definitive. One major assumption is for this model is that correlated offset value remains constant. The testing situation has improved significantly over time. Let's explore a subset of the data that is more indicative of the present situation.
+
+## "I like California in June"
+The Offset 9 prediction intercepts the actual data around the 5000 death mark, which is in the middle of June. Subsequently the data deviates significantly from the model. This requires building a data frame with just the June data and running a correlation test to validate the offset.
+
+``` {r building a better June, echo=FALSE}
+
+### June starts on row 76. This code grabs rows from 76 to the end of the data field. The new data frame
+### Will expand as new data is added.
+june_offset_df <- offset_daily_df[76:nrow(offset_daily_df),]
+### Base Model comparing confirmed and deaths for Post June data
+### Predicting: Deaths based on confirmed
+june_CD_base_lm <-  lm(daily_total_deaths ~ daily_total_confirmed, data=june_offset_df)
+
+
+############################################################################
+### Created Prediction data frame using the base model
+### Build prediction based on Model
+### State Confirmed/Deaths - state_CD_base_predict_df
+############################################################################
+june_CD_base_predict_df <- data.frame( date=june_offset_df$date,
+  daily_total_deaths = predict(june_CD_base_lm, 
+                               newdata=june_offset_df), 
+  daily_total_confirmed=june_offset_df$daily_total_confirmed)
+
+```
+
+``` {r june correlation, echo=TRUE}
+cor(june_offset_df[2:length(colnames(june_offset_df))])[2,]
+
+```
+
+The correlation table reveals the offset has shifted from 9 (for the whole data set) to 13 or 14. Since 13 and 14 are so close, we'll calculate the residuals for each and go with the smallest value.
+
+``` {r June best residuals, echo=FALSE}
+
+
+june_CD_offset_13_lm <-  lm(daily_total_deaths ~ offset_13, data=june_offset_df)
+
+june_CD_offset_13_predict_df <- data.frame(date=june_offset_df$date,
+  daily_total_deaths = predict(june_CD_offset_13_lm, 
+                               newdata=june_offset_df), 
+  daily_total_confirmed=june_offset_df$daily_total_confirmed)
+
+#### Get residuals from prediction
+june_offset_13_residual <- june_offset_df$daily_total_deaths - june_CD_offset_13_predict_df$daily_total_deaths
+### Base Error
+june_offset_13_residual <- sum(june_offset_13_residual^2)
+
+june_CD_offset_14_lm <-  lm(daily_total_deaths ~ offset_14, data=june_offset_df)
+
+june_CD_offset_14_predict_df <- data.frame(date=june_offset_df$date,
+  daily_total_deaths = predict(june_CD_offset_14_lm, 
+                               newdata=june_offset_df), 
+  daily_total_confirmed=june_offset_df$daily_total_confirmed)
+
+#### Get residuals from prediction
+june_offset_14_residual <- june_offset_df$daily_total_deaths - june_CD_offset_14_predict_df$daily_total_deaths
+### Base Error
+june_offset_14_residual <- sum(june_offset_14_residual^2)
+
+june_CD_offset_15_lm <-  lm(daily_total_deaths ~ offset_15, data=june_offset_df)
+
+june_CD_offset_15_predict_df <- data.frame(date=june_offset_df$date,
+  daily_total_deaths = predict(june_CD_offset_15_lm, 
+                               newdata=june_offset_df), 
+  daily_total_confirmed=june_offset_df$daily_total_confirmed)
+
+#### Get residuals from prediction
+june_offset_15_residual <- june_offset_df$daily_total_deaths - june_CD_offset_15_predict_df$daily_total_deaths
+### Base Error
+june_offset_15_residual <- sum(june_offset_15_residual^2)
+
+paste0("June Offset 13 residuals: ", june_offset_13_residual)
+paste0("June Offset 14 residuals: ", june_offset_14_residual)
+paste0("June Offset 15 residuals: ", june_offset_15_residual)
+
+paste0("June offset 14 is less than offset 13? ",  june_offset_14_residual < june_offset_13_residual)
+paste0("June offset 14 is less than offset 15? ",  june_offset_14_residual < june_offset_15_residual)
+
+```
+
+Offset 14 has the smallest residual which corresposnds with the highest correlation value in the offset table. This is further supported by calculating the residuals of offset 13 and 15 which were both higher. Since we are using a linear model offset 14 appears to be the best choice. 
+
+Here's the plot of June confirmed and deaths. The red line is the prediction.
+
+``` {r june offset 14 plot, echo=FALSE}
+ggplot(data = june_offset_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + 
+  geom_point(color='blue') + scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(color='red'   ,data = june_CD_offset_14_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
+
+
+```
+
+That result stopped me in my tracks. There appears to be a very tight correlation between predicted deaths and the reported confirmed cases from 14 days prior. The data also demonstrates the offset days shifted during the pandemic. Likely due to an increase in testing and people not waiting as long to get tested. This is an interesting find and I intend to keep picking at it.
+
+
