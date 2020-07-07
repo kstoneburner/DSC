@@ -33,8 +33,8 @@ build_offset_columns <- function(input_df,target_col,range_vector){
 
 
 ## Set the working directory to the root of your DSC 520 directory
-setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
-#setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
+#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
+setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
 
 ### Read CSV 
 
@@ -391,4 +391,101 @@ ssm
 ## Mean of Squares for Error:   MSE = SSE / DFE
 mse <- june_offset_14_residual / dfe
 mse
+
+build_rolling_offset <- function(input_df,rolling_days){
+  
+  
+  ### Find the best offset covariance over a period of rolling days
+  output_vector <- c()  
+  output_vector2 <- c()  
+  
+  ### Loop through input data frame
+  for (i in 1:nrow(input_df)){
+    if (i <= rolling_days) {
+      output_vector <- append(output_vector,0) 
+      output_vector2 <- append(output_vector2,0) 
+      next
+    }
+    #output_vector <- append(output_vector,1) 
+    ### Get a subset of the input_df i - rolling_days
+    #print(input_df[(i- rolling_days):i,])
+    #offset_daily_df[76:nrow(offset_daily_df),]
+    #print(temp_df)
+    #print(cor(input_df[2:length(input_df)]) )
+    #covResponse <- cov(input_df[2:length(input_df)])[2,] 
+    #corResposnse <- cor(input_df[2:length(input_df) ],method=c("pearson"))[2,]
+    #print(covResponse)
+    #print(corResposnse)
+    
+    temp_df <- input_df[(i - rolling_days):i,2:length(input_df)]
+    
+    least_residual <- -1
+    least_offset <- ""
+    most_cor <- -1
+    most_cor_offset <- ""
+    ### Build Residuals for each offset Column
+    ### Loop through each offset column
+
+    tempCor <- (cor(temp_df)[2,])
+    #print(max(tempCor[3:length(tempCor)]))
+    for (q in 3:length(tempCor)){
+      #print(tempCor[q])
+      if (most_cor == -1 ){ 
+        most_cor <- tempCor[q] 
+        most_cor_offset <- colnames(temp_df)[q]
+        next
+      }
+      if (tempCor[q] > most_cor){
+        most_cor <- tempCor[q] 
+        most_cor_offset <- colnames(temp_df)[q]
+      }
+      
+    }
+    #print("Most_cor")
+    #print(most_cor)
+    #print("Most_cor_offset")
+    #print(most_cor_offset)
+    
+    output_vector2 <- append(output_vector2,most_cor_offset) 
+    
+      }### END Each data frame row
+  
+  
+  return(output_vector2)  
+  #eval(parse(text=command))
+  
+  
+}### END build rolling offset
+offset_vectors <- build_rolling_offset(offset_daily_df,30)
+
+adjusted_confirmed <- c()
+
+for (x in 1:length(offset_vectors)){
+  if (offset_vectors[x] == 0) {
+    adjusted_confirmed <- append(adjusted_confirmed,0)
+    next
+  }
+  thisCol <- offset_vectors[x]
+  thisVal <- offset_daily_df[thisCol]
+  adjusted_confirmed <- append(adjusted_confirmed, thisVal[x,1])
+}
+adjusted_confirmed
+
+adjusted_df <- data.frame(date=offset_daily_df$date,daily_total_confirmed=adjusted_confirmed,daily_total_deaths=offset_daily_df$daily_total_deaths)
+
+#### Remove rows that have 0 daily_total_confirmed
+adjusted_df <- adjusted_df[ which(adjusted_df$daily_total_confirmed > 0),]
+
+adjusted_lm <-  lm(daily_total_deaths ~ daily_total_confirmed, data=offset_daily_df)
+
+summary(adjusted_lm)
+sqrt(.9957) ## R=.9978477
+adjusted_predict_df
+adjusted_predict_df <- data.frame(date=adjusted_df$date,
+                                           daily_total_deaths = predict(adjusted_lm, 
+                                                                        newdata=adjusted_df), 
+                                           daily_total_confirmed=adjusted_df$daily_total_confirmed)
+
+ggplot(data = offset_daily_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  geom_line(color='red'   ,data = adjusted_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) 
 

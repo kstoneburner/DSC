@@ -51,20 +51,61 @@ removeColsFromDF <- function(input_df, removeCols){
 }### END RemoveColsFromDF
 ## Set the working directory to the root of your DSC 520 directory
 
-setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
-#setwd("L:\\stonk\\projects\\DSC\\520")
+#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+
 
 ## Load the housing data
 raw_housing_df <- read.csv("week-7-housing.csv")
 
+## Remove the double date first column from CSV
+#raw_housing_df <- raw_housing_df[2:length(colnames(raw_housing_df))]
 
+head(raw_housing_df)
+housing_df <- removeColsFromDF(raw_housing_df,c("lon",
+                                                "lat",
+                                                "addr_full",
+                                                "ctyname",
+                                                "postalctyn",
+                                                "prop_type",
+                                                "year_renovated",
+                                                "current_zoning",
+                                                "bath_full_count",
+                                                "bath_half_count",
+                                                "bath_3qtr_count",
+                                                "present_use"))[,-1]
+#### Combine the bathrooms
+bath_total <- raw_housing_df$bath_full_count + (raw_housing_df$bath_half_count *.5) + (raw_housing_df$bath_3qtr_count *.75)
 
+housing_df <- cbind(housing_df,bath_total)
 
+whole_year_built <- vapply(housing_df$year_built, function(x){
+  thisDate <- paste0("1/1/",x)
+  
+  return ( thisDate  )
+  }, character(1) )
 
+whole_year_built <- as.Date( whole_year_built, tryFormats=c("%m/%d/%Y") )
+whole_year_built <- format(as.Date(whole_year_built, format="%Y/%m/%d"),"%Y")
 
-housing_df <- removeColsFromDF(raw_housing_df,c("lon","lat","addr_full","ctyname","postalctyn","prop_type"))
+housing_df$Sale.Date <-  as.Date(housing_df$Sale.Date,  tryFormats = c("%m/%d/%Y") )
+housing_df$year_built <- whole_year_built
+
+whole_year_built <- as.numeric(housing_df$year_built)
+(housing_df$year_built - sale_year)
+
+sale_year <- as.numeric(sale_year)
+
+sale_year - whole_year_built
+
+sale_year <- format(as.Date(housing_df$Sale.Date, format="%Y/%m/%d"),"%Y")
+
+sale_year - housing_df$year_built
+
+housing_df$Sale.Date
+
 head(housing_df)
-
+str(housing_df)
 unique(raw_housing_df$sitetype)
 unique(raw_housing_df$current_zoning)
 unique(raw_housing_df$year_renovated)
@@ -77,10 +118,12 @@ unique(raw_housing_df$present_use)
 hist(raw_housing_df$present_use)
 unique(raw_housing_df$present_use)
 
+
 present_use_count <- vapply(unique(raw_housing_df$present_use), function(x){
   thisUseVector <- raw_housing_df [ which(raw_housing_df$present_use == x),]
   
   return(nrow(thisUseVector))},numeric(1))
+
 present_use_count
 
 11931 / nrow(raw_housing_df)
