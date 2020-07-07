@@ -1,0 +1,73 @@
+---
+title: 'Week06: Housing Data Analysis'
+author: "Kurt Stoneburner"
+date: "7/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#### a. Explain why you chose to remove data points from your ‘clean’ dataset.
+As a currently active house hunter the primary factors that affect price are:
+
+  1. Size
+  1. Location
+  1. Bedrooms
+  1. Bathrooms
+  1. House Quality
+
+Other factors that may have a lessor effect on price
+
+  - Age of the home - There may be a premium based on the age of the home. 
+  - Sale Warning - May indicate other issues with the property or repairs, that may deflate the selling price.
+  - Zoning variation - Is the location zoned differently than use? This implies a redevlopment scenario, where an older home on a larger lot is replaced with a higher density structure(s). Although it is a possibility I looked at the relationship between zoning and present use. A unique list of zones was generated. The current_zoning column was converted to a numeric vector based on the index value in the unique zone list. 
+The numeric zones were correlated with the present_use column. 
+
+The resulting value:
+``` {r zoning, echo=FALSE }
+
+## Convert current_zoning into a numeric value.
+## Build a number vector based on the unique values in current_zoning
+#-zoning_zones <- unique(raw_housing_df$current_zoning)
+
+### Return the index Value from zoning_zones
+
+#- coded_zoning <- vapply(raw_housing_df$current_zoning, function(x){
+#- thisIndex <- match(x,zoning_zones)
+#-  return(thisIndex)},numeric(1))
+
+#-print(cor(coded_zoning,raw_housing_df$present_use))
+
+```
+portrays a very weak link between these variables. These will be excluded from the calculations.
+
+All other categories unrelated categories were removed.
+
+One other note on the data set. The three bathroom variables have been summed into a new variable bath_total. Using the following weighted values:
+  bath_full_count + (bath_half_count \*.5) + (bath_3qtr_count \*.75)
+
+The bath_total is more in line with current listing standards and makes the relationship of bathroom count to the overall price easier to interpret.
+
+
+### b. Create two variables; one that will contain the variables Sale Price and Square Foot of Lot (same variables used from previous assignment on simple regression) and one that will contain Sale Price and several additional predictors of your choice. Explain the basis for your additional predictor selections.
+
+1. Location has a large affect on price. Denser urban locations, as well as high income zip codes increase price. A 1 acre farm 100 miles from the nearest city is priced different than a 1 acre farm in a city. In my city of Castro Valley, similar homes may vary by $100k depending on which school district the house lies in. 
+1. Bedrooms and Bathrooms directly reflect the needs of the American buyer which assumes individual space demands a higher premium than the overall shared space of the dwelling. 
+1. The total living space relates to the size and cost of the overall structure. 
+
+## c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
+## d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?
+## e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.
+## f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.
+## g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
+## h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.
+## i. Use the appropriate function to show the sum of large residuals.
+## j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
+## k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
+## l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.
+## m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.
+## n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.
+## o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?
