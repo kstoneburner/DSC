@@ -91,7 +91,7 @@ whole_year_built <- format(as.Date(whole_year_built, format="%Y/%m/%d"),"%Y")
 housing_df$Sale.Date <-  as.Date(housing_df$Sale.Date,  tryFormats = c("%m/%d/%Y") )
 housing_df$year_built <- whole_year_built
 
-whole_year_built <- as.numeric(housing_df$year_built)
+year_built <- as.numeric(housing_df$year_built)
 (housing_df$year_built - sale_year)
 
 sale_year <- as.numeric(sale_year)
@@ -100,7 +100,15 @@ sale_year - whole_year_built
 
 sale_year <- format(as.Date(housing_df$Sale.Date, format="%Y/%m/%d"),"%Y")
 
+housing_df <- cbind(housing_df,sale_year)
+housing_df <- cbind(housing_df,year_built)
+
+housing_df
 sale_year - housing_df$year_built
+
+housing_df[ which(housing_df$sale_year < housing_df$year_built),]
+
+raw_housing_df[136,]
 
 housing_df$Sale.Date
 
