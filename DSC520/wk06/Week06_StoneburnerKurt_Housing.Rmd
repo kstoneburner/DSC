@@ -7,8 +7,87 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
+removeColsFromDF <- function(input_df, removeCols){
+  ###########################################################################
+  ### Remove Columns from data frame the Hard Way!
+  ### I don't like the clever answers from the Internet that I don't quite
+  ### Understand.
+  ###########################################################################
+  ### Purpose: Return a data frame without the columns listed in removeCols
+  ###########################################################################
+  ### Variables #############################################################
+  ###########################################################################
+  ### input_df: Data Frame that needs columns removed
+  ### removeCols: Vector of columns names as strings to be removed:
+  ###             Example: c("date","Location","col1","col2")
+  ###########################################################################
+  
+  
+  ### Build a new vector of names by excluding values in removeCols
+  newColNames <- lapply(colnames(input_df), function(x){
+    
+    if ( (x %in% removeCols) == FALSE) {return(x)}
+  })
+  
+  ### Initialize output data frame with the first column from input. 
+  ### This allows us to cbind in the loop. The first column will be
+  ### removed later
+  output_df = data.frame(input_df[1])
+  
+  ### Build output data frame by adding in columns from newColNames
+  ### For each new column name
+  for (i in 1:length(newColNames)){
+    
+    ########################################################################################
+    ### Build column name
+    ########################################################################################
+    ### Not exactly sure why I need to unlist.
+    ### probably should use a different function from lapply. Maybe capply? But this works
+    ########################################################################################
+    thisColName <- unlist(newColNames[i])
+    
+    output_df <- cbind(output_df,input_df[thisColName])
+    
+  }### END Each New Column Name
+  
+  return(output_df)
+  
+}### END RemoveColsFromDF
 
+#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+
+
+## Load the housing data
+raw_housing_df <- read.csv("week-7-housing.csv")
+
+## Remove the double date first column from CSV
+#raw_housing_df <- raw_housing_df[2:length(colnames(raw_housing_df))]
+
+head(raw_housing_df)
+housing_df <- removeColsFromDF(raw_housing_df,c("lon",
+                                                "lat",
+                                                "addr_full",
+                                                "ctyname",
+                                                "postalctyn",
+                                                "prop_type",
+                                                "year_renovated",
+                                                "current_zoning",
+                                                "bath_full_count",
+                                                "bath_half_count",
+                                                "bath_3qtr_count",
+                                                "sitetype",
+                                                "sale_warning",
+                                                "present_use",
+                                                "sale_reason",
+                                                "sale_instrument",
+                                                "Sale.Date"))[,-1]
+#### Combine the bathrooms
+bath_total <- raw_housing_df$bath_full_count + (raw_housing_df$bath_half_count *.5) + (raw_housing_df$bath_3qtr_count *.75)
+
+housing_df <- cbind(housing_df,bath_total)
+
+```
 
 #### a. Explain why you chose to remove data points from your ‘clean’ dataset.
 As a currently active house hunter the primary factors that affect price are:
@@ -31,18 +110,18 @@ The resulting value:
 
 ## Convert current_zoning into a numeric value.
 ## Build a number vector based on the unique values in current_zoning
-#-zoning_zones <- unique(raw_housing_df$current_zoning)
+zoning_zones <- unique(raw_housing_df$current_zoning)
 
 ### Return the index Value from zoning_zones
 
-#- coded_zoning <- vapply(raw_housing_df$current_zoning, function(x){
-#- thisIndex <- match(x,zoning_zones)
-#-  return(thisIndex)},numeric(1))
+ coded_zoning <- vapply(raw_housing_df$current_zoning, function(x){
+ thisIndex <- match(x,zoning_zones)
+  return(thisIndex)},numeric(1))
 
-#-print(cor(coded_zoning,raw_housing_df$present_use))
+print(cor(coded_zoning,raw_housing_df$present_use))
 
 ```
-portrays a very weak link between these variables. These will be excluded from the calculations.
+portrays no significant link between these variables. 
 
 All other categories unrelated categories were removed.
 
@@ -52,13 +131,49 @@ One other note on the data set. The three bathroom variables have been summed in
 The bath_total is more in line with current listing standards and makes the relationship of bathroom count to the overall price easier to interpret.
 
 
-### b. Create two variables; one that will contain the variables Sale Price and Square Foot of Lot (same variables used from previous assignment on simple regression) and one that will contain Sale Price and several additional predictors of your choice. Explain the basis for your additional predictor selections.
+#### b. Create two variables; one that will contain the variables Sale Price and Square Foot of Lot (same variables used from previous assignment on simple regression) and one that will contain Sale Price and several additional predictors of your choice. Explain the basis for your additional predictor selections.
 
 1. Location has a large affect on price. Denser urban locations, as well as high income zip codes increase price. A 1 acre farm 100 miles from the nearest city is priced different than a 1 acre farm in a city. In my city of Castro Valley, similar homes may vary by $100k depending on which school district the house lies in. 
 1. Bedrooms and Bathrooms directly reflect the needs of the American buyer which assumes individual space demands a higher premium than the overall shared space of the dwelling. 
-1. The total living space relates to the size and cost of the overall structure. 
+1. The an increase in total living space should increase the sale price since structure costs increase with size. 
+
+``` {r build lm, echo=TRUE}
+
+salePrice_base_lm <-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
+
+salePrice_naieve_lm <-  lm(Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, data=housing_df)
+
+summary(salePrice_base_lm)
+summary(salePrice_naieve_lm)
+
+```
+And this is where I stop and challenge my assumptions. The criteria I listed above are what *"I"* look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared:  0.2095 means I need to rethink the process.
+
+The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let's test that addage with the data.
+``` {r its_all_about_location, echo=TRUE }
+
+length(housing_df$zip5)
+unique(housing_df$zip5)
+
+```
+
+There are only four zip codes in the data. Clearly, this is not significant.
+
+Let's turn to correlation to find significant values
+``` {r lets_correlate,echo=TRUE}
+
+cor(housing_df)[1,]
+
+```
+
+Based on the correlation, variables with a correlation of greater than .20 are good candidates to work with. I was genuinely surprised at the correlation value of bathrooms to sale price. 
 
 ## c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
+``` {r lm summary, echo=FALSE}
+summary(salePrice_base_lm)
+summary(salePrice_naieve_lm)
+```
+
 ## d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?
 ## e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.
 ## f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.

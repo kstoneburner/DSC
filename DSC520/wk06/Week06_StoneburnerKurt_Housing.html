@@ -386,21 +386,123 @@ summary {
 <li>Zoning variation - Is the location zoned differently than use? This implies a redevlopment scenario, where an older home on a larger lot is replaced with a higher density structure(s). Although it is a possibility I looked at the relationship between zoning and present use. A unique list of zones was generated. The current_zoning column was converted to a numeric vector based on the index value in the unique zone list. The numeric zones were correlated with the present_use column.</li>
 </ul>
 <p>The resulting value:</p>
-<p>portrays a very weak link between these variables. These will be excluded from the calculations.</p>
+<pre><code>## [1] 0.02921141</code></pre>
+<p>portrays no significant link between these variables.</p>
 <p>All other categories unrelated categories were removed.</p>
 <p>One other note on the data set. The three bathroom variables have been summed into a new variable bath_total. Using the following weighted values: bath_full_count + (bath_half_count *.5) + (bath_3qtr_count *.75)</p>
 <p>The bath_total is more in line with current listing standards and makes the relationship of bathroom count to the overall price easier to interpret.</p>
 </div>
-<div id="b.-create-two-variables-one-that-will-contain-the-variables-sale-price-and-square-foot-of-lot-same-variables-used-from-previous-assignment-on-simple-regression-and-one-that-will-contain-sale-price-and-several-additional-predictors-of-your-choice.-explain-the-basis-for-your-additional-predictor-selections." class="section level3">
-<h3>b. Create two variables; one that will contain the variables Sale Price and Square Foot of Lot (same variables used from previous assignment on simple regression) and one that will contain Sale Price and several additional predictors of your choice. Explain the basis for your additional predictor selections.</h3>
+<div id="b.-create-two-variables-one-that-will-contain-the-variables-sale-price-and-square-foot-of-lot-same-variables-used-from-previous-assignment-on-simple-regression-and-one-that-will-contain-sale-price-and-several-additional-predictors-of-your-choice.-explain-the-basis-for-your-additional-predictor-selections." class="section level4">
+<h4>b. Create two variables; one that will contain the variables Sale Price and Square Foot of Lot (same variables used from previous assignment on simple regression) and one that will contain Sale Price and several additional predictors of your choice. Explain the basis for your additional predictor selections.</h4>
 <ol style="list-style-type: decimal">
 <li>Location has a large affect on price. Denser urban locations, as well as high income zip codes increase price. A 1 acre farm 100 miles from the nearest city is priced different than a 1 acre farm in a city. In my city of Castro Valley, similar homes may vary by $100k depending on which school district the house lies in.</li>
 <li>Bedrooms and Bathrooms directly reflect the needs of the American buyer which assumes individual space demands a higher premium than the overall shared space of the dwelling.</li>
-<li>The total living space relates to the size and cost of the overall structure.</li>
+<li>The an increase in total living space should increase the sale price since structure costs increase with size.</li>
 </ol>
+<pre class="r"><code>salePrice_base_lm &lt;-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
+
+salePrice_naieve_lm &lt;-  lm(Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, data=housing_df)
+
+summary(salePrice_base_lm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Sale.Price ~ sq_ft_lot, data = housing_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2016064  -194842   -63293    91565  3735109 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 6.418e+05  3.800e+03  168.90   &lt;2e-16 ***
+## sq_ft_lot   8.510e-01  6.217e-02   13.69   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 401500 on 12863 degrees of freedom
+## Multiple R-squared:  0.01435,    Adjusted R-squared:  0.01428 
+## F-statistic: 187.3 on 1 and 12863 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>summary(salePrice_naieve_lm)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, 
+##     data = housing_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1829685  -118381   -41012    44345  3826888 
+## 
+## Coefficients:
+##                            Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              -2.914e+08  1.854e+08  -1.572    0.116    
+## zip5                      2.974e+03  1.891e+03   1.573    0.116    
+## bedrooms                 -2.723e+04  4.514e+03  -6.032 1.66e-09 ***
+## bath_total                2.865e+04  6.923e+03   4.139 3.52e-05 ***
+## square_feet_total_living  1.841e+02  5.114e+00  36.002  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 359500 on 12860 degrees of freedom
+## Multiple R-squared:  0.2098, Adjusted R-squared:  0.2095 
+## F-statistic: 853.5 on 4 and 12860 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>And this is where I stop and challenge my assumptions. The criteria I listed above are what <em>“I”</em> look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared: 0.2095 means I need to rethink the process.</p>
+<p>The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let’s test that addage with the data.</p>
+<pre class="r"><code>length(housing_df$zip5)</code></pre>
+<pre><code>## [1] 12865</code></pre>
+<pre class="r"><code>unique(housing_df$zip5)</code></pre>
+<pre><code>## [1] 98052 98053 98074 98059</code></pre>
+<p>There are only four zip codes in the data. Clearly, this is not significant.</p>
+<p>Let’s turn to correlation to find significant values</p>
+<pre class="r"><code>cor(housing_df)[1,]</code></pre>
+<pre><code>##               Sale.Price                     zip5           building_grade 
+##               1.00000000               0.06014866               0.39122909 
+## square_feet_total_living                 bedrooms               year_built 
+##               0.45458758               0.22546748               0.24267127 
+##                sq_ft_lot               bath_total 
+##               0.11981223               0.35449263</code></pre>
 </div>
 <div id="c.-execute-a-summary-function-on-two-variables-defined-in-the-previous-step-to-compare-the-model-results.-what-are-the-r2-and-adjusted-r2-statistics-explain-what-these-results-tell-you-about-the-overall-model.-did-the-inclusion-of-the-additional-predictors-help-explain-any-large-variations-found-in-sale-price" class="section level2">
 <h2>c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?</h2>
+<pre><code>## 
+## Call:
+## lm(formula = Sale.Price ~ sq_ft_lot, data = housing_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2016064  -194842   -63293    91565  3735109 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 6.418e+05  3.800e+03  168.90   &lt;2e-16 ***
+## sq_ft_lot   8.510e-01  6.217e-02   13.69   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 401500 on 12863 degrees of freedom
+## Multiple R-squared:  0.01435,    Adjusted R-squared:  0.01428 
+## F-statistic: 187.3 on 1 and 12863 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, 
+##     data = housing_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1829685  -118381   -41012    44345  3826888 
+## 
+## Coefficients:
+##                            Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              -2.914e+08  1.854e+08  -1.572    0.116    
+## zip5                      2.974e+03  1.891e+03   1.573    0.116    
+## bedrooms                 -2.723e+04  4.514e+03  -6.032 1.66e-09 ***
+## bath_total                2.865e+04  6.923e+03   4.139 3.52e-05 ***
+## square_feet_total_living  1.841e+02  5.114e+00  36.002  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 359500 on 12860 degrees of freedom
+## Multiple R-squared:  0.2098, Adjusted R-squared:  0.2095 
+## F-statistic: 853.5 on 4 and 12860 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div id="d.-considering-the-parameters-of-the-multiple-regression-model-you-have-created.-what-are-the-standardized-betas-for-each-parameter-and-what-do-the-values-indicate" class="section level2">
 <h2>d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?</h2>
