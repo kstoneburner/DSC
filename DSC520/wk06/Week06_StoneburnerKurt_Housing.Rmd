@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 removeColsFromDF <- function(input_df, removeCols){
   ###########################################################################
   ### Remove Columns from data frame the Hard Way!
-  ### I don't like the clever answers from the Internet that I don't quite
+  ## # I don't like the clever answers from the Internet that I don't quite
   ### Understand.
   ###########################################################################
   ### Purpose: Return a data frame without the columns listed in removeCols
@@ -54,17 +54,16 @@ removeColsFromDF <- function(input_df, removeCols){
   
 }### END RemoveColsFromDF
 
-#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
-setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+### Set working Directory
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
 
 
 ## Load the housing data
+## We'll keep the raw table for access to the unaltered data. 
+## This helps to keep housing_df (more) svelte (or svelter)
 raw_housing_df <- read.csv("week-7-housing.csv")
 
-## Remove the double date first column from CSV
-#raw_housing_df <- raw_housing_df[2:length(colnames(raw_housing_df))]
-
-head(raw_housing_df)
 housing_df <- removeColsFromDF(raw_housing_df,c("lon",
                                                 "lat",
                                                 "addr_full",
@@ -82,10 +81,41 @@ housing_df <- removeColsFromDF(raw_housing_df,c("lon",
                                                 "sale_reason",
                                                 "sale_instrument",
                                                 "Sale.Date"))[,-1]
-#### Combine the bathrooms
+
+#### Combine the bathrooms - using weighted values
 bath_total <- raw_housing_df$bath_full_count + (raw_housing_df$bath_half_count *.5) + (raw_housing_df$bath_3qtr_count *.75)
 
+
 housing_df <- cbind(housing_df,bath_total)
+
+##########################################################################################################
+#### Build house_age. This is the age of the house at Sale. 
+##########################################################################################################
+#### Get Year build and coerce into a number
+year_built <- as.numeric(raw_housing_df$year_built)
+
+#### Coerce the Date into a Date value and return just the year
+sale_year <- format(as.Date(raw_housing_df$Sale.Date, format="%m/%d/%Y"),"%Y")
+
+#### Convert Date (year) into Date (number)
+sale_year <- as.numeric(sale_year)
+
+#### The difference between the sale_year and year_built. Is the dwellings age.
+house_age <- (sale_year - year_built)
+
+################################################################################################################################
+#### There are negative number in house_age. Some sale_dates are listing as sold before the date of building. 
+#### I'm going to assume this is a data entry issue. Although there could be an issue where houses were actually sold before
+#### they were built. A sampling of the sale dates all reference 2006, with multi-year differences in some cases.
+#### I'm treating this as a data entry issue and converting all negative house_age values to 0. 
+################################################################################################################################
+house_age <- vapply(house_age, function(x){
+  if (x < 0 ) { return(0)}
+  return(x)
+},numeric(1))
+
+housing_df <- cbind(housing_df,house_age)
+
 
 ```
 
@@ -149,40 +179,63 @@ summary(salePrice_naieve_lm)
 ```
 And this is where I stop and challenge my assumptions. The criteria I listed above are what *"I"* look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared:  0.2095 means I need to rethink the process.
 
-The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let's test that addage with the data.
+The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let's test the veracity of that claim with the data.
 ``` {r its_all_about_location, echo=TRUE }
 
-length(housing_df$zip5)
 unique(housing_df$zip5)
 
 ```
 
-There are only four zip codes in the data. Clearly, this is not significant.
+There are only four zip codes in the data. Location may be important, but not in this data set. This variable is not significant and should be binned.
 
-Let's turn to correlation to find significant values
+Let's turn to correlation to determine significant variables.
 ``` {r lets_correlate,echo=TRUE}
 
 cor(housing_df)[1,]
 
 ```
 
-Based on the correlation, variables with a correlation of greater than .20 are good candidates to work with. I was genuinely surprised at the correlation value of bathrooms to sale price. 
+Based on the correlation, variables with a correlation of greater than .20 are good candidates to work with. I was genuinely surprised at the correlation value of bathrooms to sale price. The improved linear model looks like this:
+``` {r improved_linear_model, echo=TRUE}
 
-## c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
-``` {r lm summary, echo=FALSE}
-summary(salePrice_base_lm)
-summary(salePrice_naieve_lm)
+salePrice_base_lm <-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
+salePrice_house_age_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + house_age, data=housing_df)
+salePrice_year_built_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + year_built, data=housing_df)
+
 ```
 
-## d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?
-## e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.
-## f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.
-## g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
-## h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.
-## i. Use the appropriate function to show the sum of large residuals.
-## j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
-## k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
-## l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.
-## m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.
-## n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.
-## o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?
+I included a third model using house_age instead of year_built. These variable vary similarly with year_built having a slightly higher correlation than house_age. But house age at the time of sale feels like a more relevant metric. The year built variable doesn't neccessarily take into account the age of the home since the sale date is not included. A affect of age on a house built in 1945 and sold in 1945 should be different than the same house built in 1945 and sold in 2006. 
+
+#### c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
+``` {r lm summary, echo=FALSE}
+summary(salePrice_base_lm)
+summary(salePrice_house_age_lm)
+summary(salePrice_year_built_lm)
+
+```
+Price by Lot size Model           - Multiple R-squared:  0.01435, Adjusted R-squared:  0.01428
+Price by Living Space ~ House Age - Multiple R-squared:   0.22,   Adjusted R-squared:  0.2197 
+Price by Living Space ~ Year Built- Multiple R-squared:  0.2219,  Adjusted R-squared:  0.2216
+
+The Adjusted R-squared values significantly improved with both models using additional predictors. The adjusted R-squared value for using Lot size as a predictor had barely any significance on predicted price. As indicated by the correlation calculation the Building Grade accounted for the largest variability in predicting price.
+
+#### d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?
+The Betas for the Year built
+square_feet_total_living  152.4
+building_grade            31430  
+bedrooms                 -8598
+bath_total               -991.8
+year_built                2313 
+
+
+#### e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.
+#### f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.
+#### g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
+#### h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.
+#### i. Use the appropriate function to show the sum of large residuals.
+#### j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
+#### k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
+#### l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.
+#### m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.
+#### n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.
+#### o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?

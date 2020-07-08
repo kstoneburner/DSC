@@ -446,23 +446,26 @@ summary(salePrice_base_lm)</code></pre>
 ## Multiple R-squared:  0.2098, Adjusted R-squared:  0.2095 
 ## F-statistic: 853.5 on 4 and 12860 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>And this is where I stop and challenge my assumptions. The criteria I listed above are what <em>“I”</em> look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared: 0.2095 means I need to rethink the process.</p>
-<p>The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let’s test that addage with the data.</p>
-<pre class="r"><code>length(housing_df$zip5)</code></pre>
-<pre><code>## [1] 12865</code></pre>
+<p>The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let’s test the veracity of that claim with the data.</p>
 <pre class="r"><code>unique(housing_df$zip5)</code></pre>
 <pre><code>## [1] 98052 98053 98074 98059</code></pre>
-<p>There are only four zip codes in the data. Clearly, this is not significant.</p>
-<p>Let’s turn to correlation to find significant values</p>
+<p>There are only four zip codes in the data. Location may be important, but not in this data set. This variable is not significant and should be binned.</p>
+<p>Let’s turn to correlation to determine significant variables.</p>
 <pre class="r"><code>cor(housing_df)[1,]</code></pre>
 <pre><code>##               Sale.Price                     zip5           building_grade 
 ##               1.00000000               0.06014866               0.39122909 
 ## square_feet_total_living                 bedrooms               year_built 
 ##               0.45458758               0.22546748               0.24267127 
-##                sq_ft_lot               bath_total 
-##               0.11981223               0.35449263</code></pre>
+##                sq_ft_lot               bath_total                house_age 
+##               0.11981223               0.35449263              -0.22681160</code></pre>
+<p>Based on the correlation, variables with a correlation of greater than .20 are good candidates to work with. I was genuinely surprised at the correlation value of bathrooms to sale price. The improved linear model looks like this:</p>
+<pre class="r"><code>salePrice_base_lm &lt;-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
+salePrice_house_age_lm &lt;-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + house_age, data=housing_df)
+salePrice_year_built_lm &lt;-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + year_built, data=housing_df)</code></pre>
+<p>I included a third model using house_age instead of year_built. These variable vary similarly with year_built having a slightly higher correlation than house_age. But house age at the time of sale feels like a more relevant metric. The year built variable doesn’t neccessarily take into account the age of the home since the sale date is not included. A affect of age on a house built in 1945 and sold in 1945 should be different than the same house built in 1945 and sold in 2006.</p>
 </div>
-<div id="c.-execute-a-summary-function-on-two-variables-defined-in-the-previous-step-to-compare-the-model-results.-what-are-the-r2-and-adjusted-r2-statistics-explain-what-these-results-tell-you-about-the-overall-model.-did-the-inclusion-of-the-additional-predictors-help-explain-any-large-variations-found-in-sale-price" class="section level2">
-<h2>c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?</h2>
+<div id="c.-execute-a-summary-function-on-two-variables-defined-in-the-previous-step-to-compare-the-model-results.-what-are-the-r2-and-adjusted-r2-statistics-explain-what-these-results-tell-you-about-the-overall-model.-did-the-inclusion-of-the-additional-predictors-help-explain-any-large-variations-found-in-sale-price" class="section level4">
+<h4>c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?</h4>
 <pre><code>## 
 ## Call:
 ## lm(formula = Sale.Price ~ sq_ft_lot, data = housing_df)
@@ -483,62 +486,86 @@ summary(salePrice_base_lm)</code></pre>
 ## F-statistic: 187.3 on 1 and 12863 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, 
-##     data = housing_df)
+## lm(formula = Sale.Price ~ square_feet_total_living + building_grade + 
+##     bedrooms + bath_total + house_age, data = housing_df)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1829685  -118381   -41012    44345  3826888 
+## -1711510  -119020   -44977    41651  3939584 
 ## 
 ## Coefficients:
 ##                            Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -2.914e+08  1.854e+08  -1.572    0.116    
-## zip5                      2.974e+03  1.891e+03   1.573    0.116    
-## bedrooms                 -2.723e+04  4.514e+03  -6.032 1.66e-09 ***
-## bath_total                2.865e+04  6.923e+03   4.139 3.52e-05 ***
-## square_feet_total_living  1.841e+02  5.114e+00  36.002  &lt; 2e-16 ***
+## (Intercept)               70526.468  33287.633   2.119   0.0341 *  
+## square_feet_total_living    152.772      6.233  24.508  &lt; 2e-16 ***
+## building_grade            32315.730   4461.197   7.244 4.61e-13 ***
+## bedrooms                 -10303.193   4663.195  -2.209   0.0272 *  
+## bath_total                 2880.287   7207.962   0.400   0.6895    
+## house_age                 -1950.880    204.420  -9.543  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 359500 on 12860 degrees of freedom
-## Multiple R-squared:  0.2098, Adjusted R-squared:  0.2095 
-## F-statistic: 853.5 on 4 and 12860 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 357200 on 12859 degrees of freedom
+## Multiple R-squared:   0.22,  Adjusted R-squared:  0.2197 
+## F-statistic: 725.5 on 5 and 12859 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Sale.Price ~ square_feet_total_living + building_grade + 
+##     bedrooms + bath_total + year_built, data = housing_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1702662  -119113   -43742    40533  3958758 
+## 
+## Coefficients:
+##                            Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              -4.563e+06  4.102e+05 -11.125  &lt; 2e-16 ***
+## square_feet_total_living  1.524e+02  6.226e+00  24.484  &lt; 2e-16 ***
+## building_grade            3.143e+04  4.452e+03   7.060 1.75e-12 ***
+## bedrooms                 -8.598e+03  4.658e+03  -1.846   0.0649 .  
+## bath_total               -9.918e+02  7.219e+03  -0.137   0.8907    
+## year_built                2.313e+03  2.088e+02  11.077  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 356800 on 12859 degrees of freedom
+## Multiple R-squared:  0.2219, Adjusted R-squared:  0.2216 
+## F-statistic: 733.6 on 5 and 12859 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div id="d.-considering-the-parameters-of-the-multiple-regression-model-you-have-created.-what-are-the-standardized-betas-for-each-parameter-and-what-do-the-values-indicate" class="section level2">
-<h2>d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?</h2>
+<div id="d.-considering-the-parameters-of-the-multiple-regression-model-you-have-created.-what-are-the-standardized-betas-for-each-parameter-and-what-do-the-values-indicate" class="section level4">
+<h4>d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?</h4>
 </div>
-<div id="e.-calculate-the-confidence-intervals-for-the-parameters-in-your-model-and-explain-what-the-results-indicate." class="section level2">
-<h2>e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.</h2>
+<div id="e.-calculate-the-confidence-intervals-for-the-parameters-in-your-model-and-explain-what-the-results-indicate." class="section level4">
+<h4>e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.</h4>
 </div>
-<div id="f.-assess-the-improvement-of-the-new-model-compared-to-your-original-model-simple-regression-model-by-testing-whether-this-change-is-significant-by-performing-an-analysis-of-variance." class="section level2">
-<h2>f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.</h2>
+<div id="f.-assess-the-improvement-of-the-new-model-compared-to-your-original-model-simple-regression-model-by-testing-whether-this-change-is-significant-by-performing-an-analysis-of-variance." class="section level4">
+<h4>f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.</h4>
 </div>
-<div id="g.-perform-casewise-diagnostics-to-identify-outliers-andor-influential-cases-storing-each-functions-output-in-a-dataframe-assigned-to-a-unique-variable-name." class="section level2">
-<h2>g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function’s output in a dataframe assigned to a unique variable name.</h2>
+<div id="g.-perform-casewise-diagnostics-to-identify-outliers-andor-influential-cases-storing-each-functions-output-in-a-dataframe-assigned-to-a-unique-variable-name." class="section level4">
+<h4>g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function’s output in a dataframe assigned to a unique variable name.</h4>
 </div>
-<div id="h.-calculate-the-standardized-residuals-using-the-appropriate-command-specifying-those-that-are--2-storing-the-results-of-large-residuals-in-a-variable-you-create." class="section level2">
-<h2>h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.</h2>
+<div id="h.-calculate-the-standardized-residuals-using-the-appropriate-command-specifying-those-that-are--2-storing-the-results-of-large-residuals-in-a-variable-you-create." class="section level4">
+<h4>h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.</h4>
 </div>
-<div id="i.-use-the-appropriate-function-to-show-the-sum-of-large-residuals." class="section level2">
-<h2>i. Use the appropriate function to show the sum of large residuals.</h2>
+<div id="i.-use-the-appropriate-function-to-show-the-sum-of-large-residuals." class="section level4">
+<h4>i. Use the appropriate function to show the sum of large residuals.</h4>
 </div>
-<div id="j.-which-specific-variables-have-large-residuals-only-cases-that-evaluate-as-true" class="section level2">
-<h2>j. Which specific variables have large residuals (only cases that evaluate as TRUE)?</h2>
+<div id="j.-which-specific-variables-have-large-residuals-only-cases-that-evaluate-as-true" class="section level4">
+<h4>j. Which specific variables have large residuals (only cases that evaluate as TRUE)?</h4>
 </div>
-<div id="k.-investigate-further-by-calculating-the-leverage-cooks-distance-and-covariance-rations.-comment-on-all-cases-that-are-problematics." class="section level2">
-<h2>k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.</h2>
+<div id="k.-investigate-further-by-calculating-the-leverage-cooks-distance-and-covariance-rations.-comment-on-all-cases-that-are-problematics." class="section level4">
+<h4>k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.</h4>
 </div>
-<div id="l.-perform-the-necessary-calculations-to-assess-the-assumption-of-independence-and-state-if-the-condition-is-met-or-not." class="section level2">
-<h2>l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.</h2>
+<div id="l.-perform-the-necessary-calculations-to-assess-the-assumption-of-independence-and-state-if-the-condition-is-met-or-not." class="section level4">
+<h4>l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.</h4>
 </div>
-<div id="m.-perform-the-necessary-calculations-to-assess-the-assumption-of-no-multicollinearity-and-state-if-the-condition-is-met-or-not." class="section level2">
-<h2>m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.</h2>
+<div id="m.-perform-the-necessary-calculations-to-assess-the-assumption-of-no-multicollinearity-and-state-if-the-condition-is-met-or-not." class="section level4">
+<h4>m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.</h4>
 </div>
-<div id="n.-visually-check-the-assumptions-related-to-the-residuals-using-the-plot-and-hist-functions.-summarize-what-each-graph-is-informing-you-of-and-if-any-anomalies-are-present." class="section level2">
-<h2>n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.</h2>
+<div id="n.-visually-check-the-assumptions-related-to-the-residuals-using-the-plot-and-hist-functions.-summarize-what-each-graph-is-informing-you-of-and-if-any-anomalies-are-present." class="section level4">
+<h4>n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.</h4>
 </div>
-<div id="o.-overall-is-this-regression-model-unbiased-if-an-unbiased-regression-model-what-does-this-tell-us-about-the-sample-vs.-the-entire-population-model" class="section level2">
-<h2>o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?</h2>
+<div id="o.-overall-is-this-regression-model-unbiased-if-an-unbiased-regression-model-what-does-this-tell-us-about-the-sample-vs.-the-entire-population-model" class="section level4">
+<h4>o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?</h4>
 </div>
 
 

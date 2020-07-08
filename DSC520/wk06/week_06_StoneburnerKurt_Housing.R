@@ -1,6 +1,8 @@
 # Assignment: 6.1 - Housing Data
 # Name: Stoneburner, Kurt
 # Date: 2020-07-06
+
+library(QuantPsyc)
 removeColsFromDF <- function(input_df, removeCols){
   ###########################################################################
   ### Remove Columns from a a data frame the Hard Way!
@@ -51,8 +53,8 @@ removeColsFromDF <- function(input_df, removeCols){
 }### END RemoveColsFromDF
 ## Set the working directory to the root of your DSC 520 directory
 
-#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
-setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
 
 
 ## Load the housing data
@@ -97,12 +99,35 @@ housing_df <- removeColsFromDF(raw_housing_df,c("lon",
 bath_total <- raw_housing_df$bath_full_count + (raw_housing_df$bath_half_count *.5) + (raw_housing_df$bath_3qtr_count *.75)
 
 housing_df <- cbind(housing_df,bath_total)
-tail(housing_df)
 
-cor(housing_df)[1,]
 
-### Calculate the age of the house (Sale Date - sale_year)
-cor(housing_df)[1,]
+##########################################################################################################
+#### Build house_age. This is the age of the house at Sale. 
+##########################################################################################################
+#### Get Year build and coerce into a number
+year_built <- as.numeric(raw_housing_df$year_built)
+
+#### Coerce the Date into a Date value and return just the year
+sale_year <- format(as.Date(raw_housing_df$Sale.Date, format="%m/%d/%Y"),"%Y")
+
+#### Convert Date (year) into Date (number)
+sale_year <- as.numeric(sale_year)
+
+#### The difference between the sale_year and year_built. Is the dwellings age.
+house_age <- (sale_year - year_built)
+
+################################################################################################################################
+#### There are negative number in house_age. Some sale_dates are listing as sold before the date of building. 
+#### I'm going to assume this is a data entry issue. Although there could be an issue where houses were actually sold before
+#### they were built. A sampling of the sale dates all reference 2006, with multi-year differences in some cases.
+#### I'm treating this as a data entry issue and converting all negative house_age values to 0. 
+################################################################################################################################
+house_age <- vapply(house_age, function(x){
+  if (x < 0 ) { return(0)}
+  return(x)
+},numeric(1))
+
+housing_df <- cbind(housing_df,house_age)
 
 
 ### b.
@@ -111,13 +136,13 @@ salePrice_base_lm <-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
 summary(salePrice_base_lm)
 salePrice_naieve_lm <-  lm(Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, data=housing_df)
 summary(salePrice_naieve_lm)
-salePrice_complex_4_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bath_total, data=housing_df)
-summary(salePrice_complex_4_lm)
-salePrice_complex_6_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + year_built, data=housing_df)
-summary(salePrice_complex_6_lm)
+salePrice_house_age_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + house_age, data=housing_df)
+summary(salePrice_house_age_lm)
+salePrice_year_built_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + year_built, data=housing_df)
+summary(salePrice_year_built_lm)
+lm.beta(salePrice_house_age_lm)
+lm.beta(salePrice_year_built_lm)
 
-hist(housing_df$year_built)
-hist(housing_df$house_age)
 cor(housing_df$year_built,housing_df$house_age)
 
 ## c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
@@ -125,6 +150,10 @@ summary(salePrice_base_lm)
 cor(housing_df[2:length(housing_df)])
 summary(salePrice_complex_lm)
 head(housing_df)
+
+summary(housing_df$Sale.Price)
+sd(housing_df$Sale.Price)
+
 
 cor(num_housing_df)[1,]
 head(num_housing_df)
@@ -138,10 +167,7 @@ plot(raw_housing_df$bath_full_count,housing_df$Sale.Price)
 summary(raw_housing_df$bath_full_count)
 summary(bath_total)
 
-iqr_dumper_df <- housing_df[which(housing_df$bath_total <= 5),]
-iqr_dumper_df <- iqr_dumper_df[which(iqr_dumper_df$bath_total > 1),]
-nrow(iqr_dumper_df)
-cor(iqr_dumper_df)[1,]
+
 plot(iqr_dumper_df$bath_total,iqr_dumper_df$Sale.Price)
 housing_df$Sale.Date <-  as.Date(housing_df$Sale.Date,  tryFormats = c("%m/%d/%Y") )
 sale_year
@@ -208,21 +234,3 @@ hist(raw_housing_df$present_use)
 
 cor(coded_zoning,raw_housing_df$present_use)
 
-year_built <- as.numeric(raw_housing_df$year_built)
-year_built
-raw_housing_df$Sale.Date
-sale_year <- format(as.Date(raw_housing_df$Sale.Date, format="%m/%d/%Y"),"%Y")
-sale_year
-sale_year <- as.numeric(sale_year)
-sale_year
-house_age <- (sale_year - year_built)
-
-house_age
-
-house_age <- vapply(house_age, function(x){
-  if (x < 0 ) { return(0)}
-  return(x)
-},numeric(1))
-
-cor(housing_df)[1,]
-housing_df <- cbind(housing_df,house_age)
