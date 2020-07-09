@@ -2,6 +2,12 @@
 # Name: Stoneburner, Kurt
 # Date: 2020-07-06
 
+## Set the working directory to the root of your DSC 520 directory
+
+#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+
+
 library(QuantPsyc)
 removeColsFromDF <- function(input_df, removeCols){
   ###########################################################################
@@ -51,10 +57,6 @@ removeColsFromDF <- function(input_df, removeCols){
   return(output_df)
   
 }### END RemoveColsFromDF
-## Set the working directory to the root of your DSC 520 directory
-
-setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
-#setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
 
 
 ## Load the housing data
@@ -128,7 +130,7 @@ house_age <- vapply(house_age, function(x){
 },numeric(1))
 
 housing_df <- cbind(housing_df,house_age)
-
+summary(housing_df)
 
 ### b.
 ### base_lm: Predicts Sale Price based on lot lot size
@@ -144,6 +146,61 @@ lm.beta(salePrice_house_age_lm)
 lm.beta(salePrice_year_built_lm)
 
 cor(housing_df$year_built,housing_df$house_age)
+
+std_deviation_df <- data.frame ( 
+  variable = 
+    c("Sale Price", 
+      "sqft Living", 
+      "Building Grade",
+      "bedrooms",
+      "bathrooms",
+      "house age"),
+  std_dev = 
+    c( sd(raw_housing_df$Sale.Price),
+       sd(housing_df$square_feet_total_living),
+       sd(housing_df$building_grade),
+       sd(housing_df$bedrooms),
+       sd(housing_df$bath_total),
+       sd(housing_df$house_age)
+)) 
+std_deviation_df
+
+############################################
+#### Confidence Intervals the Hard way
+############################################
+##### Start by Calculating Z Scores the hard way
+##### zScores <- (dataset - mean(dataset)) / sd(dataset)
+
+# Calculate Standard Error in R 
+# using the SD function / SQRT of vector length
+## Standard error: Standard Deviation / sqrt(sample size)
+##    sd(values) / sqrt(length(values))
+##
+## lower boundary: mean() minus mini
+##      mean(values) - ( min(values) * Standard Error )
+##      mean(values) - ( 1.96 * Standard Error )
+##
+## upper boundary: 
+##      mean(values) + ( max(values) * Standard Error )
+##      mean(values) + ( 1.96 * Standard Error )
+
+value <- salePrice_house_age_lm$model$Sale.Price
+
+zScores <- (value - mean(value)) / sd(value)
+zScores
+
+min(zScores)
+
+### Calculate standard_error for value
+standard_error <- sd(value) / sqrt(length(value))
+
+standard_error #3565.217
+mean(value) - min(value) * standard_error
+t.test(value)
+##lower Bound
+mean(value) - (1.96*standard_error)
+##upper Bound
+mean(value) + (1.96 * standard_error)
 
 ## c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
 summary(salePrice_base_lm)
@@ -195,7 +252,6 @@ unique(raw_housing_df$present_use)
 unique(raw_housing_df$sale_warning)
 unique(raw_housing_df$sale_instrument)
 unique(raw_housing_df$present_use)
-hist(raw_housing_df$present_use)
 unique(raw_housing_df$present_use)
 
 
@@ -204,9 +260,7 @@ present_use_count <- vapply(unique(raw_housing_df$present_use), function(x){
   
   return(nrow(thisUseVector))},numeric(1))
 
-present_use_count
 
-11931 / nrow(raw_housing_df)
 
 
 length(unique(raw_housing_df$current_zoning))

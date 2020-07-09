@@ -7,6 +7,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+### Set working Directory
+#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+library(QuantPsyc)
+
 removeColsFromDF <- function(input_df, removeCols){
   ###########################################################################
   ### Remove Columns from data frame the Hard Way!
@@ -54,9 +60,6 @@ removeColsFromDF <- function(input_df, removeCols){
   
 }### END RemoveColsFromDF
 
-### Set working Directory
-setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
-#setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
 
 
 ## Load the housing data
@@ -177,9 +180,9 @@ summary(salePrice_base_lm)
 summary(salePrice_naieve_lm)
 
 ```
-And this is where I stop and challenge my assumptions. The criteria I listed above are what *"I"* look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared:  0.2095 means I need to rethink the process.
+And this is where I stop and challenge my assumptions. The criteria I listed above are what **"I"** look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared:  0.2095 means I need to rethink the process.
 
-The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let's test the veracity of that claim with the data.
+The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let's test the veracity of that claim using the data.
 ``` {r its_all_about_location, echo=TRUE }
 
 unique(housing_df$zip5)
@@ -217,25 +220,83 @@ Price by Lot size Model           - Multiple R-squared:  0.01435, Adjusted R-squ
 Price by Living Space ~ House Age - Multiple R-squared:   0.22,   Adjusted R-squared:  0.2197 
 Price by Living Space ~ Year Built- Multiple R-squared:  0.2219,  Adjusted R-squared:  0.2216
 
-The Adjusted R-squared values significantly improved with both models using additional predictors. The adjusted R-squared value for using Lot size as a predictor had barely any significance on predicted price. As indicated by the correlation calculation the Building Grade accounted for the largest variability in predicting price.
+The Adjusted R-squared values significantly improved with both models using additional predictors. The adjusted R-squared value for using Lot size as a predictor had barely any significance on predicted price. As indicated by the correlation calculation the Building Grade accounted for the largest variability in predicting price. I am a little surprised that bedrooms and bath_total have a negative coefficient using the year_built mode. The House age model reflects negative coefficents for house age and bedrooms. A negative relationship with house_age makes sense, and older house would be expected to have some negative pricing affect.
 
 #### d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?
-The Betas for the Year built
-square_feet_total_living  152.4
-building_grade            31430  
-bedrooms                 -8598
-bath_total               -991.8
-year_built                2313 
 
++---------------+----------------------------+------------------+----------------+--------------+--------------+--------------+
+|               | square_feet_total_living   | building_grade   | bedrooms       |bath_total    | house_age    | year_built   |
++===============+============================+==================+================+==============+==============+==============+
+| house_age     | 0.373945132                |  0.087315978     | -0.022322776   | 0.004951635  | -0.084478319 |              |
++---------------+----------------------------+------------------+----------------+--------------+--------------+--------------+
+| year_built    | 0.373103476                |  0.084926945     | -0.018628440   | -0.001705028 |              |  0.098504715 |
++---------------+----------------------------+------------------+----------------+--------------+--------------+--------------+
+
+For every increase in standard deviation of a given variable, the sale price will change by a stand deviation of sale price * Beta. Assuming the other variables remain constant.
+
+For Example:
+Looking at the standard deviations for the variables:
+``` {r sale_price_Std_Deviation, echo=FALSE}
+std_deviation_df <- data.frame ( 
+  variable = 
+    c("Sale Price", 
+      "sqft Living", 
+      "Building Grade",
+      "bedrooms",
+      "bathrooms",
+      "house age"),
+  std_dev = 
+    c( sd(raw_housing_df$Sale.Price),
+       sd(housing_df$square_feet_total_living),
+       sd(housing_df$building_grade),
+       sd(housing_df$bedrooms),
+       sd(housing_df$bath_total),
+       sd(housing_df$house_age)
+)) 
+print(std_deviation_df)
+
+```
+
+ Using the house age model
+  
+    Predicted Sale Price increases **$151,216** per **989.817** increase in square_feet_total_living
+      - 989.817 std deviation of square_feet_total_living.
+      - 151,216 = 404,381.10 (sale price standard deviation) \* .373945132 (square foot living Beta)
+
+    Predicted Sale Price increases **$35308.93** per **1.09** increase in building_grade
+      - 1.09 std deviation of building_grade
+      - 35308.93 = 404,381.10 (sale price standard deviation) * 0.087315978 (building_grade Beta)
+
+    Predicted Sale Price decreases **$9026.90** per **.88** increase in bedrooms
+      - .88 std deviation of building_grade
+      - $9026.90 = 404,381.10 (sale price standard deviation) * -0.022322776 (bedrooms Beta)
+
+    Predicted Sale Price increases **$2002.35** per **.7** increase in bathrooms
+      - .7 std deviation of building_grade
+      - $2002.35 = 404,381.10 (sale price standard deviation) * 0.004951635 (bathrooms Beta)
+
+    Predicted Sale Price decreases **$-34,212.12** per **17.5** increase in house_age
+      - 17.5 std deviation of building_grade
+      - $-34,212.12 = 404,381.10 (sale price standard deviation) * -0.084478319 (house_age Beta)
+      
+All of these predicted values assume the other variables remain constant. This also indicates the variable bath_total has < .001 influence on the predicted sale price. Making it a good candidate for elimination.
 
 #### e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.
+
 #### f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.
+
 #### g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
+
 #### h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.
+
 #### i. Use the appropriate function to show the sum of large residuals.
+
 #### j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
+
 #### k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
+
 #### l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.
+
 #### m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.
 #### n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.
 #### o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?

@@ -445,8 +445,8 @@ summary(salePrice_base_lm)</code></pre>
 ## Residual standard error: 359500 on 12860 degrees of freedom
 ## Multiple R-squared:  0.2098, Adjusted R-squared:  0.2095 
 ## F-statistic: 853.5 on 4 and 12860 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>And this is where I stop and challenge my assumptions. The criteria I listed above are what <em>“I”</em> look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared: 0.2095 means I need to rethink the process.</p>
-<p>The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let’s test the veracity of that claim with the data.</p>
+<p>And this is where I stop and challenge my assumptions. The criteria I listed above are what <strong>“I”</strong> look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared: 0.2095 means I need to rethink the process.</p>
+<p>The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let’s test the veracity of that claim using the data.</p>
 <pre class="r"><code>unique(housing_df$zip5)</code></pre>
 <pre><code>## [1] 98052 98053 98074 98059</code></pre>
 <p>There are only four zip codes in the data. Location may be important, but not in this data set. This variable is not significant and should be binned.</p>
@@ -530,9 +530,63 @@ salePrice_year_built_lm &lt;-    lm(Sale.Price ~ square_feet_total_living + buil
 ## Residual standard error: 356800 on 12859 degrees of freedom
 ## Multiple R-squared:  0.2219, Adjusted R-squared:  0.2216 
 ## F-statistic: 733.6 on 5 and 12859 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Price by Lot size Model - Multiple R-squared: 0.01435, Adjusted R-squared: 0.01428 Price by Living Space ~ House Age - Multiple R-squared: 0.22, Adjusted R-squared: 0.2197 Price by Living Space ~ Year Built- Multiple R-squared: 0.2219, Adjusted R-squared: 0.2216</p>
+<p>The Adjusted R-squared values significantly improved with both models using additional predictors. The adjusted R-squared value for using Lot size as a predictor had barely any significance on predicted price. As indicated by the correlation calculation the Building Grade accounted for the largest variability in predicting price. I am a little surprised that bedrooms and bath_total have a negative coefficient using the year_built mode. The House age model reflects negative coefficents for house age and bedrooms. A negative relationship with house_age makes sense, and older house would be expected to have some negative pricing affect.</p>
 </div>
 <div id="d.-considering-the-parameters-of-the-multiple-regression-model-you-have-created.-what-are-the-standardized-betas-for-each-parameter-and-what-do-the-values-indicate" class="section level4">
 <h4>d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?</h4>
+<table>
+<colgroup>
+<col width="12%"></col>
+<col width="23%"></col>
+<col width="15%"></col>
+<col width="13%"></col>
+<col width="11%"></col>
+<col width="11%"></col>
+<col width="11%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>square_feet_total_living</th>
+<th>building_grade</th>
+<th>bedrooms</th>
+<th>bath_total</th>
+<th>house_age</th>
+<th>year_built</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>house_age</td>
+<td>0.373945132</td>
+<td>0.087315978</td>
+<td>-0.022322776</td>
+<td>0.004951635</td>
+<td>-0.084478319</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>year_built</td>
+<td>0.373103476</td>
+<td>0.084926945</td>
+<td>-0.018628440</td>
+<td>-0.001705028</td>
+<td></td>
+<td>0.098504715</td>
+</tr>
+</tbody>
+</table>
+<p>For every increase in standard deviation of a given variable, the sale price will change by a stand deviation of sale price * Beta. Assuming the other variables remain constant.</p>
+<p>For Example: Looking at the standard deviations for the variables:</p>
+<pre><code>##         variable      std_dev
+## 1     Sale Price 4.043811e+05
+## 2    sqft Living 9.898176e+02
+## 3 Building Grade 1.092624e+00
+## 4       bedrooms 8.761273e-01
+## 5      bathrooms 6.951902e-01
+## 6      house age 1.751079e+01</code></pre>
+<p>Using the house age model</p>
 </div>
 <div id="e.-calculate-the-confidence-intervals-for-the-parameters-in-your-model-and-explain-what-the-results-indicate." class="section level4">
 <h4>e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.</h4>
