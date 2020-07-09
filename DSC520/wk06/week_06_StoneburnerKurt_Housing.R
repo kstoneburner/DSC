@@ -136,6 +136,8 @@ summary(housing_df)
 ### base_lm: Predicts Sale Price based on lot lot size
 salePrice_base_lm <-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
 summary(salePrice_base_lm)
+salePrice_living_lm <- lm(Sale.Price ~ square_feet_total_living, data=housing_df)
+summary(salePrice_living_lm)
 salePrice_naieve_lm <-  lm(Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, data=housing_df)
 summary(salePrice_naieve_lm)
 salePrice_house_age_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + house_age, data=housing_df)
@@ -144,8 +146,16 @@ salePrice_year_built_lm <-    lm(Sale.Price ~ square_feet_total_living + buildin
 summary(salePrice_year_built_lm)
 lm.beta(salePrice_house_age_lm)
 lm.beta(salePrice_year_built_lm)
+summary(salePrice_base_lm)
+summary(salePrice_naieve_lm)
+anova(salePrice_base_lm,salePrice_naieve_lm)
+anova(salePrice_base_lm,square_feet_total_living)
+anova(salePrice_base_lm,salePrice_house_age_lm)
+anova(salePrice_base_lm,salePrice_year_built_lm)
+anova(salePrice_base_lm,salePrice_house_age_lm,salePrice_year_built_lm)
+anova(salePrice_base_lm,salePrice_year_built_lm,salePrice_house_age_lm)
 
-cor(housing_df$year_built,housing_df$house_age)
+cor(housing_df)[1,]
 
 std_deviation_df <- data.frame ( 
   variable = 
@@ -187,7 +197,7 @@ std_deviation_df
 value <- salePrice_house_age_lm$model$Sale.Price
 
 zScores <- (value - mean(value)) / sd(value)
-zScores
+
 
 min(zScores)
 
@@ -211,9 +221,30 @@ head(housing_df)
 summary(housing_df$Sale.Price)
 sd(housing_df$Sale.Price)
 
+tail(housing_df)
+
+t.test(housing_df$Sale.Price)
+t.test(housing_df$building_grade)
+t.test(housing_df$square_feet_total_living)
+t.test(housing_df$bedrooms)
+t.test(housing_df$bath_total)
+t.test(housing_df$house_age)
+t.test(housing_df$year_built)
+
+t.test(salePrice_base_lm$model)
+t.test(salePrice_naieve_lm$model)
+t.test(salePrice_house_age_lm$model)
+t.test(salePrice_year_built_lm$model)
 
 cor(num_housing_df)[1,]
 head(num_housing_df)
+
+### F ratio..larger better
+### F = ssm / SSr - sum squares of the mean, the sum squares of the difference between data and prediction. 
+###                 ssr is the sum squares of the residuals!!!
+### F = Essentially the mean / error. Bigger is better fit
+
+### Write Down something for T scores and Zscores.
 
 unique(bath_total)
 
