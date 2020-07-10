@@ -288,11 +288,16 @@ talk about t.tests()?
 p285
 Anova
 #### g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
+p290. casewise diagnostics
+p290 outliers
+p269 cooks distance & leverage
+p291 covariance.ratio
 
 #### h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.
+p288 rstandard()
 
 #### i. Use the appropriate function to show the sum of large residuals.
-
+??
 #### j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
 
 #### k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.

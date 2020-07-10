@@ -149,13 +149,168 @@ lm.beta(salePrice_year_built_lm)
 summary(salePrice_base_lm)
 summary(salePrice_naieve_lm)
 anova(salePrice_base_lm,salePrice_naieve_lm)
-anova(salePrice_base_lm,square_feet_total_living)
+#anova(salePrice_base_lm,square_feet_total_living)
 anova(salePrice_base_lm,salePrice_house_age_lm)
 anova(salePrice_base_lm,salePrice_year_built_lm)
 anova(salePrice_base_lm,salePrice_house_age_lm,salePrice_year_built_lm)
 anova(salePrice_base_lm,salePrice_year_built_lm,salePrice_house_age_lm)
 
 cor(housing_df)[1,]
+
+anova(salePrice_base_lm,salePrice_house_age_lm)
+anova(salePrice_base_lm,salePrice_year_built_lm)
+resid(salePrice_house_age_lm)
+rstandard(salePrice_house_age_lm)
+rstudent(salePrice_house_age_lm)
+
+cooks.distance(salePrice_house_age_lm)
+dfbeta(salePrice_house_age_lm)
+dffits(salePrice_house_age_lm)
+
+
+#salePrice_base_lm$standardized.residuals <- rstandard(salePrice_house_age_lm) 
+#salePrice_base_lm$studentized.residuals <- rstudent(salePrice_house_age_lm)
+#salePrice_base_lm$cooks.distance <- cooks.distance(salePrice_house_age_lm)
+#salePrice_base_lm$dfbeta <- dfbeta(salePrice_house_age_lm)
+#salePrice_base_lm$dffit <- dffits(salePrice_house_age_lm)
+#salePrice_base_lm$leverage <- hatvalues(salePrice_house_age_lm)
+#salePrice_base_lm$covariance.ratios <- covratio(salePrice_house_age_lm)
+
+
+#salePrice_house_age_lm
+salePrice_house_age_lm$model$standardized.residuals <- rstandard(salePrice_house_age_lm) 
+salePrice_house_age_lm$model$studentized.residuals <- rstudent(salePrice_house_age_lm)
+salePrice_house_age_lm$model$cooks.distance <- cooks.distance(salePrice_house_age_lm)
+salePrice_house_age_lm$model$dfbeta <- dfbeta(salePrice_house_age_lm)
+salePrice_house_age_lm$model$dffit <- dffits(salePrice_house_age_lm)
+salePrice_house_age_lm$model$leverage <- hatvalues(salePrice_house_age_lm)
+salePrice_house_age_lm$model$covariance.ratios <- covratio(salePrice_house_age_lm)
+
+
+### p292
+### I think this is out casewise diagnostic
+salePrice_base_lm$model$large_residuals <- salePrice_base_lm$standardized.residuals > 2 | salePrice_base_lm$standardized.residuals < -2
+
+
+salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance","leverage","covariance.ratios")]
+### Check for outliers
+sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance") ] > 1 )
+##################################
+### Check Leverage for outliers
+##################################
+### These are troublesome > 0
+sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_2x_boundary )
+### These are outliers > )
+sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_3x_boundary )
+
+
+
+## k = number of predictors: square_feet_total_living + building_grade + bedrooms + bath_total + house_age
+## k= 5 
+## average levarage = (k + 1)/n
+## n= 12865
+#covariance outliers
+#p291
+# Reference p270 - Recommendataion is Identifying cases with 3* the average value (average covariance in this case)
+upperCov <- 1 + 3*(5 + 1)/12865
+lowerCov <- 1 - 3*(5 + 1)/12865
+k<-5
+n <- nrow(housing_df)
+upperCov <- 1 + 3*(k + 1)/n
+lowerCov <- 1 - 3*(k + 1)/n
+###########################################
+### Check covariance ratios for outliers
+###########################################
+### Any Values of sum indicate outliers
+sum(salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("covariance.ratios") ] > upperCov)
+sum(salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("covariance.ratios") ] < lowerCov)
+sum(salePrice_house_age_lm$model$covariance.ratios > upperCov) + sum(salePrice_house_age_lm$model$covariance.ratios < lowerCov)
+
+
+### Any values with a covariance 3x average covariance are ouliers
+
+###Cooks Distance test.
+### Any value greater than is considered an outlier
+
+### levarage test
+### k+1 / n = average leverage
+average_leverage <- (k + 1) / n
+
+average_leverage
+
+average_leverage_2x_boundary <- average_leverage *2
+average_leverage_3x_boundary <- average_leverage *3
+
+average_leverage_2x_boundary
+
+housing_df[housing_df$large_residuals,c("cooks.distance","leverage","covariance.ratios")]
+
+
+
+salePrice_base_lm$large_residuals
+
+large_residuals
+
+##i.
+sum(large_residuals)
+
+housing_df[large_residuals,c('cooks.distance')] 
+housing_df[large_residuals,c('covariance.ratios')] 
+housing_df[large_residuals,c('leverage')] > average_leverage_2x_boundary
+
+housing_df[large_residuals,c('leverage')] > average_leverage_2x_boundary
+
+
+
+
+
+
+housing_df[large_residuals,c('covariance.ratios')] > upperCov | housing_df[large_residuals,c('covariance.ratios')] < lowerCov
+
+
+### Should be about 1% - this model is 1.95% - Could be high
+sum(salePrice_house_age_lm$standardized.residuals > 2.5 | salePrice_house_age_lm$standardized.residuals < -2.5) / nrow(salePrice_base_lm$model)
+salePrice_house_age_lm$standardized.residuals > 2.5 | salePrice_house_age_lm$standardized.residuals < -2.5 
+
+### Anything above 3 represents outliers that affect the model
+sum(salePrice_base_lm$standardized.residuals > 3 | salePrice_base_lm$standardized.residuals < -3 ) / nrow(salePrice_base_lm$model)
+
+rstandard(salePrice_house_age_lm$model$square_feet_total_living)
+
+sum(salePrice_house_age_lm$model$square_feet_total_living > 2 | salePrice_house_age_lm$model$square_feet_total_living < -2)
+sum(salePrice_house_age_lm$model$Sales.Price < 2 | salePrice_house_age_lm$model$Sales.Price < 2)
+sum(salePrice_house_age_lm$model$bath_total < 2 | salePrice_house_age_lm$model$bath_total < 2)
+
+
+
+str(salePrice_base_lm)
+
+sum(housing_df[housing_df$large_residuals,c("standardized.residuals")])
+
+sum(housing_df$large_residuals) /nrow(housing_df)
+
+### Displays outliers with large residuals > 2
+housing_df[housing_df$large_residuals,c("Sale.Price","square_feet_total_living","building_grade","bedrooms","bath_total","house_age")]
+housing_df[housing_df$large_residuals,c("cooks.distance","leverage","covariance.ratios")]
+
+
+salePrice_house_age_lm$model[salePrice_base_lm$large_residuals, c("cooks.distance","leverage","covariance.ratios")]
+
+#salePrice_house_age_lm[ salePrice_house_age_lm$large_residuals [c("cooks.distance","leverage","covariance.ratios")]
+
+#salePrice_house_age_lm$large_residuals
+
+#salePrice_house_age_lm[1,]
+
+#head(salePrice_house_age_lm)
+
+
+
+
+
+
+
+
 
 std_deviation_df <- data.frame ( 
   variable = 
