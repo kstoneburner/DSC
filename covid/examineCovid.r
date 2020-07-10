@@ -33,8 +33,8 @@ build_offset_columns <- function(input_df,target_col,range_vector){
 
 
 ## Set the working directory to the root of your DSC 520 directory
-#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
-setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
 
 ### Read CSV 
 
@@ -122,7 +122,7 @@ cor(daily_covid_df$daily_total_confirmed,daily_covid_df$daily_total_deaths)
 ### build confirmed offset columns from 1 to 21
 ############################################################
 daily_covid_df
-offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",1:21)
+offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",8:30)
 
 ### Correlate Daily Total row
 ### Looking for column with highest correlation value
@@ -374,7 +374,7 @@ sum(june_offset_df$daily_total_deaths)^2
 june_offset_14_residual
 ## Number of observations
 ## method: str(heights_df)
-n <- 33
+n <- nrow(june_offset_df)
 ## Number of regression parameters
 p <- 2
 ## Corrected Degrees of Freedom for Model (p-1)
@@ -388,9 +388,17 @@ dft <- n-1
 ## Calculate Sum of the Squares for the prediction model. Greater the number, the greater the error.
 ssm <- sum((mean(june_offset_df$daily_total_deaths) - june_CD_offset_14_predict_df$daily_total_deaths)^2)
 ssm
+### Sum Squared of the errors.
+### The difference between total deaths and predicted deaths
+### squared and summed
+sse <- june_offset_df$daily_total_deaths - june_CD_offset_14_predict_df$daily_total_deaths
+sse <- sse^2
+sse <- sum(sse)
+sse
+
 ## Mean of Squares for Error:   MSE = SSE / DFE
-mse <- june_offset_14_residual / dfe
-mse
+mse <- sse / dfe
+
 
 build_rolling_offset <- function(input_df,rolling_days){
   
@@ -398,11 +406,13 @@ build_rolling_offset <- function(input_df,rolling_days){
   ### Find the best offset covariance over a period of rolling days
   output_vector <- c()  
   output_vector2 <- c()  
+  mse_vector <- c()
   
   ### Loop through input data frame
   for (i in 1:nrow(input_df)){
     if (i <= rolling_days) {
       output_vector2 <- append(output_vector2,0) 
+      mse_vector <- append(mse_vector,0)
       next
     }
     #output_vector <- append(output_vector,1) 
@@ -464,10 +474,20 @@ build_rolling_offset <- function(input_df,rolling_days){
     temp_residual <- sum(temp_residual^2)
     
     
+    sse <- temp_df$daily_total_deaths - temp_predict_df$daily_total_deaths
+    sse <- sse^2
+    sse <- sum(sse)
+    sse
     
     
     ## Degrees of Freedom for Error (n-p)
     dfe <- rolling_days-2
+    
+    #print(sse/dfe)
+    
+    
+    ## Mean of Squares for Error:   MSE = SSE / DFE
+    mse <- sse / dfe
     
     #print(temp_residual)
     #print(actual_values)
@@ -477,15 +497,88 @@ build_rolling_offset <- function(input_df,rolling_days){
     
     
     output_vector2 <- append(output_vector2,most_cor_offset) 
+    mse_vector <- append(mse_vector,mse)
     
     
-      }### END Each data frame row
+    
+    }### END Each data frame row
   
   
-  return(output_vector2)  
+
+  min_mse <- min(mse_vector[(mse_vector > 0)])
+  
+  offset_error <- c()
+  
+  for (i in 1:length(mse_vector)) {
+    if (mse_vector[i] == 0 ){
+      offset_error <- append(offset_error,0)
+      next
+    }
+    offset_error <- append(offset_error,min_mse/mse_vector[i])
+    
+  }
+  
+  return(data.frame(date = input_df$date,mse=mse_vector,error=offset_error,offset=output_vector2))
   #eval(parse(text=command))
   
   
 }### END build rolling offset
-offset_vectors <- build_rolling_offset(offset_daily_df,30)
-#offset_vectors
+offset_df <- build_rolling_offset(offset_daily_df,30)
+offset_df
+min_mse <- min(offset_df[offset_df$mse > 0,]$mse)
+
+error_offset <- vapply(offset_df$mse,function(x){
+  if (x == 0) {return(x)}
+  return(mse/x)
+},numeric(1))
+
+### Build model for last 30 days
+last_offset <- offset_df$offset[nrow(offset_df)]
+
+rowCount <- nrow(offset_daily_df)
+startIndex <- rowCount - 30
+
+### get last 30 days of 
+temp_df <- offset_daily_df[startIndex:rowCount,]
+temp_df
+last_month_df <- data.frame( date = temp_df$date,  
+                             daily_total_confirmed = temp_df$daily_total_confirmed,
+                             daily_total_deaths = temp_df$daily_total_deaths,
+                             "offset" = temp_df[last_offset])
+
+colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
+
+tail(last_month_df)
+
+last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
+
+
+summary(last_month_lm)
+sqrt(.9899) ## R=.9949372
+
+last_month_predict_df <- data.frame( 
+                                      date=last_month_df$date,
+                                     actual_deaths=last_month_df$daily_total_deaths,
+                                     daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
+                                     daily_total_confirmed=last_month_df$daily_total_confirmed           
+                                    )
+
+ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  #  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  geom_line(color='red'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  xlab("Total Covid Deaths") + ylab("Total Confirmed Cases")
+
+
+last_month_predict_df
+
+absolute_error <- abs(last_month_predict_df$actual_deaths - last_month_predict_df$daily_total_deaths)
+
+min(absolute_error / last_month_predict_df$actual_deaths)
+max(absolute_error / last_month_predict_df$actual_deaths)
+
+fatality_vector <- last_month_predict_df$daily_total_deaths / last_month_predict_df$daily_total_confirmed
+
+fatality_vector
+
+289468 * .0276572
