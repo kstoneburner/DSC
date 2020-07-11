@@ -9,9 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 ### Set working Directory
-#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
-setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
 library(QuantPsyc)
+
 
 removeColsFromDF <- function(input_df, removeCols){
   ###########################################################################
@@ -60,6 +61,38 @@ removeColsFromDF <- function(input_df, removeCols){
   
 }### END RemoveColsFromDF
 
+computeCI <- function(input_data){
+  ##############################################
+  #### Compute Confidence Intervals 
+  ##############################################
+  #### The best way to learn it is to do it!
+  #### Calculation confirmed with t.test()
+  ##############################################
+  # Calculate Standard Error in R 
+  # Standard Deviation divided by the sqrt of the sample size
+  # using the sd (input_data) / sqrt(length(input_data))
+  ### Determine standard error
+  
+  se <- sd(input_data) / sqrt(length(input_data))
+  thisMean <- mean(input_data)
+  ##############################################################################
+  ### The boundaries are a function of the standard error and 95% of zScores lie
+  ### between -1.96 and 1.96
+  ##############################################################################
+  lowerBoundary <- thisMean - (1.96 * se)
+  upperBoundary <- thisMean + (1.96 * se)
+  
+  return (data.frame(
+    
+    lowerBoundary = lowerBoundary,
+    mean = thisMean,
+    upperBoundary = upperBoundary,
+    lowerValue = (thisMean - lowerBoundary),
+    upperValue = (thisMean + upperBoundary)
+    
+  ))
+}
+
 
 
 ## Load the housing data
@@ -84,6 +117,16 @@ housing_df <- removeColsFromDF(raw_housing_df,c("lon",
                                                 "sale_reason",
                                                 "sale_instrument",
                                                 "Sale.Date"))[,-1]
+
+#####################################################
+### Convert spaces to periods in column names
+#####################################################
+thisNames <- colnames(housing_df)
+colnames(housing_df) <- gsub(" ",".",thisNames)
+
+thisNames <- colnames(raw_housing_df)
+colnames(raw_housing_df) <- gsub(" ",".",thisNames)
+
 
 #### Combine the bathrooms - using weighted values
 bath_total <- raw_housing_df$bath_full_count + (raw_housing_df$bath_half_count *.5) + (raw_housing_df$bath_3qtr_count *.75)
@@ -282,23 +325,137 @@ print(std_deviation_df)
 All of these predicted values assume the other variables remain constant. This also indicates the variable bath_total has < .001 influence on the predicted sale price. Making it a good candidate for elimination.
 
 #### e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.
-talk about t.tests()?
+
+The 95% confidence intervals for Sales Price looks like this.
+
+``` {r CIPrice, echo=FALSE }
+price_CI <- computeCI(salePrice_house_age_lm$model$Sale.Price)
+print(price_CI)
+sqft_CI <- computeCI(salePrice_house_age_lm$model$square_feet_total_living)
+grade_CI <- computeCI(salePrice_house_age_lm$model$building_grade)
+bath_CI <- computeCI(salePrice_house_age_lm$model$bath_total)
+bedroom_CI <- computeCI(salePrice_house_age_lm$model$bedrooms)
+age_CI <- computeCI(salePrice_house_age_lm$model$house_age)
+```
+The lower and upper bounds indicate a range from the mean where 95% of the Sales Price values lie. 95% of the Sales Price data lies between \$6,987.83 and \$1,328,463. If this data set was from the Bay Area, $1.3m would not be an outlier
+
+Looking at the 95% confidence interval for Square Feet Living Space
+``` {r CISQft, echo=FALSE}
+print(sqft_CI)
+```
+The range of values for Square feet living is notable that the lower bounds is 17sqft which is an impractical size. There may be data entry errors or properties that are lot only (0 Square feet living). These are outliers that should be taken into consideration. The upper value of 5096 sqft indicates there very well may be some very large properties for sale. Considering wealth and income distribution issues in America, these may indeed be outliers.
+
+Looking at the 95% confidence interval for Building Grade
+``` {r CI_BlgdGrade, echo=FALSE}
+print(grade_CI)
+```
+A lower value of near zero likely indicates there are properties sold without buildings. I suspect this would align with properties with 0sq Ft. An upper bound of 16, indicates there are definitely some fancy homes in the top 5% of building grades.
+
+Looking at the 95% confidence interval for bedrooms
+``` {r CI_Bedrooms, echo=FALSE}
+print(bedroom_CI)
+```
+
+Looking at the 95% confidence interval for bathrooms
+``` {r CI_bath, echo=FALSE}
+print(bath_CI)
+```
+
+Looking at the 95% confidence interval for House Age
+``` {r age_CI, echo=FALSE}
+print(age_CI)
+```
+95% of the homes are 0 - 36 years old.
 
 #### f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.
-p285
-Anova
+Looking at the analysis of variance
+``` {r anova_base, echo=FALSE}
+print(anova(salePrice_base_lm,salePrice_house_age_lm))
+print(anova(salePrice_base_lm,salePrice_year_built_lm))
+```
+
+Both models show an improved F score over the original model. The data continues to indicate that year_built is a slightly better indicator than house age, however I house_age continues to feel like an appropriate metric.
+
+
 #### g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
-p290. casewise diagnostics
-p290 outliers
-p269 cooks distance & leverage
-p291 covariance.ratio
+``` {r setup_casewise, echo=TRUE}
+casewise_df <- housing_df
+casewise_df$cooks.distance <- cooks.distance(salePrice_house_age_lm)
+casewise_df$leverage <- hatvalues(salePrice_house_age_lm)
+casewise_df$covariance.ratios <- covratio(salePrice_house_age_lm)
+```
 
 #### h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.
-p288 rstandard()
+``` {r generate_large_residuals, echo=TRUE}
+
+large_residuals <- rstandard(salePrice_house_age_lm) > 2 | rstandard(salePrice_house_age_lm) < -2
+
+```
 
 #### i. Use the appropriate function to show the sum of large residuals.
-??
+There are 325 large residuals, which represents 0.02526234 of the data. In a normal distribution, having more than 5% of the data attributed to large residuals is an indicator of undue influence on the model.
+``` {r large_residual_count, echo=TRUE}
+sum(large_residuals)
+sum(large_residuals) / nrow(housing_df)
+```
+
 #### j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
+Large_residuals is a logistical vector which can be used to select data that evaluates to TRUE. This method is used to create a data frame containing only the large outliers
+``` {r 5percentCI, echo=TRUE}
+
+large_residuals_df <- housing_df[large_residuals,c(
+  "Sale.Price",
+  "building_grade",
+  "square_feet_total_living",
+  "bedrooms",
+  "bath_total",
+  "house_age")]
+
+```
+Each parameter can be compared to the upper and lower bounds of the confidence interval to identify the specific outlier values.
+``` {r the_other_5_percent, echo=FALSE}
+
+sales_count_low <- nrow(large_residuals_df[which(large_residuals_df$Sale.Price < price_CI$lowerValue),])
+sales_count_high <- nrow(large_residuals_df[which(large_residuals_df$Sale.Price > price_CI$upperValue),])
+
+sqft_count_low <- nrow(large_residuals_df[which(large_residuals_df$square_feet_total_living < sqft_CI$lowerValue),])
+sqft_count_high <- nrow(large_residuals_df[which(large_residuals_df$square_feet_total_living > sqft_CI$upperValue),])
+
+bg_count_low <- nrow(large_residuals_df[which(large_residuals_df$building_grade < grade_CI$lowerValue),])
+bg_count_high <- nrow(large_residuals_df[which(large_residuals_df$building_grade > grade_CI$upperValue),])
+
+bath_count_low <- nrow(large_residuals_df[which(large_residuals_df$bath_total < bath_CI$lowerValue),])
+bath_count_high <- nrow(large_residuals_df[which(large_residuals_df$bath_total > bath_CI$upperValue),])
+
+bed_count_low <- nrow(large_residuals_df[which(large_residuals_df$bedrooms < bedroom_CI$lowerValue),])
+bed_count_high <- nrow(large_residuals_df[which(large_residuals_df$bedrooms > bedroom_CI$upperValue),])
+
+age_count_low <- nrow(large_residuals_df[which(large_residuals_df$house_age < age_CI$lowerValue),])
+age_count_high <- nrow(large_residuals_df[which(large_residuals_df$house_age > age_CI$upperValue),])
+
+print(paste0("Sales.Price - ",(sales_count_low + sales_count_high), " Total outliers"))
+print(paste0("              ", sales_count_low, " contain values less than ",round(price_CI$lowerValue,0) ) )
+print(paste0("              ", sales_count_high, " contain values more than ",round(price_CI$upperValue,0) ) ) 
+
+print(paste0("Building Grade - ",(bg_count_low + bg_count_high), " Total outliers"))
+
+print(paste0("Square Foot Living - ",(sqft_count_low + sqft_count_high), " Total outliers"))
+print(paste0("              ", sqft_count_high, " contain values more than ",round(sqft_CI$upperValue,0) ) ) 
+
+print(paste0("Bedrooms - ",(bed_count_low + bed_count_high), " Total outliers"))
+print(paste0("              ", bed_count_low, " contain values less than ",round(bedroom_CI$lowerValue,2) ) )
+print(paste0("              ", bed_count_high, " contain values more than ",round(bedroom_CI$upperValue,0) ) ) 
+
+print(paste0("Bathrooms - ",(bath_count_low + bath_count_high), " Total outliers"))
+print(paste0("              ", bath_count_low, " contain values less than ",round(bath_CI$lowerValue,2) ) )
+print(paste0("              ", bath_count_high, " contain values more than ",round(bath_CI$upperValue,0) ) ) 
+
+print(paste0("House Age - ",(age_count_low + age_count_high), " Total outliers"))
+print(paste0("              ", age_count_low, " contain values less than ",round(age_CI$lowerValue,2) ) )
+print(paste0("              ", age_count_high, " contain values more than ",round(age_CI$upperValue,0) ) ) 
+
+```
+The predominant outliers appear to be large expensive homes.
 
 #### k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
 

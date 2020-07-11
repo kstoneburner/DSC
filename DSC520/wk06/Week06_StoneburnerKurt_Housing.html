@@ -587,24 +587,123 @@ salePrice_year_built_lm &lt;-    lm(Sale.Price ~ square_feet_total_living + buil
 ## 5      bathrooms 6.951902e-01
 ## 6      house age 1.751079e+01</code></pre>
 <p>Using the house age model</p>
+<pre><code>Predicted Sale Price increases **$151,216** per **989.817** increase in square_feet_total_living
+  - 989.817 std deviation of square_feet_total_living.
+  - 151,216 = 404,381.10 (sale price standard deviation) \* .373945132 (square foot living Beta)
+
+Predicted Sale Price increases **$35308.93** per **1.09** increase in building_grade
+  - 1.09 std deviation of building_grade
+  - 35308.93 = 404,381.10 (sale price standard deviation) * 0.087315978 (building_grade Beta)
+
+Predicted Sale Price decreases **$9026.90** per **.88** increase in bedrooms
+  - .88 std deviation of building_grade
+  - $9026.90 = 404,381.10 (sale price standard deviation) * -0.022322776 (bedrooms Beta)
+
+Predicted Sale Price increases **$2002.35** per **.7** increase in bathrooms
+  - .7 std deviation of building_grade
+  - $2002.35 = 404,381.10 (sale price standard deviation) * 0.004951635 (bathrooms Beta)
+
+Predicted Sale Price decreases **$-34,212.12** per **17.5** increase in house_age
+  - 17.5 std deviation of building_grade
+  - $-34,212.12 = 404,381.10 (sale price standard deviation) * -0.084478319 (house_age Beta)
+  </code></pre>
+<p>All of these predicted values assume the other variables remain constant. This also indicates the variable bath_total has &lt; .001 influence on the predicted sale price. Making it a good candidate for elimination.</p>
 </div>
 <div id="e.-calculate-the-confidence-intervals-for-the-parameters-in-your-model-and-explain-what-the-results-indicate." class="section level4">
 <h4>e. Calculate the confidence intervals for the parameters in your model and explain what the results indicate.</h4>
+<p>The 95% confidence intervals for Sales Price looks like this.</p>
+<pre><code>##   lowerBoundary     mean upperBoundary lowerValue upperValue
+## 1      653749.9 660737.7      667725.6   6987.825    1328463</code></pre>
+<p>The lower and upper bounds indicate a range from the mean where 95% of the Sales Price values lie. 95% of the Sales Price data lies between $6,987.83 and $1,328,463. If this data set was from the Bay Area, $1.3m would not be an outlier</p>
+<p>Looking at the 95% confidence interval for Square Feet Living Space</p>
+<pre><code>##   lowerBoundary     mean upperBoundary lowerValue upperValue
+## 1      2522.402 2539.506      2556.611   17.10434   5096.117</code></pre>
+<p>The range of values for Square feet living is notable that the lower bounds is 17sqft which is an impractical size. There may be data entry errors or properties that are lot only (0 Square feet living). These are outliers that should be taken into consideration. The upper value of 5096 sqft indicates there very well may be some very large properties for sale. Considering wealth and income distribution issues in America, these may indeed be outliers.</p>
+<p>Looking at the 95% confidence interval for Building Grade</p>
+<pre><code>##   lowerBoundary    mean upperBoundary lowerValue upperValue
+## 1      8.221539 8.24042      8.259301 0.01888086   16.49972</code></pre>
+<p>A lower value of near zero likely indicates there are properties sold without buildings. I suspect this would align with properties with 0sq Ft. An upper bound of 16, indicates there are definitely some fancy homes in the top 5% of building grades.</p>
+<p>Looking at the 95% confidence interval for bedrooms</p>
+<pre><code>##   lowerBoundary     mean upperBoundary lowerValue upperValue
+## 1      3.463523 3.478663      3.493803 0.01513974   6.972466</code></pre>
+<p>Looking at the 95% confidence interval for bathrooms</p>
+<pre><code>##   lowerBoundary     mean upperBoundary lowerValue upperValue
+## 1      2.463599 2.475612      2.487625 0.01201309   4.963237</code></pre>
+<p>Looking at the 95% confidence interval for House Age</p>
+<pre><code>##   lowerBoundary     mean upperBoundary lowerValue upperValue
+## 1      17.81144 18.11403      18.41662  0.3025916   36.53065</code></pre>
+<p>95% of the homes are 0 - 36 years old.</p>
 </div>
 <div id="f.-assess-the-improvement-of-the-new-model-compared-to-your-original-model-simple-regression-model-by-testing-whether-this-change-is-significant-by-performing-an-analysis-of-variance." class="section level4">
 <h4>f. Assess the improvement of the new model compared to your original model (simple regression model) by testing whether this change is significant by performing an analysis of variance.</h4>
+<p>Looking at the analysis of variance</p>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: Sale.Price ~ sq_ft_lot
+## Model 2: Sale.Price ~ square_feet_total_living + building_grade + bedrooms + 
+##     bath_total + house_age
+##   Res.Df        RSS Df  Sum of Sq      F    Pr(&gt;F)    
+## 1  12863 2.0734e+15                                   
+## 2  12859 1.6407e+15  4 4.3266e+14 847.74 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: Sale.Price ~ sq_ft_lot
+## Model 2: Sale.Price ~ square_feet_total_living + building_grade + bedrooms + 
+##     bath_total + year_built
+##   Res.Df        RSS Df  Sum of Sq      F    Pr(&gt;F)    
+## 1  12863 2.0734e+15                                   
+## 2  12859 1.6367e+15  4 4.3666e+14 857.66 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Both models show an improved F score over the original model. The data continues to indicate that year_built is a slightly better indicator than house age, however I house_age continues to feel like an appropriate metric.</p>
 </div>
 <div id="g.-perform-casewise-diagnostics-to-identify-outliers-andor-influential-cases-storing-each-functions-output-in-a-dataframe-assigned-to-a-unique-variable-name." class="section level4">
 <h4>g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function’s output in a dataframe assigned to a unique variable name.</h4>
+<pre class="r"><code>casewise_df &lt;- housing_df
+casewise_df$cooks.distance &lt;- cooks.distance(salePrice_house_age_lm)
+casewise_df$leverage &lt;- hatvalues(salePrice_house_age_lm)
+casewise_df$covariance.ratios &lt;- covratio(salePrice_house_age_lm)</code></pre>
 </div>
 <div id="h.-calculate-the-standardized-residuals-using-the-appropriate-command-specifying-those-that-are--2-storing-the-results-of-large-residuals-in-a-variable-you-create." class="section level4">
 <h4>h. Calculate the standardized residuals using the appropriate command, specifying those that are +-2, storing the results of large residuals in a variable you create.</h4>
+<pre class="r"><code>large_residuals &lt;- rstandard(salePrice_house_age_lm) &gt; 2 | rstandard(salePrice_house_age_lm) &lt; -2</code></pre>
 </div>
 <div id="i.-use-the-appropriate-function-to-show-the-sum-of-large-residuals." class="section level4">
 <h4>i. Use the appropriate function to show the sum of large residuals.</h4>
+<p>There are 325 large residuals, which represents 0.02526234 of the data. In a normal distribution, having more than 5% of the data attributed to large residuals is an indicator of undue influence on the model.</p>
+<pre class="r"><code>sum(large_residuals)</code></pre>
+<pre><code>## [1] 325</code></pre>
+<pre class="r"><code>sum(large_residuals) / nrow(housing_df)</code></pre>
+<pre><code>## [1] 0.02526234</code></pre>
 </div>
 <div id="j.-which-specific-variables-have-large-residuals-only-cases-that-evaluate-as-true" class="section level4">
 <h4>j. Which specific variables have large residuals (only cases that evaluate as TRUE)?</h4>
+<p>Large_residuals is a logistical vector which can be used to select data that evaluates to TRUE. This method is used to create a data frame containing only the large outliers</p>
+<pre class="r"><code>large_residuals_df &lt;- housing_df[large_residuals,c(
+  &quot;Sale.Price&quot;,
+  &quot;building_grade&quot;,
+  &quot;square_feet_total_living&quot;,
+  &quot;bedrooms&quot;,
+  &quot;bath_total&quot;,
+  &quot;house_age&quot;)]</code></pre>
+<p>Each parameter can be compared to the upper and lower bounds of the confidence interval to identify the specific outlier values.</p>
+<pre><code>## [1] &quot;Sales.Price - 245 Total outliers&quot;</code></pre>
+<pre><code>## [1] &quot;              7 contain values less than 6988&quot;</code></pre>
+<pre><code>## [1] &quot;              238 contain values more than 1328463&quot;</code></pre>
+<pre><code>## [1] &quot;Building Grade - 0 Total outliers&quot;</code></pre>
+<pre><code>## [1] &quot;Square Foot Living - 54 Total outliers&quot;</code></pre>
+<pre><code>## [1] &quot;              54 contain values more than 5096&quot;</code></pre>
+<pre><code>## [1] &quot;Bedrooms - 9 Total outliers&quot;</code></pre>
+<pre><code>## [1] &quot;              5 contain values less than 0.02&quot;</code></pre>
+<pre><code>## [1] &quot;              4 contain values more than 7&quot;</code></pre>
+<pre><code>## [1] &quot;Bathrooms - 26 Total outliers&quot;</code></pre>
+<pre><code>## [1] &quot;              3 contain values less than 0.01&quot;</code></pre>
+<pre><code>## [1] &quot;              23 contain values more than 5&quot;</code></pre>
+<pre><code>## [1] &quot;House Age - 259 Total outliers&quot;</code></pre>
+<pre><code>## [1] &quot;              225 contain values less than 0.3&quot;</code></pre>
+<pre><code>## [1] &quot;              34 contain values more than 37&quot;</code></pre>
 </div>
 <div id="k.-investigate-further-by-calculating-the-leverage-cooks-distance-and-covariance-rations.-comment-on-all-cases-that-are-problematics." class="section level4">
 <h4>k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.</h4>

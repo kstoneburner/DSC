@@ -572,13 +572,37 @@ ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deat
 
 last_month_predict_df
 
+last_month_predict_df
+
 absolute_error <- abs(last_month_predict_df$actual_deaths - last_month_predict_df$daily_total_deaths)
 
 min(absolute_error / last_month_predict_df$actual_deaths)
 max(absolute_error / last_month_predict_df$actual_deaths)
+mean(absolute_error / last_month_predict_df$actual_deaths)
+
+mean(absolute_error)
+max(absolute_error)
+min(absolute_error)
+median(sort(absolute_error))
 
 fatality_vector <- last_month_predict_df$daily_total_deaths / last_month_predict_df$daily_total_confirmed
 
-fatality_vector
+median(fatality_vector)
+min(fatality_vector)
+maxError <- max(fatality_vector)
+mean(fatality_vector)
 
-289468 * .0276572
+last_month_predict_df
+
+277774 * mean(fatality_vector)
+last_month_predict_df$daily_total_confirmed * mean(fatality_vector)
+mean(fatality_vector)
+
+mean(last_month_predict_df$daily_total_deaths  / last_month_predict_df$daily_total_confirmed)
+min(last_month_predict_df$daily_total_deaths  / last_month_predict_df$daily_total_confirmed)
+max(last_month_predict_df$daily_total_deaths  / last_month_predict_df$daily_total_confirmed)
+
+last_month_predict_df$daily_total_confirmed * (max(last_month_predict_df$daily_total_deaths  / last_month_predict_df$daily_total_confirmed))
+simple_estimate_deaths <- last_month_predict_df$daily_total_confirmed * (min(last_month_predict_df$daily_total_deaths  / last_month_predict_df$daily_total_confirmed))
+
+last_month_predict_df$actual_deaths -simple_estimate_deaths

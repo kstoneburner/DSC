@@ -4,11 +4,12 @@
 
 ## Set the working directory to the root of your DSC 520 directory
 
-#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
-setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
 
 
 library(QuantPsyc)
+library(readxl)
 removeColsFromDF <- function(input_df, removeCols){
   ###########################################################################
   ### Remove Columns from a a data frame the Hard Way!
@@ -50,17 +51,57 @@ removeColsFromDF <- function(input_df, removeCols){
     ########################################################################################
     thisColName <- unlist(newColNames[i])
     
-    output_df <- cbind(output_df,input_df[thisColName])
+    ### Replace blank spaces with periods
+    #thisColName <- gsub(" ",".",thisColName) 
+    
+    #?gsub
+    
+    
+    output_df <- cbind(output_df, input_df[thisColName])
     
   }### END Each New Column Name
-  
+
   return(output_df)
   
 }### END RemoveColsFromDF
 
+computeCI <- function(input_data){
+  ##############################################
+  #### Compute Confidence Intervals 
+  ##############################################
+  #### The best way to learn it is to do it!
+  #### Calculation confirmed with t.test()
+  ##############################################
+  # Calculate Standard Error in R 
+  # Standard Deviation divided by the sqrt of the sample size
+  # using the sd (input_data) / sqrt(length(input_data))
+  ### Determine standard error
+  
+  se <- sd(input_data) / sqrt(length(input_data))
+  thisMean <- mean(input_data)
+  ##############################################################################
+  ### The boundaries are a function of the standard error and 95% of zScores lie
+  ### between -1.96 and 1.96
+  ##############################################################################
+  lowerBoundary <- thisMean - (1.96 * se)
+  upperBoundary <- thisMean + (1.96 * se)
+  
+  return (data.frame(
+    
+    lowerBoundary = lowerBoundary,
+    mean = thisMean,
+    upperBoundary = upperBoundary,
+    lowerValue = (thisMean - lowerBoundary),
+    upperValue = (thisMean + upperBoundary)
+    
+  ))
+}
+
 
 ## Load the housing data
-raw_housing_df <- read.csv("week-7-housing.csv")
+#raw_housing_df <- read.csv("week-7-housing.csv")
+raw_housing_df <- read_excel("week-6-housing.xlsx")
+
 
 ## Remove the double date first column from CSV
 #raw_housing_df <- raw_housing_df[2:length(colnames(raw_housing_df))]
@@ -97,6 +138,16 @@ housing_df <- removeColsFromDF(raw_housing_df,c("lon",
                                                 "sale_instrument",
                                                 "Sale.Date"))[,-1]
 
+#####################################################
+### Convert spaces to periods in column names
+#####################################################
+thisNames <- colnames(housing_df)
+colnames(housing_df) <- gsub(" ",".",thisNames)
+
+thisNames <- colnames(raw_housing_df)
+colnames(raw_housing_df) <- gsub(" ",".",thisNames)
+head(raw_housing_df)
+
 #### Combine the bathrooms
 bath_total <- raw_housing_df$bath_full_count + (raw_housing_df$bath_half_count *.5) + (raw_housing_df$bath_3qtr_count *.75)
 
@@ -114,6 +165,7 @@ sale_year <- format(as.Date(raw_housing_df$Sale.Date, format="%m/%d/%Y"),"%Y")
 
 #### Convert Date (year) into Date (number)
 sale_year <- as.numeric(sale_year)
+
 
 #### The difference between the sale_year and year_built. Is the dwellings age.
 house_age <- (sale_year - year_built)
@@ -143,11 +195,62 @@ summary(salePrice_naieve_lm)
 salePrice_house_age_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + house_age, data=housing_df)
 summary(salePrice_house_age_lm)
 salePrice_year_built_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + year_built, data=housing_df)
+
+
+
 summary(salePrice_year_built_lm)
 lm.beta(salePrice_house_age_lm)
 lm.beta(salePrice_year_built_lm)
 summary(salePrice_base_lm)
 summary(salePrice_naieve_lm)
+
+
+t.test(housing_df$Sale.Price)
+t.test(housing_df$building_grade)
+t.test(housing_df$square_feet_total_living)
+t.test(housing_df$bedrooms)
+t.test(housing_df$bath_total)
+t.test(housing_df$house_age)
+t.test(housing_df$year_built)
+
+t.test(salePrice_base_lm$model)
+t.test(salePrice_naieve_lm$model)
+t.test(salePrice_house_age_lm$model)
+t.test(salePrice_house_age_lm$model$Sale.Price)
+salePrice_house_age_lm$model
+
+mean(salePrice_house_age_lm$model$Sale.Price)
+max(salePrice_house_age_lm$model$Sale.Price)
+min(salePrice_house_age_lm$model$Sale.Price)
+
+############################################
+#### Confidence Intervals the Hard way
+############################################
+# Calculate Standard Error in R 
+# using the SD function / SQRT of vector length
+### Determine standard error
+se <-  sd(salePrice_house_age_lm$model$Sale.Price) / sqrt(length(salePrice_house_age_lm$model$Sale.Price))
+mean(salePrice_house_age_lm$model$Sale.Price) - (1.96 * se)
+mean(salePrice_house_age_lm$model$Sale.Price) + (1.96 * se)
+t.test(salePrice_house_age_lm$model$Sale.Price)
+
+
+#We'll need these Later - for outliers
+price_CI <- computeCI(salePrice_house_age_lm$model$Sale.Price)
+sqft_CI <- computeCI(salePrice_house_age_lm$model$square_feet_total_living)
+grade_CI <- computeCI(salePrice_house_age_lm$model$building_grade)
+bath_CI <- computeCI(salePrice_house_age_lm$model$bath_total)
+bedroom_CI <- computeCI(salePrice_house_age_lm$model$bedrooms)
+age_CI <- computeCI(salePrice_house_age_lm$model$house_age)
+
+t.test(salePrice_house_age_lm$model)
+
+salePrice_house_age_lm$model
+
+salePrice_house_age_lm$model$house_age
+
+
+
 anova(salePrice_base_lm,salePrice_naieve_lm)
 #anova(salePrice_base_lm,square_feet_total_living)
 anova(salePrice_base_lm,salePrice_house_age_lm)
@@ -157,15 +260,108 @@ anova(salePrice_base_lm,salePrice_year_built_lm,salePrice_house_age_lm)
 
 cor(housing_df)[1,]
 
+salePrice_improved_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade  + house_age, data=housing_df)
+anova(salePrice_base_lm,salePrice_improved_lm)
+
+
 anova(salePrice_base_lm,salePrice_house_age_lm)
 anova(salePrice_base_lm,salePrice_year_built_lm)
 resid(salePrice_house_age_lm)
-rstandard(salePrice_house_age_lm)
+large_residuals
+
+case[large_residuals]
+
 rstudent(salePrice_house_age_lm)
 
 cooks.distance(salePrice_house_age_lm)
 dfbeta(salePrice_house_age_lm)
 dffits(salePrice_house_age_lm)
+
+#### g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
+#p290. casewise diagnostics
+#p290 outliers
+#p269 cooks distance & leverage
+#p291 covariance.ratio
+##### Look for outliers with these tests
+casewise_df <- housing_df
+casewise_df$cooks.distance <- cooks.distance(salePrice_house_age_lm)
+casewise_dfl$leverage <- hatvalues(salePrice_house_age_lm)
+casewise_df$covariance.ratios <- covratio(salePrice_house_age_lm)
+
+casewise_df
+
+###Cooks Distance test.
+### Any value greater than is considered to have outsized influence on the model.
+
+### p292
+### I think this is out casewise diagnostic
+### Look for Large residuals. any Value greater than two should be flagged as an outlier
+large_residuals <- rstandard(salePrice_house_age_lm) > 2 | rstandard(salePrice_house_age_lm) < -2
+
+### Get a count of Large residuals
+sum(large_residuals)
+
+head(housing_df)
+
+
+large_residuals_df <- housing_df[large_residuals,c("Sale.Price","building_grade","square_feet_total_living","bedrooms","bath_total","house_age")]
+large_residuals_df
+
+sales_count_low <- nrow(large_residuals_df[which(large_residuals_df$Sale.Price < price_CI$lowerValue),])
+sales_count_high <- nrow(large_residuals_df[which(large_residuals_df$Sale.Price > price_CI$upperValue),])
+
+sqft_count_low <- nrow(large_residuals_df[which(large_residuals_df$square_feet_total_living < sqft_CI$lowerValue),])
+sqft_count_high <- nrow(large_residuals_df[which(large_residuals_df$square_feet_total_living > sqft_CI$upperValue),])
+
+bg_count_low <- nrow(large_residuals_df[which(large_residuals_df$building_grade < grade_CI$lowerValue),])
+bg_count_high <- nrow(large_residuals_df[which(large_residuals_df$building_grade > grade_CI$upperValue),])
+
+bath_count_low <- nrow(large_residuals_df[which(large_residuals_df$bath_total < bath_CI$lowerValue),])
+bath_count_high <- nrow(large_residuals_df[which(large_residuals_df$bath_total > bath_CI$upperValue),])
+
+bed_count_low <- nrow(large_residuals_df[which(large_residuals_df$bedrooms < bedroom_CI$lowerValue),])
+bed_count_high <- nrow(large_residuals_df[which(large_residuals_df$bedrooms > bedroom_CI$upperValue),])
+
+age_count_low <- nrow(large_residuals_df[which(large_residuals_df$house_age < age_CI$lowerValue),])
+age_count_high <- nrow(large_residuals_df[which(large_residuals_df$house_age > age_CI$upperValue),])
+
+#large_residuals_df[which(large_residuals_df$house_age < age_CI$lowerValue),]
+
+
+print(paste0("Sales.Price - ",(sales_count_low + sales_count_high), " Total outliers"))
+print(paste0("              ", sales_count_low, " contain values less than ",round(price_CI$lowerValue,0) ) )
+print(paste0("              ", sales_count_high, " contain values more than ",round(price_CI$upperValue,0) ) ) 
+
+print(paste0("Building Grade - ",(bg_count_low + bg_count_high), " Total outliers"))
+
+print(paste0("Square Foot Living - ",(sqft_count_low + sqft_count_high), " Total outliers"))
+print(paste0("              ", sqft_count_high, " contain values more than ",round(sqft_CI$upperValue,0) ) ) 
+
+print(paste0("Bedrooms - ",(bed_count_low + bed_count_high), " Total outliers"))
+print(paste0("              ", bed_count_low, " contain values less than ",round(bedroom_CI$lowerValue,2) ) )
+print(paste0("              ", bed_count_high, " contain values more than ",round(bedroom_CI$upperValue,0) ) ) 
+
+print(paste0("Bathrooms - ",(bath_count_low + bath_count_high), " Total outliers"))
+print(paste0("              ", bath_count_low, " contain values less than ",round(bath_CI$lowerValue,2) ) )
+print(paste0("              ", bath_count_high, " contain values more than ",round(bath_CI$upperValue,0) ) ) 
+
+print(paste0("House Age - ",(age_count_low + age_count_high), " Total outliers"))
+print(paste0("              ", age_count_low, " contain values less than ",round(age_CI$lowerValue,2) ) )
+print(paste0("              ", age_count_high, " contain values more than ",round(age_CI$upperValue,0) ) ) 
+
+?rstandard
+
+
+salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance","leverage","covariance.ratios")]
+### Check for outliers
+sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance") ] > 1 )
+##################################
+### Check Leverage for outliers
+##################################
+### These are troublesome > 0
+sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_2x_boundary )
+### These are outliers > )
+sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_3x_boundary )
 
 
 #salePrice_base_lm$standardized.residuals <- rstandard(salePrice_house_age_lm) 
@@ -187,21 +383,6 @@ salePrice_house_age_lm$model$leverage <- hatvalues(salePrice_house_age_lm)
 salePrice_house_age_lm$model$covariance.ratios <- covratio(salePrice_house_age_lm)
 
 
-### p292
-### I think this is out casewise diagnostic
-salePrice_base_lm$model$large_residuals <- salePrice_base_lm$standardized.residuals > 2 | salePrice_base_lm$standardized.residuals < -2
-
-
-salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance","leverage","covariance.ratios")]
-### Check for outliers
-sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance") ] > 1 )
-##################################
-### Check Leverage for outliers
-##################################
-### These are troublesome > 0
-sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_2x_boundary )
-### These are outliers > )
-sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_3x_boundary )
 
 
 
@@ -378,18 +559,6 @@ sd(housing_df$Sale.Price)
 
 tail(housing_df)
 
-t.test(housing_df$Sale.Price)
-t.test(housing_df$building_grade)
-t.test(housing_df$square_feet_total_living)
-t.test(housing_df$bedrooms)
-t.test(housing_df$bath_total)
-t.test(housing_df$house_age)
-t.test(housing_df$year_built)
-
-t.test(salePrice_base_lm$model)
-t.test(salePrice_naieve_lm$model)
-t.test(salePrice_house_age_lm$model)
-t.test(salePrice_year_built_lm$model)
 
 cor(num_housing_df)[1,]
 head(num_housing_df)
