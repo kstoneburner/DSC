@@ -196,6 +196,7 @@ salePrice_house_age_lm <-    lm(Sale.Price ~ square_feet_total_living + building
 summary(salePrice_house_age_lm)
 salePrice_year_built_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + year_built, data=housing_df)
 
+cor(housing_df[2:length(housing_df)])[1,]
 
 
 summary(salePrice_year_built_lm)
@@ -261,6 +262,7 @@ anova(salePrice_base_lm,salePrice_year_built_lm,salePrice_house_age_lm)
 cor(housing_df)[1,]
 
 salePrice_improved_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade  + house_age, data=housing_df)
+plot(salePrice_improved_lm)
 anova(salePrice_base_lm,salePrice_improved_lm)
 
 
@@ -285,13 +287,10 @@ dffits(salePrice_house_age_lm)
 ##### Look for outliers with these tests
 casewise_df <- housing_df
 casewise_df$cooks.distance <- cooks.distance(salePrice_house_age_lm)
-casewise_dfl$leverage <- hatvalues(salePrice_house_age_lm)
+casewise_df$leverage <- hatvalues(salePrice_house_age_lm)
 casewise_df$covariance.ratios <- covratio(salePrice_house_age_lm)
 
 casewise_df
-
-###Cooks Distance test.
-### Any value greater than is considered to have outsized influence on the model.
 
 ### p292
 ### I think this is out casewise diagnostic
@@ -354,67 +353,33 @@ print(paste0("              ", age_count_high, " contain values more than ",roun
 
 salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance","leverage","covariance.ratios")]
 ### Check for outliers
-sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance") ] > 1 )
+##########################################################################################
+###Check Cooks Distance for outliers
+### Any value greater than 1 is considered to have outsized influence on the model.
+##########################################################################################
+sum(casewise_df$cooks.distance > 1)
+
+
+### levarage test
+### k+1 / n = average leverage
+### k = predictors
+### n = Sample size
+
 ##################################
 ### Check Leverage for outliers
 ##################################
 ### These are troublesome > 0
-sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_2x_boundary )
+#sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_2x_boundary )
 ### These are outliers > )
-sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_3x_boundary )
-
-
-#salePrice_base_lm$standardized.residuals <- rstandard(salePrice_house_age_lm) 
-#salePrice_base_lm$studentized.residuals <- rstudent(salePrice_house_age_lm)
-#salePrice_base_lm$cooks.distance <- cooks.distance(salePrice_house_age_lm)
-#salePrice_base_lm$dfbeta <- dfbeta(salePrice_house_age_lm)
-#salePrice_base_lm$dffit <- dffits(salePrice_house_age_lm)
-#salePrice_base_lm$leverage <- hatvalues(salePrice_house_age_lm)
-#salePrice_base_lm$covariance.ratios <- covratio(salePrice_house_age_lm)
-
-
-#salePrice_house_age_lm
-salePrice_house_age_lm$model$standardized.residuals <- rstandard(salePrice_house_age_lm) 
-salePrice_house_age_lm$model$studentized.residuals <- rstudent(salePrice_house_age_lm)
-salePrice_house_age_lm$model$cooks.distance <- cooks.distance(salePrice_house_age_lm)
-salePrice_house_age_lm$model$dfbeta <- dfbeta(salePrice_house_age_lm)
-salePrice_house_age_lm$model$dffit <- dffits(salePrice_house_age_lm)
-salePrice_house_age_lm$model$leverage <- hatvalues(salePrice_house_age_lm)
-salePrice_house_age_lm$model$covariance.ratios <- covratio(salePrice_house_age_lm)
-
-
-
-
+#sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_3x_boundary )
 
 ## k = number of predictors: square_feet_total_living + building_grade + bedrooms + bath_total + house_age
-## k= 5 
+## k = 5 
 ## average levarage = (k + 1)/n
 ## n= 12865
-#covariance outliers
-#p291
-# Reference p270 - Recommendataion is Identifying cases with 3* the average value (average covariance in this case)
-upperCov <- 1 + 3*(5 + 1)/12865
-lowerCov <- 1 - 3*(5 + 1)/12865
 k<-5
-n <- nrow(housing_df)
-upperCov <- 1 + 3*(k + 1)/n
-lowerCov <- 1 - 3*(k + 1)/n
-###########################################
-### Check covariance ratios for outliers
-###########################################
-### Any Values of sum indicate outliers
-sum(salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("covariance.ratios") ] > upperCov)
-sum(salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("covariance.ratios") ] < lowerCov)
-sum(salePrice_house_age_lm$model$covariance.ratios > upperCov) + sum(salePrice_house_age_lm$model$covariance.ratios < lowerCov)
+n <- nrow(casewise_df)
 
-
-### Any values with a covariance 3x average covariance are ouliers
-
-###Cooks Distance test.
-### Any value greater than is considered an outlier
-
-### levarage test
-### k+1 / n = average leverage
 average_leverage <- (k + 1) / n
 
 average_leverage
@@ -424,66 +389,71 @@ average_leverage_3x_boundary <- average_leverage *3
 
 average_leverage_2x_boundary
 
-housing_df[housing_df$large_residuals,c("cooks.distance","leverage","covariance.ratios")]
+sum(casewise_df$leverage > average_leverage_2x_boundary)
+sum(casewise_df$leverage > average_leverage_3x_boundary)
+
+sum(casewise_df$leverage > average_leverage_2x_boundary) / n
+sum(casewise_df$leverage > average_leverage_3x_boundary) / n 
+
+###########################################
+### Check covariance ratios for outliers
+###########################################
+### Any values with a covariance 3x average covariance are ouliers
+### Any Values of sum indicate outliers
+#covariance outliers
+#p291
+# Reference p270 - Recommendataion is Identifying cases with 3* the average value (average covariance in this case)
+upperCov <- 1 + 3*(5 + 1)/12865
+lowerCov <- 1 - 3*(5 + 1)/12865
+
+#### Checking if the covariance ratios deviate 3 times from the average leverage
+upperCov <- 1 + 3*(k + 1)/n
+lowerCov <- 1 - 3*(k + 1)/n
+
+sum(casewise_df$covariance.ratios > upperCov)
+sum(casewise_df$covariance.ratios < lowerCov)
+
+### Assessing assumption of indenpendence of error
+### DSUR p292
+### Using library car
+### durbinWatsonTest
+### dwt(model)
+### Ideal D-W statistic is 2. Closer to 2 the better. 1 or 3 
+library(car) #durbinwatsontest- dwt
+dwt(salePrice_house_age_lm)
 
 
-
-salePrice_base_lm$large_residuals
-
-large_residuals
-
-##i.
-sum(large_residuals)
-
-housing_df[large_residuals,c('cooks.distance')] 
-housing_df[large_residuals,c('covariance.ratios')] 
-housing_df[large_residuals,c('leverage')] > average_leverage_2x_boundary
-
-housing_df[large_residuals,c('leverage')] > average_leverage_2x_boundary
+#### Asses the assumption of no multicollinearity using vif()
+#### p292
+#### vif(model)       - If largest value > 10 there is cause for concern
+#### mean(vif(model)) - If the average VIF is substantially greater than 1, the model may be biased
+#### 1/vif(model)     - Tolerance: values below 0.1 indicate serious problems, 0.2 indicate potential problems
 
 
+vif(salePrice_house_age_lm)
 
+1/vif(salePrice_house_age_lm)
 
+mean(vif(salePrice_house_age_lm))
 
+#### n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.
+### DSUR 294
+### plot(limear_model) - generates a series of plots
+plot(salePrice_house_age_lm)
+# Plot#1: Shows residuals vs fitted values. The pattern should be fairly random which indicates the assumptions of 
+# linearity, randomness and homoscedasticity have been met
 
-housing_df[large_residuals,c('covariance.ratios')] > upperCov | housing_df[large_residuals,c('covariance.ratios')] < lowerCov
+#Plot #2: Q-Q Plot: Shows the deviations from normalit. Data that is on the line is normally distributed. Data points off the line line indicate
+######## values that are deviated from the the norm. 
 
+#Plot #3: Residuals vs fitted values. plots closer to the line indicate normality. Further the distance indicates outliers
 
-### Should be about 1% - this model is 1.95% - Could be high
-sum(salePrice_house_age_lm$standardized.residuals > 2.5 | salePrice_house_age_lm$standardized.residuals < -2.5) / nrow(salePrice_base_lm$model)
-salePrice_house_age_lm$standardized.residuals > 2.5 | salePrice_house_age_lm$standardized.residuals < -2.5 
+#We can check if the residuals deviate from a normal distribution is inspect a histogram of the residuals.
+hist(rstandard(salePrice_house_age_lm))
+hist(salePrice_house_age_lm)
 
-### Anything above 3 represents outliers that affect the model
-sum(salePrice_base_lm$standardized.residuals > 3 | salePrice_base_lm$standardized.residuals < -3 ) / nrow(salePrice_base_lm$model)
+#### o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?
 
-rstandard(salePrice_house_age_lm$model$square_feet_total_living)
-
-sum(salePrice_house_age_lm$model$square_feet_total_living > 2 | salePrice_house_age_lm$model$square_feet_total_living < -2)
-sum(salePrice_house_age_lm$model$Sales.Price < 2 | salePrice_house_age_lm$model$Sales.Price < 2)
-sum(salePrice_house_age_lm$model$bath_total < 2 | salePrice_house_age_lm$model$bath_total < 2)
-
-
-
-str(salePrice_base_lm)
-
-sum(housing_df[housing_df$large_residuals,c("standardized.residuals")])
-
-sum(housing_df$large_residuals) /nrow(housing_df)
-
-### Displays outliers with large residuals > 2
-housing_df[housing_df$large_residuals,c("Sale.Price","square_feet_total_living","building_grade","bedrooms","bath_total","house_age")]
-housing_df[housing_df$large_residuals,c("cooks.distance","leverage","covariance.ratios")]
-
-
-salePrice_house_age_lm$model[salePrice_base_lm$large_residuals, c("cooks.distance","leverage","covariance.ratios")]
-
-#salePrice_house_age_lm[ salePrice_house_age_lm$large_residuals [c("cooks.distance","leverage","covariance.ratios")]
-
-#salePrice_house_age_lm$large_residuals
-
-#salePrice_house_age_lm[1,]
-
-#head(salePrice_house_age_lm)
 
 
 
@@ -569,77 +539,4 @@ head(num_housing_df)
 ### F = Essentially the mean / error. Bigger is better fit
 
 ### Write Down something for T scores and Zscores.
-
-unique(bath_total)
-
-hist(bath_total)
-plot(bath_total,housing_df$Sale.Price)
-plot(raw_housing_df$bath_full_count,housing_df$Sale.Price)
-
-summary(raw_housing_df$bath_full_count)
-summary(bath_total)
-
-
-plot(iqr_dumper_df$bath_total,iqr_dumper_df$Sale.Price)
-housing_df$Sale.Date <-  as.Date(housing_df$Sale.Date,  tryFormats = c("%m/%d/%Y") )
-sale_year
-housing_df <- cbind(housing_df,sale_year)
-housing_df <- cbind(housing_df,year_built)
-
-
-
-housing_df$year_built
-
-housing_df[ which(housing_df$sale_year < housing_df$year_built),]
-
-raw_housing_df[136,]
-
-housing_df$Sale.Date
-
-head(housing_df)
-str(housing_df)
-unique(raw_housing_df$sitetype)
-unique(raw_housing_df$current_zoning)
-unique(raw_housing_df$year_renovated)
-unique(raw_housing_df$sale_reason)
-unique(raw_housing_df$building_grade)
-unique(raw_housing_df$present_use)
-unique(raw_housing_df$sale_warning)
-unique(raw_housing_df$sale_instrument)
-unique(raw_housing_df$present_use)
-unique(raw_housing_df$present_use)
-
-
-present_use_count <- vapply(unique(raw_housing_df$present_use), function(x){
-  thisUseVector <- raw_housing_df [ which(raw_housing_df$present_use == x),]
-  
-  return(nrow(thisUseVector))},numeric(1))
-
-
-
-
-length(unique(raw_housing_df$current_zoning))
-current_zoning_count <- vapply(unique(raw_housing_df$current_zoning), function(x){
-  thisUseVector <- raw_housing_df [ which(raw_housing_df$current_zoning == x),]
-  
-  return(nrow(thisUseVector))},numeric(1))
-
-current_zoning_count
-
-## Convert current_zoning into a numeric value.
-## Build a number vector based on the unique values in current_zoning
-zoning_zones <- unique(raw_housing_df$current_zoning)
-
-### Return the index Value from zoning_zones
-
-coded_zoning <- vapply(raw_housing_df$current_zoning, function(x){
-  thisIndex <- match(x,zoning_zones)
-  return(thisIndex)},numeric(1))
-
-cor(cbind(housing_df,coded_zoning))[1,]
-tail(housing_df)
-hist(coded_zoning)
-hist(raw_housing_df$present_use)
-
-cor(coded_zoning,raw_housing_df$present_use)
 

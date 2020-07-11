@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
 #setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
 library(QuantPsyc)
-
+library(car) #durbinwatsontest- dwt
 
 removeColsFromDF <- function(input_df, removeCols){
   ###########################################################################
@@ -174,7 +174,7 @@ As a currently active house hunter the primary factors that affect price are:
   1. Bathrooms
   1. House Quality
 
-Other factors that may have a lessor effect on price
+Other factors that may have a lesser effect on price
 
   - Age of the home - There may be a premium based on the age of the home. 
   - Sale Warning - May indicate other issues with the property or repairs, that may deflate the selling price.
@@ -458,11 +458,84 @@ print(paste0("              ", age_count_high, " contain values more than ",roun
 The predominant outliers appear to be large expensive homes.
 
 #### k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
+There are no data with a Cooks Distance greater than one, so none of the data is having an outsized effect on the model.
+``` { r cooks_analysis, echo=TRUE}
+sum(casewise_df$cooks.distance > 1)
+```
 
+Checking leverage indicates a number of outliers. Nearly 5% of the data is attributed to having double the average leverage. Along with 2.5% attributed to triple the average leverage. Taking into account no data has a Cooks Distance greater than one, and the abonormal leverage is limited to 5% the model is still valid.
+
+``` {r leverage, echo=FALSE}
+k <-5
+n <- nrow(casewise_df)
+
+average_leverage <- (k + 1) / n
+
+print("Number of cases with more than double the leverage:")
+sum(casewise_df$leverage > average_leverage *2)
+print("Representative percentage of the data")
+sum(casewise_df$leverage > average_leverage * 2) / n
+
+print("Number of cases with more than triple the leverage:")
+sum(casewise_df$leverage > average_leverage *3)
+print("Representative percentage of the data")
+sum(casewise_df$leverage > average_leverage * 3) / n 
+
+```
+
+There are 472 cases that deviate significantly above the the covariance ratios, and 251 that deviate below. Again considering Cooks distance and relatively small sample size this should not have an outsized effect on the model. 
+
+``` {r covariance_ration, echo=TRUE}
+
+#### Checking if the covariance ratios deviate 3 times from the average leverage
+upperCov <- 1 + 3*(k + 1)/n
+lowerCov <- 1 - 3*(k + 1)/n
+
+sum(casewise_df$covariance.ratios > upperCov)
+sum(casewise_df$covariance.ratios < lowerCov)
+
+```
 #### l. Perform the necessary calculations to assess the assumption of independence and state if the condition is met or not.
+``` {r dwt, echo=TRUE}
+
+dwt(salePrice_house_age_lm)
+```
+The Durbin Watson statistic is less than 1 with a p of zero indicating the independence of errors condition is not met.
 
 #### m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.
+vif() is used to test for no multicollinarity. The vif value and tolerance generate no cause for concern. The mean indicates there may be some bias in the data. The textbook states if the value substantially deviates from 1 there may be bias. There is no reference or scal for substantial.
+``` {r vif, echo=TRUE}
 
+### VIF > 10 is cause for Concern
+vif(salePrice_house_age_lm)
+
+### VIF Tolerance < 0.2 cause for concern
+1/vif(salePrice_house_age_lm)
+
+### VIF mean substantially greater than 1 may be biased
+mean(vif(salePrice_house_age_lm))
+
+```
 #### n. Visually check the assumptions related to the residuals using the plot() and hist() functions. Summarize what each graph is informing you of and if any anomalies are present.
 
+Plotting the linear model generates four plots.
+
+Plot#1 - Residuals vs fitted. The expected outcome is a random distribution of datapoints. The plotted residuals tend to cluster near the fitted values indicating there is an issue linearaity and randomness in the data.
+
+Plot#2 - Q-Q plot that show standardized residuals in deviations from normal. There is a significant portion of the model that deviates from the norm.
+
+Plot#3 Square root of the standardized residuals vs fitted values - Values closer to the line indicate a normal distribution. As with other plots there are significant indications that housing in not normally distributed.
+
+Plot#4 Standardized residuals vs leverage. The values indicate no there are no cases that exert undue influence over the model.
+
+a Histogram of the standardized residuals indicates a leptokurtic distribution. 
+
+``` { r plot_thickens, echo=TRUE }
+plot(salePrice_house_age_lm)
+hist(salePrice_house_age_lm)
+```
 #### o. Overall, is this regression model unbiased? If an unbiased regression model, what does this tell us about the sample vs. the entire population model?
+
+This regression model appears to be relatively unbiased. Cooke's distance indicates there are no data points exerting undue influence although there are abnormalities for the leverage and covariance ratios. The data appears to indicate that housing prices are not normally distributed.
+
+ 
