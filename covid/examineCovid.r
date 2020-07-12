@@ -524,9 +524,15 @@ build_rolling_offset <- function(input_df,rolling_days){
   
 }### END build rolling offset
 offset_df <- build_rolling_offset(offset_daily_df,30)
-offset_df
+tail(offset_df)
 min_mse <- min(offset_df[offset_df$mse > 0,]$mse)
 
+offset_df$mse <- round(offset_df$mse,0)
+offset_df$error <- round(offset_df$error,0)
+offset_df$offset <- gsub("offset_","",offset_df$offset)
+
+write.csv(offset_df,"C:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\error_offset.csv")
+?write.csv
 error_offset <- vapply(offset_df$mse,function(x){
   if (x == 0) {return(x)}
   return(mse/x)
@@ -534,6 +540,8 @@ error_offset <- vapply(offset_df$mse,function(x){
 
 ### Build model for last 30 days
 last_offset <- offset_df$offset[nrow(offset_df)]
+
+last_offset
 
 rowCount <- nrow(offset_daily_df)
 startIndex <- rowCount - 30
@@ -570,7 +578,12 @@ ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deat
   xlab("Total Covid Deaths") + ylab("Total Confirmed Cases")
 
 
-last_month_predict_df
+last_row <- offset_daily_df[nrow(offset_daily_df),]
+
+312344 * .03900502
+
+12182 + (12182 *.03)
+12182 - (12182 *.03)
 
 last_month_predict_df
 

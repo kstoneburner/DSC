@@ -2,7 +2,7 @@
 title: 'Week06: Housing Data Analysis'
 author: "Kurt Stoneburner"
 date: "7/7/2020"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Set working Directory
 setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC520\\wk06")
 #setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+library(readxl)
 library(QuantPsyc)
 library(car) #durbinwatsontest- dwt
 
@@ -98,7 +99,7 @@ computeCI <- function(input_data){
 ## Load the housing data
 ## We'll keep the raw table for access to the unaltered data. 
 ## This helps to keep housing_df (more) svelte (or svelter)
-raw_housing_df <- read.csv("week-7-housing.csv")
+raw_housing_df <- read_excel("week-6-housing.xlsx")
 
 housing_df <- removeColsFromDF(raw_housing_df,c("lon",
                                                 "lat",
@@ -116,7 +117,7 @@ housing_df <- removeColsFromDF(raw_housing_df,c("lon",
                                                 "present_use",
                                                 "sale_reason",
                                                 "sale_instrument",
-                                                "Sale.Date"))[,-1]
+                                                "Sale Date"))[,-1]
 
 #####################################################
 ### Convert spaces to periods in column names
@@ -209,61 +210,38 @@ The bath_total is more in line with current listing standards and makes the rela
 
 #### b. Create two variables; one that will contain the variables Sale Price and Square Foot of Lot (same variables used from previous assignment on simple regression) and one that will contain Sale Price and several additional predictors of your choice. Explain the basis for your additional predictor selections.
 
-1. Location has a large affect on price. Denser urban locations, as well as high income zip codes increase price. A 1 acre farm 100 miles from the nearest city is priced different than a 1 acre farm in a city. In my city of Castro Valley, similar homes may vary by $100k depending on which school district the house lies in. 
-1. Bedrooms and Bathrooms directly reflect the needs of the American buyer which assumes individual space demands a higher premium than the overall shared space of the dwelling. 
 1. The an increase in total living space should increase the sale price since structure costs increase with size. 
+1. Building Grade denotes the overall quality of the structure which should directly affect price
+1. Bedrooms and Bathrooms directly reflect the needs of the American buyer which assumes individual space demands a higher premium than the overall shared space of the dwelling. 
+1. The age of the house should affect price. It is expected that an increasing house age will have negative effect of Sales Price. 
 
-``` {r build lm, echo=TRUE}
-
-salePrice_base_lm <-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
-
-salePrice_naieve_lm <-  lm(Sale.Price ~ zip5 + bedrooms + bath_total + square_feet_total_living, data=housing_df)
-
-summary(salePrice_base_lm)
-summary(salePrice_naieve_lm)
-
-```
-And this is where I stop and challenge my assumptions. The criteria I listed above are what **"I"** look for in a dwelling. Clearly my biases are showing. An Adjusted R-squared:  0.2095 means I need to rethink the process.
-
-The first selling point of real estate is LOCATION! LOCATION! LOCATION! Let's test the veracity of that claim using the data.
-``` {r its_all_about_location, echo=TRUE }
-
-unique(housing_df$zip5)
-
-```
-
-There are only four zip codes in the data. Location may be important, but not in this data set. This variable is not significant and should be binned.
-
-Let's turn to correlation to determine significant variables.
+Correlation confirms these assumptions.
 ``` {r lets_correlate,echo=TRUE}
 
 cor(housing_df)[1,]
 
 ```
 
-Based on the correlation, variables with a correlation of greater than .20 are good candidates to work with. I was genuinely surprised at the correlation value of bathrooms to sale price. The improved linear model looks like this:
+Based on the correlation, variables with a correlation of greater than .20 are good candidates to work with. I was genuinely surprised at the correlation value of bathrooms to sale price. A linear model can built with these variables.
 ``` {r improved_linear_model, echo=TRUE}
 
 salePrice_base_lm <-  lm(Sale.Price ~ sq_ft_lot, data=housing_df)
 salePrice_house_age_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + house_age, data=housing_df)
-salePrice_year_built_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade + bedrooms + bath_total + year_built, data=housing_df)
 
 ```
 
-I included a third model using house_age instead of year_built. These variable vary similarly with year_built having a slightly higher correlation than house_age. But house age at the time of sale feels like a more relevant metric. The year built variable doesn't neccessarily take into account the age of the home since the sale date is not included. A affect of age on a house built in 1945 and sold in 1945 should be different than the same house built in 1945 and sold in 2006. 
+Taking the age of the house into account feels like an important element of the model. I'm struggling with which is a better metric house_age, or year built. Year built has a slightly better Adjusted R squared and F score, which indicates it would be a slightly better metric. However, house age appears to affect the model as expected, the older the house the more negative impact on price. Since the parameter seems to better follow expectations (and the impact is small) i'm sticking with house age as the appropriate metric.
 
 #### c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
 ``` {r lm summary, echo=FALSE}
 summary(salePrice_base_lm)
 summary(salePrice_house_age_lm)
-summary(salePrice_year_built_lm)
 
 ```
 Price by Lot size Model           - Multiple R-squared:  0.01435, Adjusted R-squared:  0.01428
 Price by Living Space ~ House Age - Multiple R-squared:   0.22,   Adjusted R-squared:  0.2197 
-Price by Living Space ~ Year Built- Multiple R-squared:  0.2219,  Adjusted R-squared:  0.2216
 
-The Adjusted R-squared values significantly improved with both models using additional predictors. The adjusted R-squared value for using Lot size as a predictor had barely any significance on predicted price. As indicated by the correlation calculation the Building Grade accounted for the largest variability in predicting price. I am a little surprised that bedrooms and bath_total have a negative coefficient using the year_built mode. The House age model reflects negative coefficents for house age and bedrooms. A negative relationship with house_age makes sense, and older house would be expected to have some negative pricing affect.
+The Adjusted R-squared values significantly improved using additional predictors. The adjusted R-squared value for using Lot size as a predictor had barely any significance on predicted price. As indicated by the correlation calculation the Building Grade accounted for the largest variability in predicting price. I am a little surprised that bedrooms and bath_total have a negative coefficient using the year_built mode. The House age model reflects negative coefficents for house age and bedrooms. A negative relationship with house_age makes sense, and older house would be expected to have some negative pricing affect.
 
 #### d. Considering the parameters of the multiple regression model you have created. What are the standardized betas for each parameter and what do the values indicate?
 
@@ -271,8 +249,6 @@ The Adjusted R-squared values significantly improved with both models using addi
 |               | square_feet_total_living   | building_grade   | bedrooms       |bath_total    | house_age    | year_built   |
 +===============+============================+==================+================+==============+==============+==============+
 | house_age     | 0.373945132                |  0.087315978     | -0.022322776   | 0.004951635  | -0.084478319 |              |
-+---------------+----------------------------+------------------+----------------+--------------+--------------+--------------+
-| year_built    | 0.373103476                |  0.084926945     | -0.018628440   | -0.001705028 |              |  0.098504715 |
 +---------------+----------------------------+------------------+----------------+--------------+--------------+--------------+
 
 For every increase in standard deviation of a given variable, the sale price will change by a stand deviation of sale price * Beta. Assuming the other variables remain constant.
@@ -300,8 +276,6 @@ print(std_deviation_df)
 
 ```
 
- Using the house age model
-  
     Predicted Sale Price increases **$151,216** per **989.817** increase in square_feet_total_living
       - 989.817 std deviation of square_feet_total_living.
       - 151,216 = 404,381.10 (sale price standard deviation) \* .373945132 (square foot living Beta)
@@ -337,13 +311,13 @@ bath_CI <- computeCI(salePrice_house_age_lm$model$bath_total)
 bedroom_CI <- computeCI(salePrice_house_age_lm$model$bedrooms)
 age_CI <- computeCI(salePrice_house_age_lm$model$house_age)
 ```
-The lower and upper bounds indicate a range from the mean where 95% of the Sales Price values lie. 95% of the Sales Price data lies between \$6,987.83 and \$1,328,463. If this data set was from the Bay Area, $1.3m would not be an outlier
+The lower and upper bounds indicate a range from the mean where 95% of the Sales Price values lie. 95% of the Sales Price data lies between \$6,987.83 and \$1,328,463. (If this data set was from the Bay Area, $1.3m would not be an outlier).
 
 Looking at the 95% confidence interval for Square Feet Living Space
 ``` {r CISQft, echo=FALSE}
 print(sqft_CI)
 ```
-The range of values for Square feet living is notable that the lower bounds is 17sqft which is an impractical size. There may be data entry errors or properties that are lot only (0 Square feet living). These are outliers that should be taken into consideration. The upper value of 5096 sqft indicates there very well may be some very large properties for sale. Considering wealth and income distribution issues in America, these may indeed be outliers.
+The range of values for Square feet living is notable that the lower bounds is 17sqft which is an impractical size. There may be data entry errors or properties that are lot only (0 Square feet living). These are outliers that should be taken into consideration. The upper value of 5096 sqft indicates there very well may be some very large properties for sale. Considering wealth and income distribution issues in America, these may be a reflection of wealth distribution, therefore i'm not sure if should be considered outliers for the purposes of the model.
 
 Looking at the 95% confidence interval for Building Grade
 ``` {r CI_BlgdGrade, echo=FALSE}
@@ -371,11 +345,9 @@ print(age_CI)
 Looking at the analysis of variance
 ``` {r anova_base, echo=FALSE}
 print(anova(salePrice_base_lm,salePrice_house_age_lm))
-print(anova(salePrice_base_lm,salePrice_year_built_lm))
 ```
 
-Both models show an improved F score over the original model. The data continues to indicate that year_built is a slightly better indicator than house age, however I house_age continues to feel like an appropriate metric.
-
+The model shows an improved F score over the original model
 
 #### g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
 ``` {r setup_casewise, echo=TRUE}
@@ -400,7 +372,7 @@ sum(large_residuals) / nrow(housing_df)
 ```
 
 #### j. Which specific variables have large residuals (only cases that evaluate as TRUE)?
-Large_residuals is a logistical vector which can be used to select data that evaluates to TRUE. This method is used to create a data frame containing only the large outliers
+Large_residuals is a logistical vector which can be used to select data that evaluates to TRUE. This method is used to create a data frame containing only the large outliers.
 ``` {r 5percentCI, echo=TRUE}
 
 large_residuals_df <- housing_df[large_residuals,c(
@@ -458,12 +430,12 @@ print(paste0("              ", age_count_high, " contain values more than ",roun
 The predominant outliers appear to be large expensive homes.
 
 #### k. Investigate further by calculating the leverage, cooks distance, and covariance rations. Comment on all cases that are problematics.
-There are no data with a Cooks Distance greater than one, so none of the data is having an outsized effect on the model.
+There are no data with a Cooks Distance greater than one, therefore none of the data is having an outsized effect on the model.
 ``` { r cooks_analysis, echo=TRUE}
 sum(casewise_df$cooks.distance > 1)
 ```
 
-Checking leverage indicates a number of outliers. Nearly 5% of the data is attributed to having double the average leverage. Along with 2.5% attributed to triple the average leverage. Taking into account no data has a Cooks Distance greater than one, and the abonormal leverage is limited to 5% the model is still valid.
+Checking leverage indicates a number of outliers. Nearly 5% of the data is attributed to having double the average leverage. Along with 2.5% attributed to triple the average leverage. Taking into account no data has a Cooks Distance greater than one, and the abnormal leverage is limited to 5% the model is still valid.
 
 ``` {r leverage, echo=FALSE}
 k <-5
@@ -503,7 +475,7 @@ dwt(salePrice_house_age_lm)
 The Durbin Watson statistic is less than 1 with a p of zero indicating the independence of errors condition is not met.
 
 #### m. Perform the necessary calculations to assess the assumption of no multicollinearity and state if the condition is met or not.
-vif() is used to test for no multicollinarity. The vif value and tolerance generate no cause for concern. The mean indicates there may be some bias in the data. The textbook states if the value substantially deviates from 1 there may be bias. There is no reference or scal for substantial.
+vif() is used to test for no multicollinarity. The vif value and tolerance generate no cause for concern. The mean indicates there may be some bias in the data. The textbook states if the value substantially deviates from 1 there may be bias. There is no reference or scale for substantial, so i'm not sure how to intrepret a value of 2.
 ``` {r vif, echo=TRUE}
 
 ### VIF > 10 is cause for Concern
@@ -520,7 +492,7 @@ mean(vif(salePrice_house_age_lm))
 
 Plotting the linear model generates four plots.
 
-Plot#1 - Residuals vs fitted. The expected outcome is a random distribution of datapoints. The plotted residuals tend to cluster near the fitted values indicating there is an issue linearaity and randomness in the data.
+Plot#1 - Residuals vs fitted. The expected outcome is a random distribution of datapoints. The plotted residuals tend to cluster near the fitted values indicating there is an issue linearity and randomness in the data.
 
 Plot#2 - Q-Q plot that show standardized residuals in deviations from normal. There is a significant portion of the model that deviates from the norm.
 
@@ -530,7 +502,7 @@ Plot#4 Standardized residuals vs leverage. The values indicate no there are no c
 
 a Histogram of the standardized residuals indicates a leptokurtic distribution. 
 
-``` { r plot_thickens, echo=TRUE }
+``` { r plot_hist, echo=TRUE }
 plot(salePrice_house_age_lm)
 hist(salePrice_house_age_lm)
 ```
