@@ -153,7 +153,7 @@ build_rolling_offset <- function(input_df,rolling_days){
   
   
 }### END build rolling offset
-build_statewide_numbers <- function(input_df){
+build_statewide_confirmed_numbers <- function(input_df){
   #### Sum the numbers across the state to build a big picture estimate
   
   ### Build unique dates
@@ -176,6 +176,7 @@ build_statewide_numbers <- function(input_df){
   return(data.frame(date,daily_total_confirmed,daily_total_deaths))
   
 }#// END build statewide numbers
+
 
 buildCounties_df <- function(input_df,input_names){
   #### Build a data frame of counties listed in input_names. Multiple counties will be summed
@@ -211,71 +212,6 @@ buildCounties_df <- function(input_df,input_names){
   return(data.frame(date,daily_total_confirmed,daily_total_deaths))
   
 }### END buildCounties
-
-
-## Set the working directory to the root of your DSC 520 directory
-setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
-#setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
-
-### Read CSV 
-
-#ca_hospital_df <- read.csv("final_CA_Hospital.csv")
-ca_covid_df <- read.csv("final_CA_Confirmed.csv")
-#ca_population_df <- read.csv("final_CA_county_population.csv")
-#ca_demo_df <- read.csv("Final_CA_Race_Demographic.csv")
-
-### strip first column which duplicates row Index.It's a write.CSV thing
-#ca_hospital_df   <- ca_hospital_df[,2:length(ca_hospital_df)]
-ca_covid_df      <- ca_covid_df[,2:length(ca_covid_df)]
-#ca_population_df <- ca_population_df[,2:length(ca_population_df)]
-#ca_demo_df       <- ca_hospital_df[,2:length(ca_demo_df)]
-
-#tail(ca_hospital_df)
-#tail(ca_covid_df)
-#tail(ca_population_df)
-#tail(ca_demo_df)
-
-### Split counties into separate groups counties > 2% and less than
-#counties_by_size_index <- order(ca_population_df$population,decreasing = TRUE)
-#counties_biggest_index <- counties_by_size_index[1:12] 
-#counties_smallest_index <-counties_by_size_index[13:length(counties_by_size_index)] 
-
-### Get Names of Biggest counties by population
-#counties_biggest_names <- sapply(counties_biggest_index, function(x){
-#  return(ca_population_df$county[x])
-#},simplify = "array")
-#counties_biggest_names
-
-### Get Names of Smallest counties by population
-#counties_smallest_names <- sapply(counties_smallest_index, function(x){
-#  return(ca_population_df$county[x])
-#},simplify = "array")
-#counties_smallest_names
-
-
-############################################################
-### build statewide Numbers - daily_covid_df
-############################################################
-
-
-daily_covid_df <- build_statewide_numbers(ca_covid_df)
-alameda_df <- buildCounties_df(ca_covid_df,c("alameda"))
-
-
-############################################################
-### build State confirmed offset columns - 
-############################################################
-offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",8:30)
-
-############################################################
-### build Alameda confirmed offset columns - 
-############################################################
-alameda_offset_daily_df <- build_offset_columns(alameda_df,"daily_total_confirmed",8:30)
-
-alameda_offset_daily_df
-
-offset_daily_df
-
 build_last_30_df <- function(input_df){
   ### Return the last 30 day of a DF
   #### Determine the last 30 days index
@@ -319,25 +255,142 @@ build_model_last_30days <- function(input_df) {
     daily_total_confirmed=last_month_df$daily_total_confirmed,
     offset=last_month_df$offset
   )
-
+  
   
   return(last_month_predict_df)
-    
+  
 }#//END build_model_last_30days
+build_statewide_hospital_numbers <- function(input_df){
+  #### Sum the numbers across the state to build a big picture estimate
+  
+  ### Build unique dates
+  date <- unique(input_df$date)
+  
+  ### build statewide confirmed numbers
+  hospitalized_covid_patients <- sapply(date,function(x){
+    ### Build data frame for each date
+    this_df <- (input_df [which(input_df$date == x),])
+    ### Sum confirmed for daily total
+    return(sum(this_df$hospitalized_covid_patients) )
+  },simplify="array")
+  
+  all_hospital_beds <- sapply(date,function(x){
+    this_df <- (input_df [which(input_df$date == x),])
+    ### Sum deaths for daily total
+    return(sum(this_df$all_hospital_beds) )
+  },simplify="array")
+  
+  icu_available_beds <- sapply(date,function(x){
+    this_df <- (input_df [which(input_df$date == x),])
+    ### Sum deaths for daily total
+    return(sum(this_df$icu_available_beds) )
+  },simplify="array")
+  
+  icu_combined <- sapply(date,function(x){
+    this_df <- (input_df [which(input_df$date == x),])
+    ### Sum deaths for daily total
+    return(sum(this_df$icu_combined) )
+  },simplify="array")
+  
+  hospital_capactity <- sapply(date,function(x){
+    this_df <- (input_df [which(input_df$date == x),])
+    ### Sum deaths for daily total
+    return(sum(this_df$hospital_capactity) )
+  },simplify="array")
+  
+  icu_capacity <- sapply(date,function(x){
+    this_df <- (input_df [which(input_df$date == x),])
+    ### Sum deaths for daily total
+    return(sum(this_df$icu_capacity) )
+  },simplify="array")
+  
+  return(data.frame(date=date,
+                    hospitalized_covid_patients=hospitalized_covid_patients,
+                    all_hospital_beds=all_hospital_beds,
+                    icu_available_beds=icu_available_beds,
+                    icu_combined=icu_combined,
+                    hospital_capactity=hospital_capactity,
+                    icu_capacity=icu_capacity
+  ))
+  
+}#// END build statewide numbers
 
-alameda_last_30_df <- build_last_30_df(alameda_offset_daily_df)
 
-alameda_predict_df <- build_model_last_30days(alameda_last_30_df)
-alameda_predict_df
-df_for_plot <- alameda_last_30_df
-predict_df_for_plot <- alameda_predict_df
+## Set the working directory to the root of your DSC 520 directory
+#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
+setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
 
-ggplot(data = df_for_plot, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  geom_line(color='red'   ,data = predict_df_for_plot, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  xlab("Total Covid Deaths") + ylab("Total Confirmed Cases")
+### Read CSV 
+
+ca_hospital_df <- read.csv("final_CA_Hospital.csv")
+ca_covid_df <- read.csv("final_CA_Confirmed.csv")
+#ca_population_df <- read.csv("final_CA_county_population.csv")
+#ca_demo_df <- read.csv("Final_CA_Race_Demographic.csv")
+
+### strip first column which duplicates row Index.It's a write.CSV thing
+ca_hospital_df   <- ca_hospital_df[,2:length(ca_hospital_df)]
+ca_covid_df      <- ca_covid_df[,2:length(ca_covid_df)]
+#ca_population_df <- ca_population_df[,2:length(ca_population_df)]
+#ca_demo_df       <- ca_hospital_df[,2:length(ca_demo_df)]
+
+#tail(ca_hospital_df)
+#tail(ca_covid_df)
+#tail(ca_population_df)
+#tail(ca_demo_df)
+
+### Split counties into separate groups counties > 2% and less than
+#counties_by_size_index <- order(ca_population_df$population,decreasing = TRUE)
+#counties_biggest_index <- counties_by_size_index[1:12] 
+#counties_smallest_index <-counties_by_size_index[13:length(counties_by_size_index)] 
+
+### Get Names of Biggest counties by population
+#counties_biggest_names <- sapply(counties_biggest_index, function(x){
+#  return(ca_population_df$county[x])
+#},simplify = "array")
+#counties_biggest_names
+
+### Get Names of Smallest counties by population
+#counties_smallest_names <- sapply(counties_smallest_index, function(x){
+#  return(ca_population_df$county[x])
+#},simplify = "array")
+#counties_smallest_names
+
+tail(ca_hospital_df)
+head(ca_hospital_df)
+head(ca_covid_df)
+tail(ca_covid_df)
+
+############################################
+#### Build statewide Hospital numbers
+############################################
+### Hospital has least least rows start there
 
 
+
+daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
+daily_hospital_df$icu_capacity
+tail(daily_hospital_df)
+############################################################
+### build statewide Numbers - daily_covid_df
+############################################################
+daily_covid_df <- build_statewide_confirmed_numbers(ca_covid_df)
+alameda_df <- buildCounties_df(ca_covid_df,c("alameda"))
+
+
+############################################################
+### build State confirmed offset columns - 
+############################################################
+offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",8:30)
+
+############################################################
+### build Alameda confirmed offset columns - 
+############################################################
+alameda_offset_daily_df <- build_offset_columns(alameda_df,"daily_total_confirmed",8:30)
+
+alameda_offset_daily_df
+
+
+offset_daily_df
 
 ############################################################
 ### Build the offsets data frame. 
@@ -360,6 +413,23 @@ offset_df <- build_rolling_offset(offset_daily_df,30)
 ### Get the offset for the last date
 ############################################################
 last_offset <- offset_df$offset[nrow(offset_df)]
+
+
+
+alameda_last_30_df <- build_last_30_df(alameda_offset_daily_df)
+
+alameda_predict_df <- build_model_last_30days(alameda_last_30_df)
+alameda_predict_df
+df_for_plot <- alameda_last_30_df
+predict_df_for_plot <- alameda_predict_df
+
+ggplot(data = df_for_plot, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(color='red'   ,data = predict_df_for_plot, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  xlab("Total Covid Deaths") + ylab("Total Confirmed Cases")
+
+
+
 
 #### Determine the last 30 days index
 rowCount <- nrow(offset_daily_df)
