@@ -1,0 +1,310 @@
+<html>
+<script>
+var m = { 
+	fieldKeys : [],
+	series : {},
+	fields : {}
+}
+
+function tdChange(e){
+	
+	//***Series Changed, draw new Episode List
+	var newSeriesKey = e.target.value
+		
+	//*** Delete existing episodes
+	while (e.target.nextSibling.childNodes.length > 0) {
+		e.target.nextSibling.removeChild(e.target.nextSibling.childNodes[0])
+	}
+	
+	//*** Add New Episodes
+	var thisSeries = m.series[newSeriesKey]
+		
+	for (x in thisSeries){
+		var opt1 = document.createElement('option');
+		opt1.text = thisSeries[x];
+		opt1.value = thisSeries[x];
+		e.target.nextSibling.add(opt1);
+	}
+	
+}//*** END tdChange
+
+function buildPage(){
+
+function buildShowTD(){
+
+	//**** Build One TD Element
+	
+	var td = document.createElement("td");
+
+	//**** Build Series Drop Down
+	var series = document.createElement("select");
+	series.id="series";
+	
+	firstKey = ""
+	
+	for (x in m.series){
+		var opt1 = document.createElement('option');
+		if (firstKey == "") {
+			firstKey = x;
+		}
+		opt1.text = x;
+		opt1.value = x;
+		series.add(opt1);
+		td.appendChild(series);
+		}
+	
+	var episodes = document.createElement("select");
+	episodes.id="episodes";
+	
+	var thisSeries = m.series[firstKey]
+		
+	for (x in thisSeries){
+		var opt1 = document.createElement('option');
+		opt1.text = thisSeries[x];
+		opt1.value = thisSeries[x];
+		episodes.add(opt1);
+		td.appendChild(episodes);
+	}
+	
+	series.addEventListener("change",function(e){tdChange(e)});
+	
+	
+	
+return td;
+	
+}
+
+function buildShowTR(input_time){
+
+	newTR = document.createElement("tr");
+	
+	newTD = document.createElement("td");
+	newTD.className = "rowheader";
+	newTD.innerHTML = input_time;
+	
+	newTR.appendChild(newTD);
+	
+	newTR.appendChild(buildShowTD())
+	newTR.appendChild(buildShowTD())
+	newTR.appendChild(buildShowTD())
+	newTR.appendChild(buildShowTD())
+	newTR.appendChild(buildShowTD())
+	newTR.appendChild(buildShowTD())
+	newTR.appendChild(buildShowTD())
+	
+	return newTR
+}
+var mainTable = document.createElement("table");
+
+var thisTR = document.createElement("tr");
+
+var headSpacer = document.createElement("th");
+
+var headMonday = document.createElement("th");
+var headTuesday = document.createElement("th");
+var headWednesday = document.createElement("th");
+var headThursday = document.createElement("th");
+var headFriday = document.createElement("th");
+var headSaturday = document.createElement("th");
+var headSunday = document.createElement("th");
+
+headSpacer.innerHTML = " ";
+headMonday.innerHTML = "Monday";
+headTuesday.innerHTML = "Tuesday";
+headWednesday.innerHTML = "Wednesday";
+headThursday.innerHTML = "Thursday";
+headFriday.innerHTML = "Friday";
+headSaturday.innerHTML = "Saturday";
+headSunday.innerHTML = "Sunday";
+
+thisTR.appendChild(headSpacer);
+thisTR.appendChild(headMonday);
+thisTR.appendChild(headTuesday);
+thisTR.appendChild(headWednesday);
+thisTR.appendChild(headThursday);
+thisTR.appendChild(headFriday);
+thisTR.appendChild(headSaturday);
+thisTR.appendChild(headSunday);
+
+mainTable.appendChild(headSpacer);
+mainTable.appendChild(headMonday);
+mainTable.appendChild(headTuesday);
+mainTable.appendChild(headWednesday);
+mainTable.appendChild(headThursday);
+mainTable.appendChild(headFriday);
+mainTable.appendChild(headSaturday);
+mainTable.appendChild(headSunday);
+
+
+
+
+mainTable.appendChild(buildShowTR("3:00a"));
+mainTable.appendChild(buildShowTR("3:30a"));
+mainTable.appendChild(buildShowTR("4:00a"));
+mainTable.appendChild(buildShowTR("4:30a"));
+mainTable.appendChild(buildShowTR("5:00a"));
+mainTable.appendChild(buildShowTR("5:30a"));
+mainTable.appendChild(buildShowTR("6:00a"));
+mainTable.appendChild(buildShowTR("6:30a"));
+mainTable.appendChild(buildShowTR("7:00a"));
+mainTable.appendChild(buildShowTR("7:30a"));
+mainTable.appendChild(buildShowTR("8:00a"));
+mainTable.appendChild(buildShowTR("8:30a"));
+mainTable.appendChild(buildShowTR("9:00a"));
+mainTable.appendChild(buildShowTR("9:30a"));
+mainTable.appendChild(buildShowTR("10:00a"));
+mainTable.appendChild(buildShowTR("10:30a"));
+mainTable.appendChild(buildShowTR("11:00a"));
+mainTable.appendChild(buildShowTR("11:30a"));
+mainTable.appendChild(buildShowTR("12:00p"));
+mainTable.appendChild(buildShowTR("12:30p"));
+mainTable.appendChild(buildShowTR("1:00p"));
+mainTable.appendChild(buildShowTR("1:30p"));
+mainTable.appendChild(buildShowTR("2:00p"));
+mainTable.appendChild(buildShowTR("2:30p"));
+mainTable.appendChild(buildShowTR("3:00p"));
+mainTable.appendChild(buildShowTR("3:30p"));
+mainTable.appendChild(buildShowTR("4:00p"));
+mainTable.appendChild(buildShowTR("4:30p"));
+mainTable.appendChild(buildShowTR("5:00p"));
+mainTable.appendChild(buildShowTR("5:30p"));
+mainTable.appendChild(buildShowTR("6:00p"));
+mainTable.appendChild(buildShowTR("6:30p"));
+mainTable.appendChild(buildShowTR("7:00p"));
+mainTable.appendChild(buildShowTR("7:30p"));
+mainTable.appendChild(buildShowTR("8:00p"));
+mainTable.appendChild(buildShowTR("8:30p"));
+mainTable.appendChild(buildShowTR("9:00p"));
+mainTable.appendChild(buildShowTR("9:30p"));
+mainTable.appendChild(buildShowTR("10:00p"));
+mainTable.appendChild(buildShowTR("10:30p"));
+mainTable.appendChild(buildShowTR("11:00p"));
+mainTable.appendChild(buildShowTR("11:30p"));
+mainTable.appendChild(buildShowTR("12:00p"));
+mainTable.appendChild(buildShowTR("12:30p"));
+mainTable.appendChild(buildShowTR("1:00a"));
+mainTable.appendChild(buildShowTR("1:30a"));
+mainTable.appendChild(buildShowTR("2:00a"));
+mainTable.appendChild(buildShowTR("2:30a"));
+
+document.body.appendChild(mainTable);
+
+
+
+
+
+
+}
+
+function readText(){
+
+			cl("Let's get JSON LOADED ")
+			var input = document.createElement('input');
+			input.type = 'file';
+
+			input.onchange = e => { 
+			   // getting a hold of the file reference
+			   var file = e.target.files[0]; 
+
+			   // setting up the reader
+			   var reader = new FileReader();
+			   reader.readAsText(file,'UTF-8');
+
+			   // here we tell the reader what to do when it's done reading...
+			   reader.onload = readerEvent => {
+			      var importOBJ = readerEvent.target.result; // this is the content!
+			      
+			      try
+			      {
+			      	importOBJ = JSON.parse(importOBJ);
+	      	
+			      }//*** END import Parse Try
+			      catch(e)
+			      {
+			      	alert("Unable to parse file: " + file.name + "\nPlease select a valid Hotkey JSON File");
+			      	return;
+			      }//**** END Main Import 
+			      
+				  cl(importOBJ)
+				for (topIndex in importOBJ.records) {
+				
+					var rawFields = importOBJ.records[topIndex].fields
+					
+					//**** Build key names from fields
+					if (m.fieldKeys.length == 0){
+						for (x in rawFields){
+							m.fieldKeys.push(x);
+						}
+						
+						//cl(m.fieldKeys);
+					}
+					
+					var thisOBJ = {};
+					//**** Get the housenumber located at first index of field Keys
+					var thisHousenumber = rawFields[m.fieldKeys[0]];
+					
+					//**** Build each episode object
+					for ( x in m.fieldKeys){
+						
+						var thisKey = m.fieldKeys[x];
+						
+						//cl(thisHousenumber + ":" + thisKey + ":" + rawFields[thisKey]);
+						
+						var thisValue = rawFields[thisKey];
+						
+						if (typeof(thisValue) == 'undefined'){ thisValue = "_" };
+						
+						thisOBJ[thisKey] = thisValue;
+					}
+					
+					//*** Add episode to m.fields
+					m.fields[thisHousenumber] = thisOBJ;
+					
+					//**** Build Show Titles
+					m.series[thisOBJ["Series"]] = thisOBJ["Series"];
+				}
+				
+				//*** Get all episodes for each series
+				
+				for (scount in m.series){
+					var thisSeries = m.series[scount];
+					
+					var thisEpisodeList = [];
+					
+					for (x in m.fields){
+						
+						if (thisSeries == m.fields[x].Series) {
+							thisEpisodeList.push(x)
+						}
+					
+					}//*** For each masterObject
+					
+					//**** Assign sorted episodes to the series				
+					m.series[scount] = thisEpisodeList.sort();
+					
+				}//*** END each Series
+				
+					buildPage();
+				
+			}//*** Handle Input OnChange
+}
+			input.click();
+			
+			
+}
+
+function cl(input){
+	console.log(input)
+}
+
+function getElem(elem){
+	return(document.getElementById(elem))
+}
+
+</script>
+<body>
+<h1>Hey there!</h1>
+<p>Let's schedule some localish</p>
+<button onclick='readText()'>Load JSON Data File</button>
+</body>
+</html>
