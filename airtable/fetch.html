@@ -1,9 +1,207 @@
 <html>
+<style>
+.BSZ{
+	background : #CFDFFF;
+}
+
+.PMP {
+	background : #D0F0FD;
+}
+
+.GLL{
+	background :#C2F5E9;
+}
+
+.OOO{
+	background :#D1F7C4;
+}
+
+.LSH{
+	background :#FEE2D5;
+}
+
+.MGT{
+	background :#FFDCE5;
+}
+
+.SAW{
+	background :#FFDAF6;
+}
+
+.MIC{
+	background :#EDE2FE;
+}
+
+.WTW{
+	background :#EEEEEE;
+}
+
+.CYC{
+	background :#9CC7FF;
+}
+
+.PTL{
+	background :#77D1F3;
+}
+
+.HOU{
+	background :#F82B60;
+}
+.LOS{
+	background :#FDD081;
+}
+.PET{
+	background :#77D1F3;
+}
+.HOL{
+	background :#F99DE2;
+}
+.ALL{
+	background :#CDB0FF;
+}
+.MUS{
+	background :#2D7FF9;
+}
+.BAY{
+	background :#18BFFF;
+}
+.CHI{
+	background :#20D9D2;
+}
+.PHI{
+	background :#20C933;
+}
+.NYC{
+	background :#FF6F2C;
+}
+.SOG{
+	background :#D0F0FD;
+}
+.LIFE{
+	background :#2750AE;
+}
+.VLY{
+	background :#2750AE;
+}
+.special{
+	background :#BA1E45;
+}
+.BABY{
+	background :#72DDC3;
+}
+</style>
+
 <script>
 var m = { 
 	fieldKeys : [],
 	series : {},
 	fields : {}
+}
+
+function readText(){
+
+	cl("Let's get JSON LOADED ")
+	var input = document.createElement('input');
+	input.type = 'file';
+
+	input.onchange = e => { 
+	   // getting a hold of the file reference
+	   var file = e.target.files[0]; 
+
+	   // setting up the reader
+	   var reader = new FileReader();
+	   reader.readAsText(file,'UTF-8');
+
+	   // here we tell the reader what to do when it's done reading...
+	   reader.onload = readerEvent => {
+	      var importOBJ = readerEvent.target.result; // this is the content!
+	      
+	      try
+	      {
+	      	importOBJ = JSON.parse(importOBJ);
+  	
+	      }//*** END import Parse Try
+	      catch(e)
+	      {
+	      	alert("Unable to parse file: " + file.name + "\nPlease select a valid Hotkey JSON File");
+	      	return;
+	      }//**** END Main Import 
+	      
+		  //cl(importOBJ)
+		 	for (topIndex in importOBJ.records) {
+			
+			   	var rawFields = importOBJ.records[topIndex].fields
+					
+					//**** Build key names from fields
+					if (m.fieldKeys.length == 0){
+						for (x in rawFields){
+							m.fieldKeys.push(x);
+						}
+						
+						//cl(m.fieldKeys);
+					}
+				
+				var thisOBJ = {};
+				//**** Get the housenumber located at first index of field Keys
+				var thisHousenumber = rawFields[m.fieldKeys[0]];
+				
+				//**** Build each episode object
+				for ( x in m.fieldKeys){
+					
+					var thisKey = m.fieldKeys[x];
+					
+					//cl(thisHousenumber + ":" + thisKey + ":" + rawFields[thisKey]);
+					
+					var thisValue = rawFields[thisKey];
+					
+					if (typeof(thisValue) == 'undefined'){ thisValue = "_" };
+					
+					thisOBJ[thisKey] = thisValue;
+				}
+				
+				//*** Add episode to m.fields
+				m.fields[thisHousenumber] = thisOBJ;
+				
+				//**** Build Show Titles
+				m.series[thisOBJ["Series"]] = thisOBJ["Series"];
+			
+			}//*** END each record
+				
+			//*** Get all episodes for each series
+			for (scount in m.series){
+				var thisSeries = m.series[scount];
+				
+				var thisEpisodeList = [];
+				
+				for (x in m.fields){
+					
+					if (thisSeries == m.fields[x].Series) {
+						thisEpisodeList.push(x)
+					}
+				
+				}//*** For each masterObject
+				
+				//**** Assign sorted episodes to the series				
+				m.series[scount] = thisEpisodeList.sort();
+				
+			}//*** END each Series
+			
+				buildPage();
+			
+		}//*** Handle Input OnChange
+	
+	}//** END input.onchange
+	//*** Is this Close or open? Not Sure
+	input.click();
+			
+}//*** END readText
+
+function cl(input){
+	console.log(input)
+}
+
+function getElem(elem){
+	return(document.getElementById(elem))
 }
 
 function tdChange(e){
@@ -15,6 +213,8 @@ function tdChange(e){
 	while (e.target.nextSibling.childNodes.length > 0) {
 		e.target.nextSibling.removeChild(e.target.nextSibling.childNodes[0])
 	}
+
+	e.target.className = newSeriesKey;
 	
 	//*** Add New Episodes
 	var thisSeries = m.series[newSeriesKey]
@@ -25,21 +225,22 @@ function tdChange(e){
 		opt1.value = thisSeries[x];
 		e.target.nextSibling.add(opt1);
 	}
-	
+	e.target.nextSibling.className = newSeriesKey;
 }//*** END tdChange
 
-function buildPage(){
+
 
 function buildShowTD(){
-
+	//******************************
 	//**** Build One TD Element
-	
+	//******************************
+
 	var td = document.createElement("td");
 
 	//**** Build Series Drop Down
 	var series = document.createElement("select");
+
 	series.id="series";
-	
 	firstKey = ""
 	
 	for (x in m.series){
@@ -49,12 +250,16 @@ function buildShowTD(){
 		}
 		opt1.text = x;
 		opt1.value = x;
+		opt1.className = x;
 		series.add(opt1);
 		td.appendChild(series);
-		}
+	}//*** END each Series
+
+	series.className = firstKey;
 	
 	var episodes = document.createElement("select");
 	episodes.id="episodes";
+	episodes.className = firstKey;
 	
 	var thisSeries = m.series[firstKey]
 		
@@ -70,13 +275,15 @@ function buildShowTD(){
 	
 	
 	
-return td;
+	return td;
 	
-}
+}//*** END Build ShowTD
 
 function buildShowTR(input_time){
 
 	newTR = document.createElement("tr");
+	newTR.className = "mainRow"
+	newTR.id = input_time
 	
 	newTD = document.createElement("td");
 	newTD.className = "rowheader";
@@ -94,111 +301,188 @@ function buildShowTR(input_time){
 	
 	return newTR
 }
-var mainTable = document.createElement("table");
+function buildPage(){
 
-var thisTR = document.createElement("tr");
+	//************************************
+	//*** Create Scheduling Main Table
+	//************************************
+	var mainTable = document.createElement("table");
+	mainTable.id = "mainTable";
 
-var headSpacer = document.createElement("th");
+	var thisTR = document.createElement("tr");
 
-var headMonday = document.createElement("th");
-var headTuesday = document.createElement("th");
-var headWednesday = document.createElement("th");
-var headThursday = document.createElement("th");
-var headFriday = document.createElement("th");
-var headSaturday = document.createElement("th");
-var headSunday = document.createElement("th");
+	var headSpacer = document.createElement("th");
 
-headSpacer.innerHTML = " ";
-headMonday.innerHTML = "Monday";
-headTuesday.innerHTML = "Tuesday";
-headWednesday.innerHTML = "Wednesday";
-headThursday.innerHTML = "Thursday";
-headFriday.innerHTML = "Friday";
-headSaturday.innerHTML = "Saturday";
-headSunday.innerHTML = "Sunday";
+	var headMonday = document.createElement("th");
+	var headTuesday = document.createElement("th");
+	var headWednesday = document.createElement("th");
+	var headThursday = document.createElement("th");
+	var headFriday = document.createElement("th");
+	var headSaturday = document.createElement("th");
+	var headSunday = document.createElement("th");
 
-thisTR.appendChild(headSpacer);
-thisTR.appendChild(headMonday);
-thisTR.appendChild(headTuesday);
-thisTR.appendChild(headWednesday);
-thisTR.appendChild(headThursday);
-thisTR.appendChild(headFriday);
-thisTR.appendChild(headSaturday);
-thisTR.appendChild(headSunday);
+	//************************************
+	//*** Create Table header
+	//************************************
+	headSpacer.innerHTML = " ";
+	headMonday.innerHTML = "Monday";
+	headTuesday.innerHTML = "Tuesday";
+	headWednesday.innerHTML = "Wednesday";
+	headThursday.innerHTML = "Thursday";
+	headFriday.innerHTML = "Friday";
+	headSaturday.innerHTML = "Saturday";
+	headSunday.innerHTML = "Sunday";
 
-mainTable.appendChild(headSpacer);
-mainTable.appendChild(headMonday);
-mainTable.appendChild(headTuesday);
-mainTable.appendChild(headWednesday);
-mainTable.appendChild(headThursday);
-mainTable.appendChild(headFriday);
-mainTable.appendChild(headSaturday);
-mainTable.appendChild(headSunday);
+	thisTR.appendChild(headSpacer);
+	thisTR.appendChild(headMonday);
+	thisTR.appendChild(headTuesday);
+	thisTR.appendChild(headWednesday);
+	thisTR.appendChild(headThursday);
+	thisTR.appendChild(headFriday);
+	thisTR.appendChild(headSaturday);
+	thisTR.appendChild(headSunday);
 
-
-
-
-mainTable.appendChild(buildShowTR("3:00a"));
-mainTable.appendChild(buildShowTR("3:30a"));
-mainTable.appendChild(buildShowTR("4:00a"));
-mainTable.appendChild(buildShowTR("4:30a"));
-mainTable.appendChild(buildShowTR("5:00a"));
-mainTable.appendChild(buildShowTR("5:30a"));
-mainTable.appendChild(buildShowTR("6:00a"));
-mainTable.appendChild(buildShowTR("6:30a"));
-mainTable.appendChild(buildShowTR("7:00a"));
-mainTable.appendChild(buildShowTR("7:30a"));
-mainTable.appendChild(buildShowTR("8:00a"));
-mainTable.appendChild(buildShowTR("8:30a"));
-mainTable.appendChild(buildShowTR("9:00a"));
-mainTable.appendChild(buildShowTR("9:30a"));
-mainTable.appendChild(buildShowTR("10:00a"));
-mainTable.appendChild(buildShowTR("10:30a"));
-mainTable.appendChild(buildShowTR("11:00a"));
-mainTable.appendChild(buildShowTR("11:30a"));
-mainTable.appendChild(buildShowTR("12:00p"));
-mainTable.appendChild(buildShowTR("12:30p"));
-mainTable.appendChild(buildShowTR("1:00p"));
-mainTable.appendChild(buildShowTR("1:30p"));
-mainTable.appendChild(buildShowTR("2:00p"));
-mainTable.appendChild(buildShowTR("2:30p"));
-mainTable.appendChild(buildShowTR("3:00p"));
-mainTable.appendChild(buildShowTR("3:30p"));
-mainTable.appendChild(buildShowTR("4:00p"));
-mainTable.appendChild(buildShowTR("4:30p"));
-mainTable.appendChild(buildShowTR("5:00p"));
-mainTable.appendChild(buildShowTR("5:30p"));
-mainTable.appendChild(buildShowTR("6:00p"));
-mainTable.appendChild(buildShowTR("6:30p"));
-mainTable.appendChild(buildShowTR("7:00p"));
-mainTable.appendChild(buildShowTR("7:30p"));
-mainTable.appendChild(buildShowTR("8:00p"));
-mainTable.appendChild(buildShowTR("8:30p"));
-mainTable.appendChild(buildShowTR("9:00p"));
-mainTable.appendChild(buildShowTR("9:30p"));
-mainTable.appendChild(buildShowTR("10:00p"));
-mainTable.appendChild(buildShowTR("10:30p"));
-mainTable.appendChild(buildShowTR("11:00p"));
-mainTable.appendChild(buildShowTR("11:30p"));
-mainTable.appendChild(buildShowTR("12:00p"));
-mainTable.appendChild(buildShowTR("12:30p"));
-mainTable.appendChild(buildShowTR("1:00a"));
-mainTable.appendChild(buildShowTR("1:30a"));
-mainTable.appendChild(buildShowTR("2:00a"));
-mainTable.appendChild(buildShowTR("2:30a"));
-
-document.body.appendChild(mainTable);
+	mainTable.appendChild(headSpacer);
+	mainTable.appendChild(headMonday);
+	mainTable.appendChild(headTuesday);
+	mainTable.appendChild(headWednesday);
+	mainTable.appendChild(headThursday);
+	mainTable.appendChild(headFriday);
+	mainTable.appendChild(headSaturday);
+	mainTable.appendChild(headSunday);
 
 
+	//************************************
+	//*** Build Table Row
+	//************************************
+	mainTable.appendChild(buildShowTR("3:00a"));
+	mainTable.appendChild(buildShowTR("3:30a"));
+	mainTable.appendChild(buildShowTR("4:00a"));
+	mainTable.appendChild(buildShowTR("4:30a"));
+	mainTable.appendChild(buildShowTR("5:00a"));
+	mainTable.appendChild(buildShowTR("5:30a"));
+	mainTable.appendChild(buildShowTR("6:00a"));
+	mainTable.appendChild(buildShowTR("6:30a"));
+	mainTable.appendChild(buildShowTR("7:00a"));
+	mainTable.appendChild(buildShowTR("7:30a"));
+	mainTable.appendChild(buildShowTR("8:00a"));
+	mainTable.appendChild(buildShowTR("8:30a"));
+	mainTable.appendChild(buildShowTR("9:00a"));
+	mainTable.appendChild(buildShowTR("9:30a"));
+	mainTable.appendChild(buildShowTR("10:00a"));
+	mainTable.appendChild(buildShowTR("10:30a"));
+	mainTable.appendChild(buildShowTR("11:00a"));
+	mainTable.appendChild(buildShowTR("11:30a"));
+	mainTable.appendChild(buildShowTR("12:00p"));
+	mainTable.appendChild(buildShowTR("12:30p"));
+	mainTable.appendChild(buildShowTR("1:00p"));
+	mainTable.appendChild(buildShowTR("1:30p"));
+	mainTable.appendChild(buildShowTR("2:00p"));
+	mainTable.appendChild(buildShowTR("2:30p"));
+	mainTable.appendChild(buildShowTR("3:00p"));
+	mainTable.appendChild(buildShowTR("3:30p"));
+	mainTable.appendChild(buildShowTR("4:00p"));
+	mainTable.appendChild(buildShowTR("4:30p"));
+	mainTable.appendChild(buildShowTR("5:00p"));
+	mainTable.appendChild(buildShowTR("5:30p"));
+	mainTable.appendChild(buildShowTR("6:00p"));
+	mainTable.appendChild(buildShowTR("6:30p"));
+	mainTable.appendChild(buildShowTR("7:00p"));
+	mainTable.appendChild(buildShowTR("7:30p"));
+	mainTable.appendChild(buildShowTR("8:00p"));
+	mainTable.appendChild(buildShowTR("8:30p"));
+	mainTable.appendChild(buildShowTR("9:00p"));
+	mainTable.appendChild(buildShowTR("9:30p"));
+	mainTable.appendChild(buildShowTR("10:00p"));
+	mainTable.appendChild(buildShowTR("10:30p"));
+	mainTable.appendChild(buildShowTR("11:00p"));
+	mainTable.appendChild(buildShowTR("11:30p"));
+	mainTable.appendChild(buildShowTR("12:00p"));
+	mainTable.appendChild(buildShowTR("12:30p"));
+	mainTable.appendChild(buildShowTR("1:00a"));
+	mainTable.appendChild(buildShowTR("1:30a"));
+	mainTable.appendChild(buildShowTR("2:00a"));
+	mainTable.appendChild(buildShowTR("2:30a"));
+
+	document.body.appendChild(mainTable);
+
+}//*** END Build Page
+
+function update_mainTable_row(inputIndex,inputValues){
 
 
 
+    var thisRow = getElem("mainTable").children[inputIndex].children;
+	
 
-}
+	//for (x=0; x<thisRow.children.length; x++){
+	//	cl(thisRow.children[x+1])
+	//}
 
-function readText(){
 
-			cl("Let's get JSON LOADED ")
+	cl("Row: " + inputIndex);
+    //*** input values are in order
+    for (x=0; x < (inputValues.length );x++ ) {
+    	//*** TD element is thisRow + 1
+    	var thisTD = thisRow[ (x + 1) ];
+    	//cl(x + ":" + " ThisTD: " + thisTD);
+    	
+    	
+    	//*** Series is thisTD children [0]
+    	//cl(inputValues[x]);
+    	//cl(thisTD.children[0].value + ":" + thisTD.children[1].value);
+    	//cl(inputValues[x].series + ":" + inputValues[x].episode );
+
+    	//**** Assign Series
+    	thisTD.children[0].value = inputValues[x].series;
+		thisTD.children[0].className = inputValues[x].series;
+
+
+		//***Draw Episode List based on series
+		var newSeriesKey = inputValues[x].series;
+			
+
+		var episodeNode = thisTD.children[1]
+		//*** Delete existing episodes
+		while (episodeNode.children.length > 0) {
+			episodeNode.removeChild(episodeNode.children[0])
+		}
+		cl("Deleted: " + (x + 1) + ":" + inputIndex)
+
+		//thisEpisode = document.createElement('select');
+		//thisEpisode.className = newSeriesKey
+		
+		//*** Add New Episodes
+		var thisSeries = m.series[newSeriesKey]
+		cl(thisSeries)
+			
+		for (xx in thisSeries){
+			var opt1 = document.createElement('option');
+			opt1.text = thisSeries[xx];
+			opt1.value = thisSeries[xx];
+			episodeNode.add(opt1);
+			cl("adding: " + x + ":" + thisSeries[xx])
+		}
+		episodeNode.className = newSeriesKey;
+		
+
+
+		
+
+    	//episodeNode.value = inputValues[x].episode;
+		//episodeNode.text = inputValues[x].episode;
+
+
+    	//*** Episodes is thisTD children [1]
+
+    }
+
+
+}//*** END update_mainTable_row
+
+function import_layout(){
+
+			cl("BEGIN import_layout ")
 			var input = document.createElement('input');
 			input.type = 'file';
 
@@ -224,87 +508,138 @@ function readText(){
 			      	alert("Unable to parse file: " + file.name + "\nPlease select a valid Hotkey JSON File");
 			      	return;
 			      }//**** END Main Import 
+
+			      //*** Loop through content by row
+			      //*** ImportOBJ is a list
+
+			      //*** Loop through mainTable
+			      var mainTable = getElem("mainTable")
+					for (rowCount=0; rowCount < mainTable.children.length; rowCount++){
+						cl(mainTable.children[rowCount].className + ":" + mainTable.children[rowCount].id)
+
+						if (mainTable.children[rowCount].className == "mainRow"){
+							//*** Update the row with the corresponding imputOBJ value.
+							//*** The rowOffset is -8
+							getElem("topline").innerHTML = "Loading...Row - " + (rowCount-8)
+							update_mainTable_row(rowCount,importOBJ[rowCount-8])
+						}
+					}//*** END Each element in mainTable
+
+					getElem("topline").innerHTML ="Hey There, episodes loaded"
 			      
-				  cl(importOBJ)
-				for (topIndex in importOBJ.records) {
-				
-					var rawFields = importOBJ.records[topIndex].fields
-					
-					//**** Build key names from fields
-					if (m.fieldKeys.length == 0){
-						for (x in rawFields){
-							m.fieldKeys.push(x);
-						}
-						
-						//cl(m.fieldKeys);
-					}
-					
-					var thisOBJ = {};
-					//**** Get the housenumber located at first index of field Keys
-					var thisHousenumber = rawFields[m.fieldKeys[0]];
-					
-					//**** Build each episode object
-					for ( x in m.fieldKeys){
-						
-						var thisKey = m.fieldKeys[x];
-						
-						//cl(thisHousenumber + ":" + thisKey + ":" + rawFields[thisKey]);
-						
-						var thisValue = rawFields[thisKey];
-						
-						if (typeof(thisValue) == 'undefined'){ thisValue = "_" };
-						
-						thisOBJ[thisKey] = thisValue;
-					}
-					
-					//*** Add episode to m.fields
-					m.fields[thisHousenumber] = thisOBJ;
-					
-					//**** Build Show Titles
-					m.series[thisOBJ["Series"]] = thisOBJ["Series"];
-				}
-				
-				//*** Get all episodes for each series
-				
-				for (scount in m.series){
-					var thisSeries = m.series[scount];
-					
-					var thisEpisodeList = [];
-					
-					for (x in m.fields){
-						
-						if (thisSeries == m.fields[x].Series) {
-							thisEpisodeList.push(x)
-						}
-					
-					}//*** For each masterObject
-					
-					//**** Assign sorted episodes to the series				
-					m.series[scount] = thisEpisodeList.sort();
-					
-				}//*** END each Series
-				
-					buildPage();
-				
+			      
+
+			   }//*** Handle reader Event
 			}//*** Handle Input OnChange
-}
+
 			input.click();
-			
-			
-}
 
-function cl(input){
-	console.log(input)
-}
+}//*** END import_layout
 
-function getElem(elem){
-	return(document.getElementById(elem))
-}
+function convert_table_to_OBJ(){
+	var mainTable = getElem("mainTable")
+
+	var mainTable_export = []
+
+	for (rowCount=0; rowCount < mainTable.children.length; rowCount++){
+		cl(mainTable.children[rowCount].className + ":" + mainTable.children[rowCount].id)
+
+		if (mainTable.children[rowCount].className == "mainRow"){
+
+			thisRawRow = mainTable.children[rowCount]
+
+			var thisExportRow = [];
+
+			for (tdCount=1; tdCount < thisRawRow.children.length; tdCount++){
+				thisTD = thisRawRow.children[tdCount]
+
+				//var thisSeries = thisTD.children[0]
+				//var thisEpisode = thisTD.children[1]
+
+				var thisTD_OBJ = {
+					series : thisTD.children[0].value,
+					episode : thisTD.children[1].value
+				}
+
+				//*** Add TD OBJ to the export Row
+				thisExportRow.push(thisTD_OBJ)
+
+			}//*** END Each TD
+
+			//*** Add the Row to the main table
+			mainTable_export.push(thisExportRow)
+
+		}//*** END in mainRow
+
+	}//*** END each child Node
+
+
+return JSON.stringify(mainTable_export);
+
+
+
+
+}//*** END Conver table to OBJ
+
+function export_layout(){
+
+	//*** Get table
+	var thisOBJ = convert_table_to_OBJ()
+
+	//*********************************************************************************	
+	//*** Build a FileName based on Date and Time, because we can't do overwrites
+	//*********************************************************************************
+	var d = new Date();
+
+	var thisYear = d.getUTCFullYear();
+
+	thisYear = thisYear.toString().substring(2);
+
+	var thisMonth = d.getUTCMonth();
+
+	var thisDay = d.getDay();
+
+	var thisHour = d.getHours();
+
+	var thisMinute = d.getMinutes();
+
+	var thisSecond = d.getSeconds();
+
+	var fixTimes = [ thisMonth, thisDay, thisHour, thisMinute, thisSecond]
+
+	for (var x in fixTimes){
+		if (fixTimes[x] < 10){
+			fixTimes[x] = "0" + fixTimes[x].toString();
+		}
+	}
+
+	var fileTime = thisYear + "_" + fixTimes[0] + "_" + fixTimes[1] +"-" + fixTimes[2] + "_" + fixTimes[3] + "_" + fixTimes[4] + "__";
+
+	//*** Save to a file
+	var element = document.createElement('a');
+	element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(thisOBJ));
+	element.setAttribute('download', fileTime + "schedule.json");
+
+	element.style.display = 'none';
+	document.body.appendChild(element);
+
+	element.click();
+
+	document.body.removeChild(element);
+
+
+
+}//*** END export_layout
+
+
+
 
 </script>
 <body>
-<h1>Hey there!</h1>
+<h1 id="topline">Hey there!</h1>
 <p>Let's schedule some localish</p>
 <button onclick='readText()'>Load JSON Data File</button>
+<button onclick='import_layout()'>Import Layout</button>
+<button onclick='export_layout()'>Export Layout</button>
 </body>
 </html>

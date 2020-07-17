@@ -199,42 +199,28 @@ salePrice_year_built_lm <-    lm(Sale.Price ~ square_feet_total_living + buildin
 cor(housing_df[2:length(housing_df)])[1,]
 
 
-summary(salePrice_year_built_lm)
+
 lm.beta(salePrice_house_age_lm)
-lm.beta(salePrice_year_built_lm)
-summary(salePrice_base_lm)
-summary(salePrice_naieve_lm)
 
 
-t.test(housing_df$Sale.Price)
-t.test(housing_df$building_grade)
-t.test(housing_df$square_feet_total_living)
-t.test(housing_df$bedrooms)
-t.test(housing_df$bath_total)
-t.test(housing_df$house_age)
-t.test(housing_df$year_built)
+#################################################
+### Confidence Intervals
+#################################################
+### T.test computes High low values from the mean
+### 95% of the data lie between these points
+### To get the abosolute values, we need to compute the actual Confidence interval values.
+### We did this With the computeCI function
 
 t.test(salePrice_base_lm$model)
-t.test(salePrice_naieve_lm$model)
 t.test(salePrice_house_age_lm$model)
-t.test(salePrice_house_age_lm$model$Sale.Price)
-salePrice_house_age_lm$model
-
-mean(salePrice_house_age_lm$model$Sale.Price)
-max(salePrice_house_age_lm$model$Sale.Price)
-min(salePrice_house_age_lm$model$Sale.Price)
 
 ############################################
-#### Confidence Intervals the Hard way
+#### 1. Confidence Intervals the Hard way
 ############################################
 # Calculate Standard Error in R 
 # using the SD function / SQRT of vector length
 ### Determine standard error
-se <-  sd(salePrice_house_age_lm$model$Sale.Price) / sqrt(length(salePrice_house_age_lm$model$Sale.Price))
-mean(salePrice_house_age_lm$model$Sale.Price) - (1.96 * se)
-mean(salePrice_house_age_lm$model$Sale.Price) + (1.96 * se)
-t.test(salePrice_house_age_lm$model$Sale.Price)
-
+#se <-  sd(salePrice_house_age_lm$model$Sale.Price) / sqrt(length(salePrice_house_age_lm$model$Sale.Price))
 
 #We'll need these Later - for outliers
 price_CI <- computeCI(salePrice_house_age_lm$model$Sale.Price)
@@ -244,14 +230,25 @@ bath_CI <- computeCI(salePrice_house_age_lm$model$bath_total)
 bedroom_CI <- computeCI(salePrice_house_age_lm$model$bedrooms)
 age_CI <- computeCI(salePrice_house_age_lm$model$house_age)
 
-t.test(salePrice_house_age_lm$model)
+### With the confidence intervals we can calculate for outliers
 
-salePrice_house_age_lm$model
-
-salePrice_house_age_lm$model$house_age
-
-
-
+############################################
+#### 2. Analysis of variance
+############################################
+### anova(linear_model1, linear_model2)
+############################################
+### Compare linear models to see if there is 
+### an improvement of the second model over 
+### the first.
+############################################
+### Looking for an improved (higher) F-Value
+############################################
+### Discovering Stats Using R p286
+############################################
+### F ratio..larger better
+### F = ssm / SSr - sum squares of the mean, the sum squares of the difference between data and prediction. 
+###                 ssr is the sum squares of the residuals!!!
+### F = Essentially the mean / error. Bigger is better fit
 anova(salePrice_base_lm,salePrice_naieve_lm)
 #anova(salePrice_base_lm,square_feet_total_living)
 anova(salePrice_base_lm,salePrice_house_age_lm)
@@ -259,49 +256,30 @@ anova(salePrice_base_lm,salePrice_year_built_lm)
 anova(salePrice_base_lm,salePrice_house_age_lm,salePrice_year_built_lm)
 anova(salePrice_base_lm,salePrice_year_built_lm,salePrice_house_age_lm)
 
-cor(housing_df)[1,]
-
-salePrice_improved_lm <-    lm(Sale.Price ~ square_feet_total_living + building_grade  + house_age, data=housing_df)
-plot(salePrice_improved_lm)
-anova(salePrice_base_lm,salePrice_improved_lm)
 
 
-anova(salePrice_base_lm,salePrice_house_age_lm)
-anova(salePrice_base_lm,salePrice_year_built_lm)
-resid(salePrice_house_age_lm)
-large_residuals
-
-case[large_residuals]
-
-rstudent(salePrice_house_age_lm)
-
-cooks.distance(salePrice_house_age_lm)
-dfbeta(salePrice_house_age_lm)
-dffits(salePrice_house_age_lm)
-
-#### g. Perform casewise diagnostics to identify outliers and/or influential cases, storing each function's output in a dataframe assigned to a unique variable name.
+#############################################################################
+#### 3. Casewise diagnostics - Examine the Large residuals
+#############################################################################
 #p290. casewise diagnostics
 #p290 outliers
 #p269 cooks distance & leverage
 #p291 covariance.ratio
 ##### Look for outliers with these tests
-casewise_df <- housing_df
-casewise_df$cooks.distance <- cooks.distance(salePrice_house_age_lm)
-casewise_df$leverage <- hatvalues(salePrice_house_age_lm)
-casewise_df$covariance.ratios <- covratio(salePrice_house_age_lm)
+#############################################################################
 
-casewise_df
+#### rstandard() - Standardized (or studentized residuals). Gives the residual as somethink akin to a zScore.
+####               The score is the error in deviations. Anything above a 2 is deemed a large error.
+####               Large Residuals > 2 should be less than 5% of the total data
+####               Large Residuals > 3 should be less than 2.5% of the total data.
 
 ### p292
-### I think this is out casewise diagnostic
 ### Look for Large residuals. any Value greater than two should be flagged as an outlier
 large_residuals <- rstandard(salePrice_house_age_lm) > 2 | rstandard(salePrice_house_age_lm) < -2
 
-### Get a count of Large residuals
-sum(large_residuals)
-
-head(housing_df)
-
+#### Example of counting the outliers for each variable.
+#### Takes large residuals vector, builds a new data frame using specified variables in a c(). 
+#### We count values that exceed the range calculated by the confidence interval.
 
 large_residuals_df <- housing_df[large_residuals,c("Sale.Price","building_grade","square_feet_total_living","bedrooms","bath_total","house_age")]
 large_residuals_df
@@ -324,7 +302,6 @@ bed_count_high <- nrow(large_residuals_df[which(large_residuals_df$bedrooms > be
 age_count_low <- nrow(large_residuals_df[which(large_residuals_df$house_age < age_CI$lowerValue),])
 age_count_high <- nrow(large_residuals_df[which(large_residuals_df$house_age > age_CI$upperValue),])
 
-#large_residuals_df[which(large_residuals_df$house_age < age_CI$lowerValue),]
 
 
 print(paste0("Sales.Price - ",(sales_count_low + sales_count_high), " Total outliers"))
@@ -348,30 +325,38 @@ print(paste0("House Age - ",(age_count_low + age_count_high), " Total outliers")
 print(paste0("              ", age_count_low, " contain values less than ",round(age_CI$lowerValue,2) ) )
 print(paste0("              ", age_count_high, " contain values more than ",round(age_CI$upperValue,0) ) ) 
 
-?rstandard
 
 
-salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("cooks.distance","leverage","covariance.ratios")]
-### Check for outliers
 ##########################################################################################
-###Check Cooks Distance for outliers
+### 4. Cooks Distance for outliers
 ### Any value greater than 1 is considered to have outsized influence on the model.
 ##########################################################################################
+#p290. casewise diagnostics
+#p290 outliers
+#p269 cooks distance & leverage
+#p291 covariance.ratio
+##### Look for outliers with these tests
+casewise_df <- housing_df
+casewise_df$cooks.distance <- cooks.distance(salePrice_house_age_lm)
+casewise_df$leverage <- hatvalues(salePrice_house_age_lm)
+casewise_df$covariance.ratios <- covratio(salePrice_house_age_lm)
+
+#### Shows problematic for cooks
 sum(casewise_df$cooks.distance > 1)
 
-
-### levarage test
+##########################################################################################
+#### 5. Leverage Test
+##########################################################################################
 ### k+1 / n = average leverage
 ### k = predictors
 ### n = Sample size
+###########################################################################################
+### Trouble cases exceed 2x and 3x the average Leverage
 
 ##################################
 ### Check Leverage for outliers
 ##################################
 ### These are troublesome > 0
-#sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_2x_boundary )
-### These are outliers > )
-#sum( salePrice_house_age_lm$model[salePrice_base_lm$model$large_residuals, c("leverage") ] > average_leverage_3x_boundary )
 
 ## k = number of predictors: square_feet_total_living + building_grade + bedrooms + bath_total + house_age
 ## k = 5 
@@ -380,24 +365,29 @@ sum(casewise_df$cooks.distance > 1)
 k<-5
 n <- nrow(casewise_df)
 
+#######################################
+###  Calculate the average leverage
+#######################################
 average_leverage <- (k + 1) / n
 
-average_leverage
 
+#######################################
+###  Leverage boundaries are 2x & 3x
+#######################################
 average_leverage_2x_boundary <- average_leverage *2
 average_leverage_3x_boundary <- average_leverage *3
 
-average_leverage_2x_boundary
-
+#### Total cases that exceed boundary
 sum(casewise_df$leverage > average_leverage_2x_boundary)
 sum(casewise_df$leverage > average_leverage_3x_boundary)
 
+#### Percentage of cases that exceed the boundary.
 sum(casewise_df$leverage > average_leverage_2x_boundary) / n
 sum(casewise_df$leverage > average_leverage_3x_boundary) / n 
 
-###########################################
-### Check covariance ratios for outliers
-###########################################
+#############################################
+### 6. Check covariance ratios for outliers
+#############################################
 ### Any values with a covariance 3x average covariance are ouliers
 ### Any Values of sum indicate outliers
 #covariance outliers
@@ -413,22 +403,25 @@ lowerCov <- 1 - 3*(k + 1)/n
 sum(casewise_df$covariance.ratios > upperCov)
 sum(casewise_df$covariance.ratios < lowerCov)
 
-### Assessing assumption of indenpendence of error
+#############################################################
+### 7. Assessing assumption of indenpendence of error
+#############################################################
 ### DSUR p292
 ### Using library car
 ### durbinWatsonTest
 ### dwt(model)
-### Ideal D-W statistic is 2. Closer to 2 the better. 1 or 3 
+### Ideal D-W statistic is 2. Closer to 2 the better. 1 or 3 is problematic
 library(car) #durbinwatsontest- dwt
 dwt(salePrice_house_age_lm)
 
-
-#### Asses the assumption of no multicollinearity using vif()
+#####################################################################
+#### 8. Assesd the assumption of no multicollinearity using vif()
+#####################################################################
 #### p292
 #### vif(model)       - If largest value > 10 there is cause for concern
 #### mean(vif(model)) - If the average VIF is substantially greater than 1, the model may be biased
 #### 1/vif(model)     - Tolerance: values below 0.1 indicate serious problems, 0.2 indicate potential problems
-
+#####################################################################
 
 vif(salePrice_house_age_lm)
 
@@ -463,80 +456,4 @@ hist(salePrice_house_age_lm)
 
 
 
-std_deviation_df <- data.frame ( 
-  variable = 
-    c("Sale Price", 
-      "sqft Living", 
-      "Building Grade",
-      "bedrooms",
-      "bathrooms",
-      "house age"),
-  std_dev = 
-    c( sd(raw_housing_df$Sale.Price),
-       sd(housing_df$square_feet_total_living),
-       sd(housing_df$building_grade),
-       sd(housing_df$bedrooms),
-       sd(housing_df$bath_total),
-       sd(housing_df$house_age)
-)) 
-std_deviation_df
-
-############################################
-#### Confidence Intervals the Hard way
-############################################
-##### Start by Calculating Z Scores the hard way
-##### zScores <- (dataset - mean(dataset)) / sd(dataset)
-
-# Calculate Standard Error in R 
-# using the SD function / SQRT of vector length
-## Standard error: Standard Deviation / sqrt(sample size)
-##    sd(values) / sqrt(length(values))
-##
-## lower boundary: mean() minus mini
-##      mean(values) - ( min(values) * Standard Error )
-##      mean(values) - ( 1.96 * Standard Error )
-##
-## upper boundary: 
-##      mean(values) + ( max(values) * Standard Error )
-##      mean(values) + ( 1.96 * Standard Error )
-
-value <- salePrice_house_age_lm$model$Sale.Price
-
-zScores <- (value - mean(value)) / sd(value)
-
-
-min(zScores)
-
-### Calculate standard_error for value
-standard_error <- sd(value) / sqrt(length(value))
-
-standard_error #3565.217
-mean(value) - min(value) * standard_error
-t.test(value)
-##lower Bound
-mean(value) - (1.96*standard_error)
-##upper Bound
-mean(value) + (1.96 * standard_error)
-
-## c. Execute a summary() function on two variables defined in the previous step to compare the model results. What are the R2 and Adjusted R2 statistics? Explain what these results tell you about the overall model. Did the inclusion of the additional predictors help explain any large variations found in Sale Price?
-summary(salePrice_base_lm)
-cor(housing_df[2:length(housing_df)])
-summary(salePrice_complex_lm)
-head(housing_df)
-
-summary(housing_df$Sale.Price)
-sd(housing_df$Sale.Price)
-
-tail(housing_df)
-
-
-cor(num_housing_df)[1,]
-head(num_housing_df)
-
-### F ratio..larger better
-### F = ssm / SSr - sum squares of the mean, the sum squares of the difference between data and prediction. 
-###                 ssr is the sum squares of the residuals!!!
-### F = Essentially the mean / error. Bigger is better fit
-
-### Write Down something for T scores and Zscores.
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<script type="text/javascript" src="ahk_Builder_v2.js">
+</script>
+<body onload="init()" style="background:#CCCCCC">
+	<div>Code Faster: Convert Keystrokes into MOS Objects  <button style="display:none;" onclick="instructions('show',this)">Instructions</button></div>
+	<div style="font-size:3em">KGO Basic AutoHotkey Builder</div>
+	<div style="font-size:1.5em">Created By: Kurt.Stoneburner@abc.com</div>
+	<div id="pluginFolder"></div>
+	<!-- <iframe src="http://10.218.116.11/newsroomplugin/" style="width:100%;height:45%"></iframe> -->
+	<div id='instructions' style='display: none; width:100%; height:300px; overflow:scroll; '>
+		<p>This software builds Autohotkey scripts that turn keystrokes into MOS commands. Keystrokes are used instead of dragging and dropping in scripts. </p>
+		<p>This works by dragging MOS objects from the Overdrive Server webpage: http://OverDrive_Server_IP/newsroomplugin/ and dragging it onto a hotkey line, which assigns a keyboard Key plus any combination of SHIFT,CTRL,WIN and ALT. </p>
+	
+		<p>This is a very basic builder designed to give maximum benefit for the least effort. Autohotkey can be used to do a whole lot more.</p>
+		<p>1.) Download and install the latest version of <a href='https://www.autohotkey.com'> www.autohotkey.com </a></p>
+		<p>2.) Drag desired MOS Element onto a line.</p>
+		<p>3.) Assign a Key or special key command for F Keys, numpad, etc..(see Below)</p>
+		<p>4.) Click the appropriate Checkbox if SHIFT,CTRL,WIN or ALT is to be pressed with the Key</p>
+		<p>5.) Click New Hotkey to add a new blank hotkey line</p>
+		<p>6.) Repeat</p>
+		</br>
+		<p>Build the AHK file</p>
+		<p>1.) Click Export AHK and save the file</p>
+		<p>2.) Open the Download Folder and Double-Click Macros.AHK to launch the AutoHotkey Script.</p>
+		<p>Note: Scripts built with Export have a reload function built in. Press SHIFT+CTRL+WIN+ALT+R will reload the autohotkey script. This it is useful when making later changes to the script. Notably, the script can be editted in notepad, saved, then reloaded with SHIFT+CTRL+WIN+ALT+R</p>
+		</br>
+		<p>Copy AHK to Clipboard</p>
+		<p>This button builds a basic Autohotkey script and places it in the clipboard. This is designed to add new autohotkeys to an existing script.</p>
+		</br>
+		<p>Saving your progess</p>
+		<p>You can also save your work by pressing CTRL+S and saving the HTML file. This can be opened later in a web browser</p>
+		</br>
+		<p>Special Keys</p>
+		<p>Keys other than letters and numbers may be used. </p>
+		<p>F keys are F1,F2,F3-F12.</p>
+		<p>The Number Pad is: Numpad1,Numpad2,Numpad3-Numpad9</p>
+		<p>A Complete keylist can be found at https://www.autohotkey.com/docs/KeyList.htm</p>
+
+		</div>
+	<table id="masterTable"></table>
+	<button onclick="addRow({action : 'new'})" style="border: 3px solid blue; color:blue; background:#7777; font-size:2em">new hotkey</button>
+	</br>
+	<table>
+		<tr>
+			<td><button onclick="buildAHK({action:'export'})" style="font-size:2em; width:100%">Export AHK</button></td>
+			<td><button onclick="buildAHK({action:'clipboard'})" style="font-size:2em; width:100%">Copy AHK to Clipboard</button></td>
+		</tr>
+		<tr>
+			<td><button onclick="saveLoadJSON({action:'save'})" style="font-size:2em; width:100%">Save Hotkeys</button></td>
+			<td><button onclick="saveLoadJSON({action:'load'})" style="font-size:2em; width:100%">Load Hotkeys</button></td>
+		</tr>
+	</table>
+	</br>
+	<span style="background:black;color:white">To Save your progress use Save Hotkeys.</br>To load saved work, use Load Hotkeys</span>
+</body>
+<script>
+
+</script>
+</html>
+
+
+
+

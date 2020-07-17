@@ -1,36 +1,44 @@
 ---
-title: "RMarkdown Assignment Template"
-author: "Author Name"
-date: March 23rd 2018
-output:
-  
-  word_document: default
+title: "Assignment 7.1: Fit a Logistic Regression Model to a Thoracic Surgery Binary Dataset"
+author: "Kurt Stoneburner"
+date: July 13th 2020
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(foreign) #Used to import ARFF files
+setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github\\data")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk06")
+dataset_df <- read.arff("ThoraricSurgery.arff")
+
 ```
-## Note - Remove example code and comments before submitting assignment.  Producing a professional R Markdown document is the goal. 
+#### a. Fit a binary logistic regression model to the data set that predicts whether or not the patient survived for one year (the Risk1Y variable) after the surgery. Use the glm() function to perform the logistic regression. See Generalized Linear Models for an example. Include a summary using the summary() function in your results.
 
-## R Markdown
+``` {r modeling, echo=FALSE }
+data1_lm <- glm(Risk1Yr ~ DGN+PRE7+PRE8+PRE10+PRE11+PRE14+PRE30,
+                   data=dataset_df, family=binomial())
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+summary(data1_lm)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+#### b. According to the summary, which variables had the greatest effect on the survival rate?
 
-## References
+The DGN variable had the greatest effect on survival rate in the model. DGN values of DGN2, DGN3,DGN5,DG5, and DGN8 greatly influenced the survival rate. However the DGN value DGN6 had very little effect on the survival rate. These values represent standardized diagnosis. It stands to reason, that the primary predictor of one year survivability is the condition that is to be cured.
 
+#### c. To compute the accuracy of your model, use the dataset to predict the outcome variable. The percent of correct predictions is the accuracy of your model. What is the accuracy of your model?
+
+``` {r modeling2, echo=FALSE }
+predict_data1_lm <- predict(data1_lm,dataset_df,type="response") > .5
+
+totalCorrect <- sum( (dataset_df$Risk1Yr == "T") == (predict_data1_lm) )
+totalPercent <- round(sum( (dataset_df$Risk1Yr == "T") == (predict_data1_lm) ) / nrow(dataset_df),2)*100
+totalRows <- nrow(dataset_df)
+totalWrong <- totalRows - totalCorrect
+
+print(paste0("The model successfully predicted ",totalCorrect," outcomes. Out of ",totalRows," elements."))
+print(paste0("Leaving ", totalWrong, " elements predicted incorrectly. For an accuracy score of ",totalPercent,"%"))
+
+```
