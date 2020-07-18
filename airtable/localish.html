@@ -279,6 +279,107 @@ function buildShowTD(){
 	
 }//*** END Build ShowTD
 
+function autobuild_row(inputOBJ){
+	var parent = inputOBJ.srcElement.parentNode;
+	cl(parent);
+	var firstTD = parent.children[1];
+
+	cl("Series: " + firstTD.children[0].value);
+	cl("Episode: " + firstTD.children[1].value);
+
+	var startSeries = firstTD.children[0].value;
+	var startEpisode = firstTD.children[1].value;
+
+	//*** Build Row based on start series
+	var thisRowList = [];
+
+	var showOBJ = {
+		series : startSeries,
+		episode : startEpisode
+	}
+
+	//*** get start episode index
+	var theseEpisodes = m.series[startSeries];
+
+	var episodeIndex = -1;
+
+	for (x=0;x<theseEpisodes.length;x++){
+
+		if ( theseEpisodes[x] == startEpisode){
+
+			episodeIndex = x;
+
+		}//*** END get find index
+
+	}//*** END find Episode Index
+
+	thisRowList.push(showOBJ)
+
+	for (x=1;x<7;x++){
+
+		//*** Increment episode Index, Starting from found Value
+		episodeIndex++;
+
+		//*** Reset Index to 0 if out of bounds
+		if (episodeIndex > theseEpisodes.length -1 ){ episodeIndex = 0 }
+
+		//*** Build Suggestions and add to list
+		thisRowList.push({
+			series : startSeries,
+			episode : theseEpisodes[episodeIndex]
+		});
+
+	}//*** END build suggested shows
+
+	cl("ThisRow List: " + thisRowList)
+	
+	//*** Find Index of current Row
+	var mainTable = parent.parentNode;
+
+	
+	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
+	for (x=0;x<mainTable.children.length - 1;x++){
+
+		if (parent == mainTable.children[x]) {
+			//*** Parent Found, x is RowIndex.
+			//*** Let's Update!!!
+			update_mainTable_row(x,thisRowList)
+			break;		
+		}
+
+	}//*** END maintable Row Loop
+
+
+
+}//*** END autobuild_row
+
+function buildAutoPopulate(inputOBJ){
+
+	thisAction = inputOBJ.action;
+
+	thisColumn = "";
+
+	switch (thisAction){ 
+
+		case "autobuild":
+	
+			thisColumn = 1
+
+
+			var button = document.createElement("button");
+			button.innerHTML = "Autobuild - Row1"
+
+			button.addEventListener("click",function(e){autobuild_row(e)});
+
+			return button;
+
+		break;
+
+	}
+
+
+}//*** END Build autopoplate TD
+
 function buildShowTR(input_time){
 
 	newTR = document.createElement("tr");
@@ -298,9 +399,14 @@ function buildShowTR(input_time){
 	newTR.appendChild(buildShowTD())
 	newTR.appendChild(buildShowTD())
 	newTR.appendChild(buildShowTD())
+	newTR.appendChild(buildAutoPopulate({action : "autobuild", column : 1}))
+	
+	//buildAutoPopulate({action : "autobuild", column : 1})
 	
 	return newTR
 }
+
+
 function buildPage(){
 
 	//************************************
@@ -425,7 +531,7 @@ function update_mainTable_row(inputIndex,inputValues){
     for (x=0; x < (inputValues.length );x++ ) {
     	//*** TD element is thisRow + 1
     	var thisTD = thisRow[ (x + 1) ];
-    	//cl(x + ":" + " ThisTD: " + thisTD);
+    	cl(x + ":" + " ThisTD: " + thisTD);
     	
     	
     	//*** Series is thisTD children [0]
@@ -469,8 +575,8 @@ function update_mainTable_row(inputIndex,inputValues){
 
 		
 
-    	//episodeNode.value = inputValues[x].episode;
-		//episodeNode.text = inputValues[x].episode;
+    	episodeNode.value = inputValues[x].episode;
+		episodeNode.text = inputValues[x].episode;
 
 
     	//*** Episodes is thisTD children [1]
@@ -548,14 +654,18 @@ function convert_table_to_OBJ(){
 
 			thisRawRow = mainTable.children[rowCount]
 
+			cl(thisRawRow)
+
 			var thisExportRow = [];
 
-			for (tdCount=1; tdCount < thisRawRow.children.length; tdCount++){
-				thisTD = thisRawRow.children[tdCount]
+			for (tdCount=1; tdCount < 8 ; tdCount++){
+				
+				var thisTD = thisRawRow.children[tdCount];
 
 				//var thisSeries = thisTD.children[0]
 				//var thisEpisode = thisTD.children[1]
 
+				
 				var thisTD_OBJ = {
 					series : thisTD.children[0].value,
 					episode : thisTD.children[1].value
@@ -567,7 +677,7 @@ function convert_table_to_OBJ(){
 			}//*** END Each TD
 
 			//*** Add the Row to the main table
-			mainTable_export.push(thisExportRow)
+			mainTable_export.push(thisExportRow);
 
 		}//*** END in mainRow
 
