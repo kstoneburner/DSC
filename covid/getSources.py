@@ -29,6 +29,13 @@ getFiles = {
        "file": "CA_covid_Cases.csv",
    },
 
+   "CA_testing.csv": {
+       "name": "Dowloading California Test Data",
+       "url": "https://data.ca.gov/dataset/efd6b822-7312-477c-922b-bccb82025fbe/resource/b6648a0d-ff0a-4111-b80b-febda2ac9e09/download/statewide_testing.csv",
+       "file": "CA_testing.csv",
+   },
+   
+
 
 
 

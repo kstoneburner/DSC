@@ -14,11 +14,11 @@
 ### Add Phased reopening data and correlate subsequent infections hospitalizations and deaths. Correlate
 
 ## Set the working directory to the root of your DSC 520 directory
-#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
-setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
 
-#covidRootPath <- "c:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\"
-covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
+covidRootPath <- "c:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\"
+#covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
 sum_and_remove_DF_Columns <- function(data_df,col1,col2,sumColName){
   ### Adds the row values of column1 and column. The new values are stored in sumColName
   ### SumColName added to data_df, col1 and col2 are removed.

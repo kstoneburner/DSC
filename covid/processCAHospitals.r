@@ -50,11 +50,11 @@ removeCols <- function(data_df,col_vector){
 
 
 ## Set the working directory to the root of your DSC 520 directory
-#setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
-setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
+setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
+#setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
 
-#covidRootPath <- "c:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\"
-covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
+covidRootPath <- "c:\\Users\\newcomb\\DSCProjects\\DSC\\covid\\"
+#covidRootPath <- "L:\\stonk\\projects\\DSC\\DSC\\covid\\"
 
 caCovidHospitalizationPath <- "CA_covid_Hospitalization.csv"
 #cdcDeathsPath <- "cdcMortality.csv"

@@ -284,9 +284,7 @@ exp(data_less2_lm$coefficients)
 ### Confidence intervals should not cross 1. The lower levels should be greater than 1. 
 confint(data_less2_lm)
 
-exp(confint(data1_lm))
 
-?glm.fit()
 
 summary(data_less2_lm)
 summary(data_less_lm)
