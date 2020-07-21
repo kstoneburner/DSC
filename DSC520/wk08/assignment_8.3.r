@@ -21,16 +21,45 @@ set.seed(123)
 
 k_means_cluster_df <- data.frame()
 
+
 ### Calculate all the clusters from k2 - k12 and place them in a data frame.
 for (k in 2:12){
   
-  print(k)
   
   cluster_results <- kmeans(dataset_df, k, iter.max = 25, nstart = 1)
   
+  #print(  cluster_results)
+  #print(cluster_results$centers[2,])
+  
+  ### Calculate Distance from Centers
+  
   cluster_factor <- as.factor(cluster_results$cluster)
+  
+  ### Get a vector of the unique cluster values, should be equal to k
+  cluster_key <- unique(cluster_factor)
 
-  ### initialize additional rpw to get us started  
+  ### Copy the dataset_
+  temp_df <- dataset_df
+  
+  ### append results to temp_df
+  temp_df <- cbind(temp_df, cluster=cluster_factor)
+  
+  print(temp_df)
+  
+  ### Get Centers for each value in cluster_key
+  for (counter in 1:length(cluster_key))
+  {
+    
+    thisCluster <- cluster_key[counter]
+    thisCenter_x <- cluster_results$centers[thisCluster,][1]
+    thisCenter_y <- cluster_results$centers[thisCluster,][2]
+    
+    
+
+  }
+  print(cluster_results$centers)
+
+    ### initialize additional rpw to get us started  
   if ( nrow(k_means_cluster_df) == 0 ) {
     
     k_means_cluster_df <- data.frame( k=cluster_factor) 
@@ -38,6 +67,10 @@ for (k in 2:12){
   }#//END check for new Data Frame
 
     k_means_cluster_df[k] <- cluster_factor
+    
+
+    
+    
       
   if (k == 12 ){
     #### Remove First Column 
