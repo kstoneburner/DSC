@@ -469,7 +469,6 @@ error_rate
 
 last_row <- offset_daily_df[nrow(offset_daily_df),]
 
-interpret_glm_model(last_month_lm)
 
 ### Project ahead by offset
 
@@ -511,6 +510,7 @@ last_month_lm$offset
 
 intercept <- last_month_lm$coefficients[1]
 coefficients <- last_month_lm$coefficients[2]
+intercept
 coefficients
 
 se <- summary(last_month_lm)$coefficients["offset","Std. Error"]

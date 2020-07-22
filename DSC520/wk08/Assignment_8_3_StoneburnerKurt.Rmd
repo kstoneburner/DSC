@@ -1,8 +1,14 @@
-#install.packages("factoextra") ### For beautiful graphs
-library(factoextra)
-library(ggplot2)
+---
+title: 'Assignment 8.3:'
+author: "Kurt Stoneburner"
+date: "7/21/2020"
+output: pdf_document
+---
 
-### Set working Directory to the Github data folder
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(ggplot2)
 
 setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github\\data")
 #setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk08")
@@ -10,32 +16,43 @@ setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github\\data")
 #### Load the Binaray Classifier Dataset
 dataset_df <- read.csv("clustering-data.csv")
 
+#### Set Seed so random numbers will be generated consistently
+set.seed(123)
 
-#a. Plot the dataset using a scatter plot.
+
+```
+
+
+#### a. Plot the dataset using a scatter plot.\newline
+
+
+``` {r scatter.plot,echo=FALSE}
+
 
 ggplot(data = dataset_df, aes(y = y, x = x) ) + geom_point(color="blue")
 
-#b. Fit the dataset using the k-means algorithm from k=2 to k=12. Create a scatter plot of the resultant clusters for each value of k.
 
-set.seed(123)
+```
+
+
+#### b. Fit the dataset using the k-means algorithm from k=2 to k=12. Create a scatter plot of the resultant clusters for each value of k.\newline
+
+
+``` {r k.I.Means.It,echo=FALSE}
 
 k_means_cluster_df <- data.frame()
-
-means_distance_df <- data.frame(  initial= c(NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA))
 
 average_means_vector <- c()
 
 ### Calculate all the clusters from k2 - k12 and place them in a data frame.
+### Also calculate average distance for each k model
 for (k in 2:12){
   
-  
+  ### Generate kmeans results for each value of K  
   cluster_results <- kmeans(dataset_df, k, iter.max = 25, nstart = 1)
   
-  #print(  cluster_results)
-  #print(cluster_results$centers[2,])
-  
+
   ### Calculate Distance from Centers
-  
   cluster_factor <- as.factor(cluster_results$cluster)
   
   ### Get a vector of the unique cluster values, should be equal to k
@@ -58,23 +75,19 @@ for (k in 2:12){
     thisCenter_y <- cluster_results$centers[thisCluster,][2]
     
     temp_cluster_df <- temp_df[which(temp_df$cluster==thisCluster),]
-    #print(temp_cluster_df)
     
+    ### Get the mean distance for each data point to its corresponding center
     means_vector<- append(means_vector, mean(sqrt( (temp_cluster_df$x - thisCenter_x)^2 + (temp_cluster_df$y - thisCenter_y)^2)) )
     
 
   }
-
-  print(means_vector)
-  print(mean(means_vector))
+  
+  #### Means vector has a length of k.
+  #### The Target value is the mean of the means
   average_means_vector <- append(average_means_vector, mean(means_vector))
-    #print(cluster_results$centers)
-  
-  ###calculate distance = sqrt((x1 - x2)^2 + (y1 - y2)^2)
-  #means_distance_df <- cbind(means_distance_df,means_vector)
-  
 
-    ### initialize additional rpw to get us started  
+
+  ### initialize additional rpw to get us started  
   if ( nrow(k_means_cluster_df) == 0 ) {
     
     k_means_cluster_df <- data.frame( k=cluster_factor) 
@@ -87,17 +100,15 @@ for (k in 2:12){
   if (k == 12 ){
     #### Remove First Column 
     k_means_cluster_df <- k_means_cluster_df[-1]    
-    #means_distance_df <-  means_distance_df[-1]
+
     #### Rename Columns
     colnames(k_means_cluster_df)<-c("k2","k3","k4","k5","k6","k7","k8","k9","k10","k11","k12")
-    #colnames(means_distance_df) <-c("k2","k3","k4","k5","k6","k7","k8","k9","k10","k11","k12")
-    
 
   }
   
 }#//** END K plot loop
 
-#means_vector <- round(means_vector,2)
+
 ggplot(data = dataset_df, aes(y = y, x = x) ) + geom_point(color=k_means_cluster_df$k2) + labs(title="K Cluster = 2")
 ggplot(data = dataset_df, aes(y = y, x = x) ) + geom_point(color=k_means_cluster_df$k3) + labs(title="K Cluster = 3")
 ggplot(data = dataset_df, aes(y = y, x = x) ) + geom_point(color=k_means_cluster_df$k4) + labs(title="K Cluster = 4")
@@ -111,15 +122,22 @@ ggplot(data = dataset_df, aes(y = y, x = x) ) + geom_point(color=k_means_cluster
 ggplot(data = dataset_df, aes(y = y, x = x) ) + geom_point(color=k_means_cluster_df$k12) + labs(title="K Cluster = 12")
 
 
-#c. As k-means is an unsupervised algorithm, you cannot compute the accuracy as there are no correct values to compare the output to.
-#   Instead, you will use the average distance from the center of each cluster as a measure of how well the model fits the data. 
-#   To calculate this metric, simply compute the distance of each data point to the center of the cluster it is assigned to and take 
-#   the average value of all of those distances.
-#   Compute k-means with k = 4
+
+
+```
+
+
+#### c. As k-means is an unsupervised algorithm, you cannot compute the accuracy as there are no correct values to compare the output to. Instead, you will use the average distance from the center of each cluster as a measure of how well the model fits the data. To calculate this metric, simply compute the distance of each data point to the center of the cluster it is assigned to and take the average value of all of those distances. Calculate this average distance from the center of each cluster for each value of k and plot it as a line chart where k is the x-axis and the average distance is the y-axis. Looking at the graph you generated in the previous example, what is the elbow point for this dataset?
+
+
+``` {r elbow.room.is.means.of.a.k, echo=FALSE}
 
 average_means_vector <- round(average_means_vector,2)
-average_means_vector
 means_distance_df <- data.frame(k=as.factor(c(2:12)),average_distance=average_means_vector)
-means_distance_df
 
 ggplot(data = means_distance_df, aes(y = average_distance, x = k ) )+ geom_point(color="blue") + labs(title="Average Cluster Distance")
+
+
+```
+
+The 'elbow joint' is at a k of 6 or 7. Looking at the scatterplots k=6 is the better choice.

@@ -1,7 +1,14 @@
-library(ggplot2)
-#install.packages("class") ass Package Used for knn
-library(class)
+---
+title: "Assignment 8.2: Introduction to Machine Learning"
+author: "Kurt Stoneburner"
+date: "7/21/2020"
+output: pdf_document
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(class)
 knn_accuracy <- function(input_df,k_vector,sampling_rate){
   #### Test the accuracy of knn by runing the algorithm with accross multiple
   #### k values stored in k_vector
@@ -70,51 +77,63 @@ knn_accuracy <- function(input_df,k_vector,sampling_rate){
   #round(accuracy(tab),2)
   
 }#//END Knn accuracy
-### Set working Directory to the Github data folder
 
+set.seed(123)
+
+### Set working Directory to the Github data folder
 setwd("C:\\Users\\newcomb\\DSCProjects\\dsc520_github\\data")
 #setwd("L:\\stonk\\projects\\DSC\\DSC\\DSC520\\wk08")
 
 #### Load the Binaray Classifier Dataset
 binary_class_df <- read.csv("binary-classifier-data.csv")
-
 binary_class_df$label <- as.factor(binary_class_df$label)
 
 #### Load the Trinary Classifier Dataset
 trinary_class_df <- read.csv("trinary-classifier-data.csv")
 trinary_class_df$label <- as.factor(trinary_class_df$label)
-
-#a. Plot the data from each dataset using a scatter plot.
-ggplot(data = binary_class_df, aes(y = y, x = x, color=label ) ) + geom_point() 
-
-ggplot(data = trinary_class_df, aes(y = y, x = x, color=label )) + geom_point() 
+```
 
 
-#b. Fit a k nearest neighbors model for each dataset for k=3, k=5, k=10, k=15, k=20, and k=25. 
-#Compute the accuracy of the resulting models for each value of k. 
-#Plot the results in a graph where the x-axis is the different values of k and the y-axis is the accuracy of the model.
+#### a. Plot the data from each dataset using a scatter plot.\newline
 
 
-###################################
-### K Nearest Neighbor Modeling
-###################################
-set.seed(123)
+``` {r plotted, echo=FALSE}
+
+ggplot(data = binary_class_df, aes(y = y, x = x, color=label ) ) + geom_point() + labs(title="binary-classifier-data.csv")
+
+ggplot(data = trinary_class_df, aes(y = y, x = x, color=label )) + geom_point() + labs(title="trinary-classifier-data.csv")
+
+
+```
+
+
+#### b. Fit a k nearest neighbors model for each dataset for k=3, k=5, k=10, k=15, k=20, and k=25. Compute the accuracy of the resulting models for each value of k. Plot the results in a graph where the x-axis is the different values of k and the y-axis is the accuracy of the model.\newline
+
+
+``` {r knnAccuracy, echo=FALSE}
+
+### Generate Accuracy of each Model
 binary_accuracy_v <- knn_accuracy(binary_class_df,c(3,5,10,15,20,25),0.9)
-binary_accuracy_v
+
+### Build Dataframe
 binary_accuracy_df <- data.frame(k=c(3,5,10,15,20,25),accuracy=binary_accuracy_v)
-plot(binary_accuracy_df)
+
 ggplot(data = binary_accuracy_df, aes(y = accuracy, x = k) ) + geom_point(color="blue") + 
   labs(title="K value Accuracy",subtitle = "Binary-Classifier-data.csv")
 
-
-
-
+### Generate Accuracy of each Model
 trinary_accuracy_v <- knn_accuracy(trinary_class_df,c(3,5,10,15,20,25),0.9)
-trinary_accuracy_v
+
+### Build Dataframe
 trinary_accuracy_df <- data.frame(k=c(3,5,10,15,20,25),accuracy=trinary_accuracy_v)
-plot(trinary_accuracy_df)
+
 ggplot(data = trinary_accuracy_df, aes(y = accuracy, x = k, color=label )) + geom_point(color = "blue") + 
   labs(title="K value Accuracy",subtitle = "Trinary-Classifier-data.csv")
 
 
-?knn
+```
+
+
+#### c. Looking back at the plots of the data, do you think a linear classifier would work well on these datasets?\newline
+
+A linear classifier would not be a good choice for these datasets. The data does not appear to be organized in a manner that can be classified linearly, as in by being above or below a line.
