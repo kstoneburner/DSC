@@ -179,8 +179,6 @@ build_statewide_confirmed_numbers <- function(input_df){
   return(data.frame(date,daily_total_confirmed,daily_total_deaths))
   
 }#// END build statewide numbers
-
-
 buildCounties_df <- function(input_df,input_names){
   #### Build a data frame of counties listed in input_names. Multiple counties will be summed
   date <- unique(ca_covid_df$date)
@@ -226,8 +224,6 @@ build_last_30_df <- function(input_df){
   
   
 }#///END build_last_30_df
-
-
 build_model_last_30days <- function(input_df) {
   ############################################################
   ### Build model for last 30 days
@@ -263,11 +259,15 @@ build_model_last_30days <- function(input_df) {
   return(last_month_predict_df)
   
 }#//END build_model_last_30days
+
+
 build_statewide_hospital_numbers <- function(input_df){
   #### Sum the numbers across the state to build a big picture estimate
   
   ### Build unique dates
   date <- unique(input_df$date)
+  
+  
   
   ### build statewide confirmed numbers
   hospitalized_covid_patients <- sapply(date,function(x){
@@ -317,7 +317,176 @@ build_statewide_hospital_numbers <- function(input_df){
   ))
   
 }#// END build statewide numbers
+daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
 
+sum_and_remove_DF_Columns <- function(data_df,col1,col2,sumColName){
+  ### Adds the row values of column1 and column. The new values are stored in sumColName
+  ### SumColName added to data_df, col1 and col2 are removed.
+  ### Effectively two columns are summed and replaced with a column of the summed value
+  ### This is mostly used for combining suspected and confirmed cases
+  
+  i <- 0
+  
+  temp_col <- sapply(data_df[col1], function(x) {
+    ### Increment the outer counter
+    i <<- i + 1
+    
+    return(data_df[col1][i] + data_df[col2][i])
+    
+    
+  },simplify = "array")
+  #print(temp_col)
+  #length(temp_col)
+  ### remove old columns
+  remove_columns = c(col1,col2)
+  data_df <- data_df[, ! names(data_df) %in% remove_columns, drop = F]
+  
+  data_df[sumColName] <- temp_col
+  
+  return(data_df)
+  
+  
+}
+removeCols <- function(data_df,col_vector){
+  ### col_vector is a vector of column names to remove
+  data_df <- data_df[, ! names(data_df) %in% col_vector, drop = F]
+  
+  return(data_df)
+}
+
+process_CA_covid_cases_data <- function(input_df){
+  
+  
+  ca_confirmed_df <-input_df
+  
+  
+  ### Convert Date to a Date object
+  ca_confirmed_df$date <- as.Date(ca_confirmed_df$date,"%Y-%m-%d")
+  
+  
+  ##########################################################################################
+  ### Convert NA to 0
+  ##########################################################################################
+  ### Hospital Data Frame - ca_hospital_df
+  ##########################################################################################
+  for (colCount in 1:length(ca_confirmed_df ) ) {
+    
+    ### Skip County and Date Columns
+    if (colCount == 1) { next}
+    if (colCount == 6) { next}
+    
+    
+    ### Looping through each column
+    ### Unlist converts data_frame list to vector
+    thisColumn <- unlist(ca_confirmed_df[colCount])
+    
+    ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
+    new_column <- sapply(thisColumn, function(x){
+      if (is.na(x) ) {
+        return(0)
+      } else { return(x) }
+    },simplify="array")
+    
+    
+    ca_confirmed_df[colCount] <- new_column
+    
+    
+    
+  }#//END Each Column
+  
+  ##########################################################################################
+  ### convert county to lower case
+  ##########################################################################################
+  ca_confirmed_df$county <- sapply(ca_confirmed_df$county, tolower,simplify="array")
+  
+  return(ca_confirmed_df)
+  
+  
+}#//END Process_CA_data
+process_CA_hospital_data <- function(input_df){
+  
+  ca_hospital_df <- input_df
+  
+  ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%Y-%m-%d")
+  
+  ### Get Date Column name
+  dateCol <- colnames(ca_hospital_df[2])
+  dateCol
+  
+  ### Get county Column name
+  countyCol <- colnames(ca_hospital_df[1])
+  countyCol
+  
+  hospitalCol <-colnames(ca_hospital_df)
+  
+  ##########################################################################################
+  ### Convert NA to 0
+  ##########################################################################################
+  ### Hospital Data Frame - ca_hospital_df
+  ##########################################################################################
+  for (colCount in 1:length(ca_hospital_df ) ) {
+    
+    ### Skip County and Date Columns
+    if (colCount < 3) { next}
+    
+    ### Looping through each column
+    ### Unlist converts data_frame list to vector
+    thisColumn <- unlist(ca_hospital_df[colCount])
+    
+    ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
+    new_column <- sapply(thisColumn, function(x){
+      if (is.na(x) ) {
+        return(0)
+      } else { return(x) }
+    },simplify="array")
+    
+    ca_hospital_df[colCount] <- new_column
+    
+    
+    
+  }#//END Each Column
+  
+  ##########################################################################################
+  ### convert county to lower case
+  ##########################################################################################
+  ca_hospital_df$county <- sapply(ca_hospital_df$county, tolower,simplify="array")
+  
+  
+  ##########################################################################################
+  ### Build combined tables
+  ##########################################################################################
+  ### Hospital Data Frame - ca_hospital_df
+  ##########################################################################################
+  
+  ### combine icu_confirmed with icu_suspected
+  ### Get the daily confirmed totals
+  ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"icu_suspected_covid_patients","icu_covid_confirmed_patients","icu_combined")
+  #ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"previous_days_covid_confirmed_patients","previous_days_suspected_covid_patients","confirmed_combined")
+  
+  ### remove hospitalized confirmed and suspected cases since these are already summarized
+  ca_hospital_df <- removeCols(ca_hospital_df,c("hospitalized_covid_confirmed_patients","hospitalized_suspected_covid_patients"))
+  
+  ### rename date column to date
+  names <- colnames(ca_hospital_df)
+  names[2] <- "date"
+  colnames(ca_hospital_df) <- names
+  head(ca_hospital_df)
+  
+  #Calculations
+  icu_capacity <- ca_hospital_df$icu_available_beds - ca_hospital_df$icu_combined
+  
+  hospital_capactity <- ca_hospital_df$all_hospital_beds - ca_hospital_df$hospitalized_covid_patients 
+  
+  ca_hospital_df <- cbind(ca_hospital_df,hospital_capactity)
+  ca_hospital_df <- cbind(ca_hospital_df,icu_capacity)
+  
+  #ca_hospital_df = as.matrix(ca_hospital_df)
+  
+  return(ca_hospital_df)
+  
+  
+  
+}#//*** END process_CA_hospital_data
 
 
 ## Set the working directory to the root of your DSC 520 directory
@@ -325,22 +494,23 @@ setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
 #setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
 
 ### Read CSV 
+ca_covid_df <- process_CA_covid_cases_data(read.csv("CA_covid_Cases.csv"))
 
-ca_hospital_df <- read.csv("final_CA_Hospital.csv")
-ca_covid_df <- read.csv("final_CA_Confirmed.csv")
+ca_hospital_df <- process_CA_hospital_data(read.csv("CA_covid_Hospitalization.csv"))
+
+
+#ca_hospital_df <- read.csv("final_CA_Hospital.csv")
+
+#ca_covid_df <- read.csv("final_CA_Confirmed.csv")
 #ca_population_df <- read.csv("final_CA_county_population.csv")
 #ca_demo_df <- read.csv("Final_CA_Race_Demographic.csv")
 
 ### strip first column which duplicates row Index.It's a write.CSV thing
-ca_hospital_df   <- ca_hospital_df[,2:length(ca_hospital_df)]
-ca_covid_df      <- ca_covid_df[,2:length(ca_covid_df)]
+#ca_hospital_df   <- ca_hospital_df[,2:length(ca_hospital_df)]
+#ca_covid_df      <- ca_covid_df[,2:length(ca_covid_df)]
 #ca_population_df <- ca_population_df[,2:length(ca_population_df)]
 #ca_demo_df       <- ca_hospital_df[,2:length(ca_demo_df)]
 
-#tail(ca_hospital_df)
-#tail(ca_covid_df)
-#tail(ca_population_df)
-#tail(ca_demo_df)
 
 ### Split counties into separate groups counties > 2% and less than
 #counties_by_size_index <- order(ca_population_df$population,decreasing = TRUE)
@@ -359,26 +529,36 @@ ca_covid_df      <- ca_covid_df[,2:length(ca_covid_df)]
 #},simplify = "array")
 #counties_smallest_names
 
-tail(ca_hospital_df)
-head(ca_hospital_df)
-head(ca_covid_df)
-tail(ca_covid_df)
-
 ############################################
 #### Build statewide Hospital numbers
 ############################################
 ### Hospital has least least rows start there
-
-
-
 daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
-daily_hospital_df$icu_capacity
 
 ############################################################
 ### build statewide Numbers - daily_covid_df
 ############################################################
 daily_covid_df <- build_statewide_confirmed_numbers(ca_covid_df)
 
+############################################################
+### Combine Frames into mega frame
+############################################################
+
+### Start with daily covid
+mega_df <- merge(daily_covid_df,daily_hospital_df)
+
+head(mega_df)
+tail(mega_df)
+
+
+plot(mega_df$date,mega_df$icu_combined)
+plot(mega_df$date,mega_df$hospitalized_covid_patients)
+plot(mega_df$date,mega_df$daily_total_deaths)
+
+plot(mega_df$daily_total_deaths,mega_df$icu_combined)
+
+plot(mega_df$date,mega_df$hospital_capactity)
+plot(mega_df$date,mega_df$all_hospital_beds)
 
 ############################################################
 ### build State confirmed offset columns - 

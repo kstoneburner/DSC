@@ -1,0 +1,10 @@
+11am -> 6am -> 9am -> 12pm -> 2pm -> 7pm -> 3am
+11:30  -> 630 -> 930 1230p -> 230 730 330a
+12am -> 7am, 10am 1pm, 3pm 6pm, 8pm, 10p
+1230 -> 730a 1030a 130p 330p 630 1030
+1:00am -> 8am 4pm 9pm 
+1:30am -> 830am 1130 430 
+2:00am -> 5am 5pm
+2:30am -> 530am 530pm 
+
+Shows Organized for outuput by date and time slot
