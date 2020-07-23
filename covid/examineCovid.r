@@ -30,8 +30,8 @@ build_offset_columns <- function(input_df,target_col,range_vector){
   return(input_df)  
   
 }### END build_minus_column
-build_rolling_offset <- function(input_df,rolling_days){
-  
+build_rolling_cor_offset <- function(input_df,rolling_days){
+  #### 
   
   ### Find the best offset covariance over a period of rolling days
   output_vector <- c()  
@@ -58,10 +58,12 @@ build_rolling_offset <- function(input_df,rolling_days){
     ### Build Residuals for each offset Column
     ### Loop through each offset column
     
+    ### Build correlation vector from temp_df using second column which gives one correlation of everything
     tempCor <- (cor(temp_df)[2,])
-    #print(max(tempCor[3:length(tempCor)]))
+    
     for (q in 3:length(tempCor)){
-      #print(tempCor[q])
+      
+      ### Initialize most_cor first time through
       if (most_cor == -1 ){ 
         most_cor <- tempCor[q] 
         most_cor_offset <- colnames(temp_df)[q]
@@ -75,14 +77,16 @@ build_rolling_offset <- function(input_df,rolling_days){
     }
     #print("Most_cor")
     #print(most_cor)
-    #print("Most_cor_offset")
-    #print(most_cor_offset)
-    #print(temp_df[most_cor_offset])
+    print("Most_cor_offset")
+    print(most_cor_offset)
+    #print(temp_df)
     
     ## Build a linear model prediction based on suggested offset.
     ## calculate the error of the prediction
     
-    temp_lm <-  lm(daily_total_deaths ~ offset_14, data=temp_df)
+    #temp_lm <-  lm(daily_total_deaths ~ offset_14, data=temp_df)
+    eval(parse(text=paste0("temp_lm <-  lm(daily_total_deaths ~ ",most_cor_offset,", data=temp_df)")))
+    #eval(parse(text=command))
     
     #print(summary(temp_lm))
     
@@ -156,6 +160,155 @@ build_rolling_offset <- function(input_df,rolling_days){
   
   
 }### END build rolling offset
+build_rolling_lm_offset <- function(input_df,rolling_days){
+  
+  
+  ### Find the best offset covariance over a period of rolling days
+  output_vector <- c()  
+  output_vector2 <- c()  
+  mse_vector <- c()
+  predicted_deaths <- c()  
+  
+  ### Loop through input data frame
+  for (i in 1:nrow(input_df)){
+    
+    ### Skip rows that are less than rolling days. Sorry it can't be helped
+    if (i <= rolling_days) {
+      output_vector2 <- append(output_vector2,0) 
+      mse_vector <- append(mse_vector,0)
+      predicted_deaths <- append(predicted_deaths,0)
+      next
+    }
+    
+    print(paste0("Processing Row: ",i," of ",nrow(input_df)))
+    
+    #### Build a temprory data frame, using current row index - minus the rolling days
+    temp_df <- input_df[(i - rolling_days):i,2:length(input_df)]
+    
+    least_residual <- -1
+    least_offset <- ""
+    least_lm <- ""
+    least_predict_df <- ""
+    
+    ### Build Residuals for each offset Column
+    ### Loop through each offset column
+    
+    for (lmCount in 3:length(temp_df)){
+      
+      ### Build a linear model for each offset
+      ### Choose the model with the lowest error
+      
+      ### Get Each offset column name for Linear model
+      loopColName <- colnames(temp_df)[lmCount]
+      
+      ### dynamically build Linear Model
+      eval(parse(text=paste0("temp_lm <-  lm(daily_total_deaths ~ ",loopColName,", data=temp_df)")))
+      
+      temp_predict_df <- data.frame( 
+        daily_total_deaths = predict(temp_lm, newdata=temp_df), 
+        daily_total_confirmed=temp_df[loopColName])
+      
+      temp_residual <- temp_df$daily_total_deaths - temp_predict_df$daily_total_deaths
+      
+      ### Base Error
+      temp_residual <- sum(temp_residual^2)
+      
+      ### Initialze residual and offset values
+      if (least_residual == -1) {
+        
+        least_residual <- temp_residual
+        least_offset <- loopColName
+        least_lm <- temp_lm
+        least_predict_df <- temp_predict_df
+        
+      }#//END Initialize Least Residuals
+      
+      ### Assign the least residual
+      if (temp_residual < least_residual){
+        
+        least_residual <- temp_residual
+        least_offset <- loopColName
+        least_lm <- temp_lm
+        least_predict_df <- temp_predict_df
+        
+        
+      }#//END assign least Residual
+      
+      
+      #[temp_df[lmCount]]
+      
+    }#//*** END each column Name
+    #print(paste0("Least:",least_offset,":",least_residual))
+    
+    #least_residual <- temp_residual
+    #least_offset <- loopColName
+    #least_lm <- temp_lm
+    #least_predict_df <- temp_predict_df
+    
+    
+    ### Get the last predicted death for model comparison
+    last_predicted_death <- round(least_predict_df$daily_total_deaths[nrow(least_predict_df)],0)
+    
+    predicted_deaths <- append(predicted_deaths,last_predicted_death)
+    #### Get residuals from prediction
+    
+    
+    sse <- temp_df$daily_total_deaths - least_predict_df$daily_total_deaths
+    sse <- sse^2
+    sse <- sum(sse)
+    sse
+    
+    
+    ## Degrees of Freedom for Error (n-p)
+    dfe <- rolling_days-2
+    
+    #print(sse/dfe)
+    
+    
+    ## Mean of Squares for Error:   MSE = SSE / DFE
+    mse <- sse / dfe
+    
+    #print(temp_residual)
+    #print(actual_values)
+    
+    #print(temp_residual / dfe)
+    #daily_total_deaths
+    
+    ### Generate Average deaths for the month
+    
+    
+    
+    output_vector2 <- append(output_vector2,least_offset) 
+    mse_vector <- append(mse_vector,mse)
+    #mean_predicted_deaths <- append(mean_predicted_deaths, mean(temp_predict_df$daily_total_confirmed))
+    
+    
+    
+  }### END Each data frame row
+  
+  
+  
+  min_mse <- min(mse_vector[(mse_vector > 0)])
+  
+  offset_error <- c()
+  
+  for (i in 1:length(mse_vector)) {
+    if (mse_vector[i] == 0 ){
+      offset_error <- append(offset_error,0)
+      next
+    }
+    offset_error <- append(offset_error,min_mse/mse_vector[i])
+    
+  }
+  #predict_death=mean_predicted_deaths
+  return(data.frame(date = input_df$date,mse=mse_vector,error=offset_error,offset=output_vector2,predicted_deaths=predicted_deaths))
+  #eval(parse(text=command))
+  
+  
+}### END build rolling offset
+
+#offset_df <- build_rolling_offset(offset_daily_df,30)
+
 build_statewide_confirmed_numbers <- function(input_df){
   #### Sum the numbers across the state to build a big picture estimate
   
@@ -259,8 +412,6 @@ build_model_last_30days <- function(input_df) {
   return(last_month_predict_df)
   
 }#//END build_model_last_30days
-
-
 build_statewide_hospital_numbers <- function(input_df){
   #### Sum the numbers across the state to build a big picture estimate
   
@@ -317,8 +468,6 @@ build_statewide_hospital_numbers <- function(input_df){
   ))
   
 }#// END build statewide numbers
-daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
-
 sum_and_remove_DF_Columns <- function(data_df,col1,col2,sumColName){
   ### Adds the row values of column1 and column. The new values are stored in sumColName
   ### SumColName added to data_df, col1 and col2 are removed.
@@ -353,7 +502,6 @@ removeCols <- function(data_df,col_vector){
   
   return(data_df)
 }
-
 process_CA_covid_cases_data <- function(input_df){
   
   
@@ -498,6 +646,8 @@ ca_covid_df <- process_CA_covid_cases_data(read.csv("CA_covid_Cases.csv"))
 
 ca_hospital_df <- process_CA_hospital_data(read.csv("CA_covid_Hospitalization.csv"))
 
+ca_testing_df <- read.csv("CA_testing.csv")
+ca_testing_df$date <- as.Date(ca_testing_df$date,"%Y-%m-%d")
 
 #ca_hospital_df <- read.csv("final_CA_Hospital.csv")
 
@@ -541,14 +691,84 @@ daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
 daily_covid_df <- build_statewide_confirmed_numbers(ca_covid_df)
 
 ############################################################
+### build State confirmed offset columns - 
+############################################################
+offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",2:30)
+offset_daily_df
+############################################################
+### Build the offsets data frame. 
+############################################################
+offset_df <- build_rolling_cor_offset(offset_daily_df,30)
+offset_df
+
+offset_lm_5_df <- build_rolling_lm_offset(offset_daily_df,5)
+offset_lm_6_df <- build_rolling_lm_offset(offset_daily_df,6)
+offset_lm_7_df <- build_rolling_lm_offset(offset_daily_df,7)
+offset_lm_8_df <- build_rolling_lm_offset(offset_daily_df,8)
+offset_lm_9_df <- build_rolling_lm_offset(offset_daily_df,9)
+offset_lm_10_df <- build_rolling_lm_offset(offset_daily_df,10)
+offset_lm_11_df <- build_rolling_lm_offset(offset_daily_df,11)
+offset_lm_12_df <- build_rolling_lm_offset(offset_daily_df,12)
+offset_lm_13_df <- build_rolling_lm_offset(offset_daily_df,13)
+offset_lm_14_df <- build_rolling_lm_offset(offset_daily_df,14)
+offset_lm_15_df <- build_rolling_lm_offset(offset_daily_df,15)
+
+
+sum(offset_lm_5_df$mse)
+sum(offset_lm_6_df$mse)
+sum(offset_lm_7_df$mse)
+sum(offset_lm_8_df$mse)
+sum(offset_lm_9_df$mse)
+sum(offset_lm_10_df$mse)
+sum(offset_lm_11_df$mse)
+sum(offset_lm_12_df$mse)
+sum(offset_lm_13_df$mse)
+sum(offset_lm_14_df$mse)
+sum(offset_lm_15_df$mse)
+
+mean(offset_lm_5_df$mse) / sum(offset_lm_5_df$mse)
+mean(offset_lm_6_df$mse) / sum(offset_lm_6_df$mse)
+mean(offset_lm_7_df$mse) / sum(offset_lm_7_df$mse)
+mean(offset_lm_8_df$mse) / sum(offset_lm_8_df$mse)
+mean(offset_lm_9_df$mse) / sum(offset_lm_9_df$mse)
+mean(offset_lm_10_df$mse) / sum(offset_lm_10_df$mse)
+mean(offset_lm_11_df$mse) / sum(offset_lm_11_df$mse)
+mean(offset_lm_12_df$mse) / sum(offset_lm_12_df$mse)
+mean(offset_lm_13_df$mse) / sum(offset_lm_13_df$mse)
+mean(offset_lm_14_df$mse) / sum(offset_lm_14_df$mse)
+mean(offset_lm_15_df$mse) / sum(offset_lm_15_df$mse)
+
+
+sum(offset_df$mse)
+sum(offset_lm_df$mse)
+
+offset_lm_df
+
+offset_df <- cbind(offset_df,actual_deaths=daily_covid_df$daily_total_deaths)
+
+offset_indexes <- vapply(offset_df$offset, function(x){
+
+  
+
+  if (x==0) {return(0)}
+  return(as.numeric(gsub("offset_","",x)))
+  
+  
+},numeric(1) )  
+
+offset_df <- cbind(offset_df,offset_index=offset_indexes )
+
+############################################################
 ### Combine Frames into mega frame
 ############################################################
 
 ### Start with daily covid
 mega_df <- merge(daily_covid_df,daily_hospital_df)
+mega_df <- merge(mega_df,ca_testing_df)
 
-head(mega_df)
-tail(mega_df)
+mega_df$test_positivity <- mega_df$daily_total_confirmed / mega_df$tested
+
+mega_df <- merge(mega_df, offset_df)
 
 
 plot(mega_df$date,mega_df$icu_combined)
@@ -559,44 +779,34 @@ plot(mega_df$daily_total_deaths,mega_df$icu_combined)
 
 plot(mega_df$date,mega_df$hospital_capactity)
 plot(mega_df$date,mega_df$all_hospital_beds)
+plot(mega_df$date,mega_df$tested)
 
-############################################################
-### build State confirmed offset columns - 
-############################################################
-offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",8:30)
-offset_daily_df
-############################################################
-### Build the offsets data frame. 
-############################################################
-offset_df <- build_rolling_offset(offset_daily_df,30)
+plot(mega_df$date,mega_df$tested)
+plot(mega_df$date,mega_df$test_positivity)
 
-offset_df <- cbind(offset_df,actual_deaths=daily_covid_df$daily_total_deaths)
+cor(mega_df$test_positivity,mega_df$error)
+cor(mega_df$test_positivity,mega_df$mse)
+cor(mega_df[-14])
 
-offset_indexes <- vapply(offset_df$offset, function(x){
-  
-  if (x==0) {return(0)}
-  return(as.numeric(gsub("offset_","",x)))
-  
-  
-},numeric(1) )  
+str(mega_df[2:13-15])
 
-offset_df <- cbind(offset_df,offset_index=offset_indexes )
+str(mega_df)
 
+mega_names_v <-colnames(mega_df)
+mega_names_v <- mega_names_v[-14]
+mega_names_v <- mega_names_v[-1]
+mega_names_v
 
-offset_df
+cor(mega_df[,mega_names_v])
 
-nrow(offset_daily_df)
-
-#### Trim offset_daily_df so it has the same number of records as daily_hospital
-startIndex <- nrow(offset_daily_df) - nrow(daily_hospital_df)
-
-offset_daily_df <- offset_daily_df
+cor(offset_df$mse,offset_df$offset_index)
 
 
 ############################################################
 ### Build model for last 30 days
 ############################################################
 ### Get the offset for the last date
+### Rolling 30 day Model
 ############################################################
 last_offset <- offset_df$offset[nrow(offset_df)]
 
@@ -633,10 +843,95 @@ ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deat
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
   #  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
   geom_line(color='red'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Statewide (last 30 days)")  
+  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Statewide (last 30 days)",subtitle="Rolling 30 day model")  
+
+############################################################
+### Rolling 5 day Model
+############################################################
+last_offset <- offset_lm_5_df$offset[nrow(offset_lm_5_df)]
+
+offset_lm_5_df
+
+
+#### Determine the last 30 days index
+rowCount <- nrow(offset_daily_df)
+startIndex <- rowCount - 30
+
+### get last 30 days of of offset_daily_ statewide
+temp_df <- offset_daily_df[startIndex:rowCount,]
+
+last_month_df <- data.frame( date = temp_df$date,  
+                             daily_total_confirmed = temp_df$daily_total_confirmed,
+                             daily_total_deaths = temp_df$daily_total_deaths,
+                             "offset" = temp_df[last_offset])
+
+colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
+
+
+last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
 
 
 
+last_month_predict_df <- data.frame( 
+  date=last_month_df$date,
+  actual_deaths=last_month_df$daily_total_deaths,
+  daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
+  daily_total_confirmed=last_month_df$daily_total_confirmed,
+  offset=last_month_df$offset
+)
+
+ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  #  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  geom_line(color='red'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Statewide (last 30 days)",subtitle=paste0("Rolling 5 day model - Correlation Confirmed: ",last_offset," days") ) 
+
+############################################################
+### Rolling 15 day Model
+############################################################
+last_offset <- offset_lm_15_df$offset[nrow(offset_lm_15_df)]
+last_offset
+
+offset_lm_15_df
+
+
+#### Determine the last 30 days index
+rowCount <- nrow(offset_daily_df)
+startIndex <- rowCount - 30
+
+### get last 30 days of of offset_daily_ statewide
+temp_df <- offset_daily_df[startIndex:rowCount,]
+
+last_month_df <- data.frame( date = temp_df$date,  
+                             daily_total_confirmed = temp_df$daily_total_confirmed,
+                             daily_total_deaths = temp_df$daily_total_deaths,
+                             "offset" = temp_df[last_offset])
+
+colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
+
+
+last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
+
+
+
+last_month_predict_df <- data.frame( 
+  date=last_month_df$date,
+  actual_deaths=last_month_df$daily_total_deaths,
+  daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
+  daily_total_confirmed=last_month_df$daily_total_confirmed,
+  offset=last_month_df$offset
+)
+
+ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  #  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  geom_line(color='red'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Statewide (last 30 days)",subtitle=paste0("Rolling 15 day model - Correlation Confirmed: ",last_offset," days") ) 
+
+intercept <- last_month_lm$coefficients[1]
+coefficients <- last_month_lm$coefficients[2]
+intercept
+coefficients
 
 
 last_month_predict_df
@@ -663,7 +958,6 @@ offset_daily_df
 last_row
 last_offset
 
-offset_df
 
 #########################################
 ### Get last offset worth of records
@@ -687,6 +981,7 @@ summary(last_month_lm)[4]
 str(last_month_lm)
 last_month_lm$offset
 
+offset_df
 
 intercept <- last_month_lm$coefficients[1]
 coefficients <- last_month_lm$coefficients[2]
@@ -698,6 +993,7 @@ se <- summary(last_month_lm)$coefficients["offset","Std. Error"]
 
 last_month_lm$coefficients
 
+last_offset_index
 
 
 error_rate /2
@@ -717,6 +1013,59 @@ data.frame(date=last_month_predict_df$date,
            predict_high=predict_high)
 
 
+print(paste0("Confirmed Correlates"))
+
+offset_df
+
+############################################################################
+#### Model Error rates as a function of California testing effectiveness
+###########################################################################
+ggplot(data = offset_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_5_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 5 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_6_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 6 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_7_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 7 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_8_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 8 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_9_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 9 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_10_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 10 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_11_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 11 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_12_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 12 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_13_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 13 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_14_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 14 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+ggplot(data = offset_lm_15_df, aes(y = mse, x = date)) + geom_line(color='blue') +
+  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 15 day Correlation/Testing error rates", subtitle="Lower is Better")  
+
+offset_lm_15_df
+
+max(offset_df$offset_index)
+  
+scale_value <- max(offset_df$offset_index)/max(offset_df$mse)
+
+ggplot(data = offset_df, aes(y = offset_index, x = date)) + geom_line(color='blue') +
+  geom_line(color='red', aes(y= mse*scale_value, x=date)) +
+  labs( x="Date", y="Days prior", title="Correlating confirmed cases with deaths", subtitle="Deaths correlated confirmed days prior")  
+
 
 
 ############################################################
@@ -724,22 +1073,21 @@ data.frame(date=last_month_predict_df$date,
 ############################################################
 ### build Alameda confirmed offset columns - 
 ############################################################
-alameda_df <- buildCounties_df(ca_covid_df,c("alameda"))
-alameda_offset_daily_df <- build_offset_columns(alameda_df,"daily_total_confirmed",8:30)
+#alameda_df <- buildCounties_df(ca_covid_df,c("alameda"))
+#alameda_offset_daily_df <- build_offset_columns(alameda_df,"daily_total_confirmed",8:30)
 
-alameda_offset_daily_df
+#alameda_offset_daily_df
 
+#alameda_last_30_df <- build_last_30_df(alameda_offset_daily_df)
 
-alameda_last_30_df <- build_last_30_df(alameda_offset_daily_df)
+#alameda_predict_df <- build_model_last_30days(alameda_last_30_df)
+#alameda_predict_df
+#df_for_plot <- alameda_last_30_df
+#predict_df_for_plot <- alameda_predict_df
 
-alameda_predict_df <- build_model_last_30days(alameda_last_30_df)
-alameda_predict_df
-df_for_plot <- alameda_last_30_df
-predict_df_for_plot <- alameda_predict_df
-
-ggplot(data = df_for_plot, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  geom_line(color='red'   ,data = predict_df_for_plot, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Alameda (last 30 days)")  
+#ggplot(data = df_for_plot, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+#  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+#  geom_line(color='red'   ,data = predict_df_for_plot, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
+#  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Alameda (last 30 days)")  
 
 
