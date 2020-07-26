@@ -279,7 +279,7 @@ function buildShowTD(){
 	
 }//*** END Build ShowTD
 
-function autobuild_row(inputOBJ){
+function autobuild_mf_row(inputOBJ){
 	var parent = inputOBJ.srcElement.parentNode;
 	cl(parent);
 	var firstTD = parent.children[1];
@@ -351,7 +351,161 @@ function autobuild_row(inputOBJ){
 
 
 
-}//*** END autobuild_row
+}//*** END autobuild_mf_row
+
+function autobuild_tu_thu_row(inputOBJ){
+	var parent = inputOBJ.srcElement.parentNode;
+	cl(parent);
+	var firstTD = parent.children[1];
+
+	cl("Series: " + firstTD.children[0].value);
+	cl("Episode: " + firstTD.children[1].value);
+
+	var startSeries = firstTD.children[0].value;
+	var startEpisode = firstTD.children[1].value;
+
+	//*** Build Row based on start series
+	var thisRowList = [];
+
+	var thuSeries = ""
+	var thuEpisode = ""
+
+	//*** Get all selections in row
+	//*** Build the value for the row. Increment Thursday based on Tuesday
+	for (x=1;x<8;x++){
+
+
+		var showOBJ = {
+			series : parent.children[x].children[0].value,
+			episode : parent.children[x].children[1].value
+		}
+
+		switch(x){
+
+			case 2:
+				//*** Tuesday's show. Build Thursday's show
+				//*** Assign series, that was easy
+				thuSeries = showOBJ.series
+
+				cl(showOBJ.series + ":" + showOBJ.episode)
+
+				//***Increment Episode, this is lil more work ;)
+				var theseEpisodes = m.series[showOBJ.series];
+
+				var episodeIndex = -1;
+
+				for (xx=0;xx<theseEpisodes.length;xx++){
+
+					if ( theseEpisodes[xx] == showOBJ.episode){
+
+						episodeIndex = xx;
+
+					}//*** END get find index
+
+				}//*** END find Episode Index
+
+				//*** Increment found Index
+				episodeIndex++;
+
+				if (episodeIndex == theseEpisodes.length){
+
+					episodeIndex = 0;
+
+				}//*** END Reset episodeIndex to Beginning
+
+				thuEpisode = theseEpisodes[episodeIndex];
+
+				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
+				break
+			case 4:
+				showOBJ = {
+					series : thuSeries,
+					episode : thuEpisode
+				}
+				break
+
+		}//*** END Switch Handle Tuesday Thursday
+
+		cl(showOBJ)
+
+		thisRowList.push(showOBJ)
+	
+
+	}//*** Each TD
+
+	//*** Find Index of current Row
+	var mainTable = parent.parentNode;
+
+	
+	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
+	for (x=0;x<mainTable.children.length - 1;x++){
+
+		if (parent == mainTable.children[x]) {
+			//*** Parent Found, x is RowIndex.
+			//*** Let's Update!!!
+			update_mainTable_row(x,thisRowList)
+			break;		
+		}
+
+	}//*** END maintable Row Loop
+
+	return
+
+
+	//*** get start episode index
+	var theseEpisodes = m.series[startSeries];
+
+	var episodeIndex = -1;
+
+	for (x=0;x<theseEpisodes.length;x++){
+
+		if ( theseEpisodes[x] == startEpisode){
+
+			episodeIndex = x;
+
+		}//*** END get find index
+
+	}//*** END find Episode Index
+
+	thisRowList.push(showOBJ)
+
+	for (x=1;x<7;x++){
+
+		//*** Increment episode Index, Starting from found Value
+		episodeIndex++;
+
+		//*** Reset Index to 0 if out of bounds
+		if (episodeIndex > theseEpisodes.length -1 ){ episodeIndex = 0 }
+
+		//*** Build Suggestions and add to list
+		thisRowList.push({
+			series : startSeries,
+			episode : theseEpisodes[episodeIndex]
+		});
+
+	}//*** END build suggested shows
+
+	cl("ThisRow List: " + thisRowList)
+	
+	//*** Find Index of current Row
+	var mainTable = parent.parentNode;
+
+	
+	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
+	for (x=0;x<mainTable.children.length - 1;x++){
+
+		if (parent == mainTable.children[x]) {
+			//*** Parent Found, x is RowIndex.
+			//*** Let's Update!!!
+			//update_mainTable_row(x,thisRowList)
+			break;		
+		}
+
+	}//*** END maintable Row Loop
+
+
+
+}//*** END autobuild_tu_thu_row
 
 function buildAutoPopulate(inputOBJ){
 
@@ -361,21 +515,31 @@ function buildAutoPopulate(inputOBJ){
 
 	switch (thisAction){ 
 
-		case "autobuild":
+		case "autobuild_mf":
 	
 			thisColumn = 1
 
 
 			var button = document.createElement("button");
-			button.innerHTML = "Autobuild - Row1"
+			button.innerHTML = "Autobuild - M-F"
 
-			button.addEventListener("click",function(e){autobuild_row(e)});
+			button.addEventListener("click",function(e){autobuild_mf_row(e)});
 
 			return button;
 
 		break;
 
-	}
+		case "autobuild_tu_thu":
+			thisColumn = 1
+
+			var button = document.createElement("button");
+			button.innerHTML = "Autobuild - Tu-Thu"
+
+			button.addEventListener("click",function(e){autobuild_tu_thu_row(e)});
+
+			return button;
+
+	}//*** END switch Action
 
 
 }//*** END Build autopoplate TD
@@ -399,7 +563,8 @@ function buildShowTR(input_time){
 	newTR.appendChild(buildShowTD())
 	newTR.appendChild(buildShowTD())
 	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildAutoPopulate({action : "autobuild", column : 1}))
+	newTR.appendChild(buildAutoPopulate({action : "autobuild_mf", column : 1}))
+	newTR.appendChild(buildAutoPopulate({action : "autobuild_tu_thu", column : 1}))
 	
 	//buildAutoPopulate({action : "autobuild", column : 1})
 	
@@ -461,8 +626,6 @@ function buildPage(){
 	//************************************
 	//*** Build Table Row
 	//************************************
-	mainTable.appendChild(buildShowTR("3:00a"));
-	mainTable.appendChild(buildShowTR("3:30a"));
 	mainTable.appendChild(buildShowTR("4:00a"));
 	mainTable.appendChild(buildShowTR("4:30a"));
 	mainTable.appendChild(buildShowTR("5:00a"));
@@ -509,8 +672,16 @@ function buildPage(){
 	mainTable.appendChild(buildShowTR("1:30a"));
 	mainTable.appendChild(buildShowTR("2:00a"));
 	mainTable.appendChild(buildShowTR("2:30a"));
+	mainTable.appendChild(buildShowTR("3:00a"));
+	mainTable.appendChild(buildShowTR("3:30a"));
 
 	document.body.appendChild(mainTable);
+
+	var copyPopulateButton = document.createElement("button");
+	copyPopulateButton.innerHTML = "Copy Populate: 11am to 2:30am"
+	copyPopulateButton
+	document.body.appendChild(copyPopulateButton);
+
 
 }//*** END Build Page
 
