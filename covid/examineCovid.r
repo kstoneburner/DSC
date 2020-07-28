@@ -877,7 +877,7 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
     output_df <- data.frame(
       date =loop_county_death_by_confirmed_df$date,
       predict_mse=loop_county_death_by_confirmed_df$mse,
-      predict_deaths=loop_county_death_by_confirmed_df$predicted_deaths,
+      prediction=loop_county_death_by_confirmed_df$predicted_deaths,
       predict_intercept =loop_county_death_by_confirmed_df$lm_intercept,
       predict_coefficient = loop_county_death_by_confirmed_df$lm_coefficient, 
       predict_offset = loop_county_death_by_confirmed_df$offset_index
@@ -917,11 +917,12 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
   saveRDS(index_df, index_filename)
   
 }#//*** END build_county_models_to_file
-build_county_models_to_file(ca_covid_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
+#build_county_models_to_file(ca_covid_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
 
 
 
-workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
+workingDir <- "C:\\DSC\\covid"
+#workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
 #workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
 ## Set the working directory to the root of your DSC 520 directory
 setwd(workingDir)
@@ -999,7 +1000,6 @@ ca_combined_df <- merge(ca_covid_df,ca_hospital_df)
 ca_combined_df
 
 #ca_combined_df[which(ca_hopital_combined_df$county=="alameda"),]$hospitalized_covid_patients == ca_hospital_df[which(ca_hospital_df$county=="alameda"),]$hospitalized_covid_patients
-
 
 
 ### Add Statewide deaths to testing for offset building
@@ -1114,11 +1114,11 @@ ca_combined_df
 unique(ca_hospital_df$county)
 
 #build_county_models_to_file(ca_combined_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
-#build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients")
-#build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined")
-#build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined")
-#build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths")
-#build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
+build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients")
+build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined")
+build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined")
+build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths")
+build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
 
 build_statewide_model_from_counties <- function(input_folder){
   
@@ -1126,7 +1126,9 @@ build_statewide_model_from_counties <- function(input_folder){
   ### Get the Index File
   ### Because we make it easy!
   #######################################
-  file_index <- readRDS(paste0(working_model_path,"\\1_index.dat"))
+  #working_model_path <- paste0(input_folder,)
+  
+  file_index <- readRDS(paste0(input_folder,"\\1_index.dat"))
   
   colnames(file_index) <- c("county","filenames")
   
@@ -1172,7 +1174,7 @@ build_statewide_model_from_counties <- function(input_folder){
     
     ### Start with unweighted Values
     output_mse <- output_mse + loop_county_df$predict_mse
-    output_deaths <- output_deaths + loop_county_df$predict_deaths
+    output_deaths <- output_deaths + loop_county_df$prediction
     
     ########################################################################################################
     #### Build Weights based on population percentage
@@ -1196,29 +1198,20 @@ build_statewide_model_from_counties <- function(input_folder){
     #### Build Weighted values - these values are multiplied by their percentage of the population
     ########################################################################################################
     
-    if (is.na(loop_county_df$predict_offset)) {
-      print("DING")
-      return()
-      break
-    }
     
-    print(loop_county_df$predict_offset)
-    print(length(loop_county_df$predict_offset))
-    
-      
-  
-    
+    #############################################################################
+    ### Replace NA with 0. The Models should not be generating NA
+    ### But it's likely from low population counties. Let's go with it ATM.
+    #############################################################################
+    loop_county_df$predict_offset[is.na(loop_county_df$predict_offset)] <- 0
+    loop_county_df$predict_intercept[is.na(loop_county_df$predict_intercept)] <- 0
+    loop_county_df$predict_coefficient[is.na(loop_county_df$predict_coefficient)] <- 0
     
     
     output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_pop_weight) )
     
-    offset_result <- output_offset + (loop_county_df$predict_offset * loop_pop_weight)
-    ### Check for NAs for some reason These are occurring in low population counties
-     if (is.na(offset_result) == TRUE){
-       print(loop_county_df)
-       print("OFFSET NA!")
-       break
-     }
+    #offset_result <- output_offset + (loop_county_df$predict_offset * loop_pop_weight)
+
     output_offset <- (output_offset + (loop_county_df$predict_offset * loop_pop_weight) )
     
     
@@ -1230,7 +1223,7 @@ build_statewide_model_from_counties <- function(input_folder){
   ### output_offset <- round(output_offset,0)
   
   return(data.frame(
-    predict_deaths      = output_deaths,
+    prediction          = output_deaths,
     predict_offset      = output_offset,
     predict_mse         = output_mse,
     predict_intercept   = output_intercept,
@@ -1241,16 +1234,25 @@ build_statewide_model_from_counties <- function(input_folder){
 
   
 }#//END build_statewide_model_from_counties
-
-
 confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
+confirm_predict_death_model_df
 confirm_predict_hospital_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_hospital"))
+confirm_predict_hospital_model_df
 confirm_predict_icu_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_icu"))
-
+confirm_predict_icu_model_df
+confirm_predict_hospital_model_df
 sum(confirm_predict_death_model_df$predict_mse)
+sum(confirm_predict_death_model_df$predict_deaths)
 sum(confirm_predict_hospital_model_df$predict_mse)
+confirm_predict_icu_model_df$prediction
+daily_hospital_df$icu_combined
+
+daily_hospital_df$hospitalized_covid_patients
+
+
 confirm_predict_death_model_df
 confirm_predict_hospital_model_df
+confirm_predict_hospital_model_df$predict_deaths
 
 cor(confirm_predict_death_model_df$predict_offset,confirm_predict_death_model_df$predict_mse)  
 
