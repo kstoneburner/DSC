@@ -1,5 +1,178 @@
 library(ggplot2)
 
+
+
+########################################################
+### Process and clean the California COVID data set. ###
+### Outboarded to a function to keep the code tidier ###
+###################################################################################################
+### Light Cleaning:
+### - counties are converted to lower case
+### - NA values are converted to 0. These are from low population counties early in the dataset ###
+###################################################################################################
+process_CA_covid_cases_data <- function(input_df){
+  
+  
+  ca_confirmed_df <-input_df
+  
+  
+  ### Convert Date to a Date object
+  ca_confirmed_df$date <- as.Date(ca_confirmed_df$date,"%Y-%m-%d")
+  
+  
+  ##########################################################################################
+  ### Convert NA to 0
+  ##########################################################################################
+  ### Hospital Data Frame - ca_hospital_df
+  ##########################################################################################
+  for (colCount in 1:length(ca_confirmed_df ) ) {
+    
+    ### Skip County and Date Columns
+    if (colCount == 1) { next}
+    if (colCount == 6) { next}
+    
+    
+    ### Looping through each column
+    ### Unlist converts data_frame list to vector
+    thisColumn <- unlist(ca_confirmed_df[colCount])
+    
+    ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
+    new_column <- sapply(thisColumn, function(x){
+      if (is.na(x) ) {
+        return(0)
+      } else { return(x) }
+    },simplify="array")
+    
+    
+    ca_confirmed_df[colCount] <- new_column
+    
+    
+    
+  }#//END Each Column
+  
+  ##########################################################################################
+  ### convert county to lower case
+  ##########################################################################################
+  ca_confirmed_df$county <- sapply(ca_confirmed_df$county, tolower,simplify="array")
+  
+  return(ca_confirmed_df)
+  
+  
+}#//END Process_CA_data
+
+########################################################################
+### Process and clean the California COVID Hospitalization data set. ###
+### Outboarded to a function to keep the code tidier                 ###
+###################################################################################################
+### Light Cleaning:
+### - date column converted to as.Date
+### - counties are converted to lower case
+### - NA values are converted to 0. These are from low population counties early in the dataset ###
+### Dervied Values:
+### - Combined suspected COVID and confirmed COVID Hospitalizations
+### - Combined suspected COVID and confirmed COVID ICU
+### - Built projected capacity fields for Hospitalization and ICU. This is available beds 
+###   minus the people in beds. This is likely not a good metric, since bed capacities appear to be
+###   over-reported and include beds that are not suitable for treating COVID patients.
+###   Keeping the processing here, but stripping the columns from the dataset later.
+###   That leaves a more obvious reminder that the data is there, just tucked aside
+###################################################################################################
+process_CA_hospital_data <- function(input_df){
+  
+  ca_hospital_df <- input_df
+  
+  ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%Y-%m-%d")
+  
+  ### Get Date Column name
+  dateCol <- colnames(ca_hospital_df[2])
+  dateCol
+  
+  ### Get county Column name
+  countyCol <- colnames(ca_hospital_df[1])
+  countyCol
+  
+  hospitalCol <-colnames(ca_hospital_df)
+  
+  ##########################################################################################
+  ### Convert NA to 0
+  ##########################################################################################
+  ### Hospital Data Frame - ca_hospital_df
+  ##########################################################################################
+  for (colCount in 1:length(ca_hospital_df ) ) {
+    
+    ### Skip County and Date Columns
+    if (colCount < 3) { next}
+    
+    ### Looping through each column
+    ### Unlist converts data_frame list to vector
+    thisColumn <- unlist(ca_hospital_df[colCount])
+    
+    ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
+    new_column <- sapply(thisColumn, function(x){
+      if (is.na(x) ) {
+        return(0)
+      } else { return(x) }
+    },simplify="array")
+    
+    ca_hospital_df[colCount] <- new_column
+    
+    
+    
+  }#//END Each Column
+  
+  ##########################################################################################
+  ### convert county to lower case
+  ##########################################################################################
+  ca_hospital_df$county <- sapply(ca_hospital_df$county, tolower,simplify="array")
+  
+  
+  ##########################################################################################
+  ### Build combined tables
+  ##########################################################################################
+  ### Hospital Data Frame - ca_hospital_df
+  ##########################################################################################
+  
+  ### combine icu_confirmed with icu_suspected
+  ### Get the daily confirmed totals
+  ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"icu_suspected_covid_patients","icu_covid_confirmed_patients","icu_combined")
+  #ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"previous_days_covid_confirmed_patients","previous_days_suspected_covid_patients","confirmed_combined")
+  
+  ### remove hospitalized confirmed and suspected cases since these are already summarized
+  ca_hospital_df <- removeCols(ca_hospital_df,c("hospitalized_covid_confirmed_patients","hospitalized_suspected_covid_patients"))
+  
+  ### rename date column to date
+  names <- colnames(ca_hospital_df)
+  names[2] <- "date"
+  colnames(ca_hospital_df) <- names
+  head(ca_hospital_df)
+  
+  ####Calculations - leave these in and strip out later since we are building from these values
+  #### Let's strip out capacity since it is generating negative values.
+  #### I suspect the available bed value and icu available, are not good values to use, since they don't represent staffing
+  #### and include beds that are incompatible for COVID patients including NICU and PICU specialized units.
+  #### Notably, there are anecdotal news reports saying hospitals are at capacity, yet this is not found in the data
+  #### We'll haveto go after impact differently
+  icu_capacity <- ca_hospital_df$icu_available_beds - ca_hospital_df$icu_combined
+  hospital_capacity <- ca_hospital_df$all_hospital_beds - ca_hospital_df$hospitalized_covid_patients 
+  
+  
+  return(ca_hospital_df)
+  
+  
+  
+}#//*** END process_CA_hospital_data
+
+###############################################################################
+### Returns a data frame of offset columns
+################################################################################################
+### Each offset column is the target_col minus a number of days indicated in the range vector.
+### The offset is used to model / correlate the current day's value with a value in the past
+### This function allows any column to be offset, providing a lot of flexibility when 
+### exmining th edata
+################################################################################################
+### target_col: is the column to build offsets from
+### range vector: numeric vector indicating the range of days to offset
+################################################################################################
 build_offset_columns <- function(input_df,target_col,range_vector){
   
   #print("BEGIN: build_offset_columns")
@@ -34,6 +207,13 @@ build_offset_columns <- function(input_df,target_col,range_vector){
   return(input_df)  
   
 }### END build_minus_column
+
+########################
+### Original Models: ###
+##################################################################################
+### Useful for statewide data sets where county level numbers are unavailable. ###
+### This is needed to model testing                                            ###
+##################################################################################
 build_rolling_cor_offset <- function(input_df,prediction_field,rolling_days){
   
   
@@ -361,10 +541,55 @@ build_rolling_lm_offset <- function(input_df,prediction_field,rolling_days){
   
 }### END build rolling offset
 
+#########################
+### Utility Functions ###
+#########################
+### Remove Columns from a data frame
+removeCols <- function(data_df,col_vector){
+  ### col_vector is a vector of column names to remove
+  data_df <- data_df[, ! names(data_df) %in% col_vector, drop = F]
+  
+  return(data_df)
+}
+##################################################################################
+### Combines columns by adding them together and removing the original columns ###
+### Used for combining columns when cleaning the source data                   ###
+##################################################################################
+sum_and_remove_DF_Columns <- function(data_df,col1,col2,sumColName){
+  ### Adds the row values of column1 and column. The new values are stored in sumColName
+  ### SumColName added to data_df, col1 and col2 are removed.
+  ### Effectively two columns are summed and replaced with a column of the summed value
+  ### This is mostly used for combining suspected and confirmed cases
+  
+  i <- 0
+  
+  temp_col <- sapply(data_df[col1], function(x) {
+    ### Increment the outer counter
+    i <<- i + 1
+    
+    return(data_df[col1][i] + data_df[col2][i])
+    
+    
+  },simplify = "array")
+  #print(temp_col)
+  #length(temp_col)
+  ### remove old columns
+  remove_columns = c(col1,col2)
+  data_df <- data_df[, ! names(data_df) %in% remove_columns, drop = F]
+  
+  data_df[sumColName] <- temp_col
+  
+  return(data_df)
+  
+  
+}
 
 
-#loop_county_death_by_confirmed_df <- build_rolling_lm_offset(loop_county_confirmed_df,"daily_total_deaths",15)
-#loop_county_death_by_confirmed_df
+###################################################################################
+### Build Aggregate Statewide numbers 
+### This combines county wide numbers per date into an aggregate value by day.
+### Needed to get actual statewide confirmed, death and hospitalization values
+###################################################################################
 
 build_statewide_confirmed_numbers <- function(input_df){
   #### Sum the numbers across the state to build a big picture estimate
@@ -389,86 +614,6 @@ build_statewide_confirmed_numbers <- function(input_df){
   return(data.frame(date,daily_total_confirmed,daily_total_deaths))
   
 }#// END build statewide numbers
-buildCounties_df <- function(input_df,input_names){
-  #### Build a data frame of counties listed in input_names. Multiple counties will be summed
-  date <- unique(input_df$date)
-  
-  daily_total_confirmed <- sapply(date,function(x){
-    ### Build data frame for each date
-    this_df <- (input_df [which(input_df$date == x),])
-    
-    temp_array <- sapply(input_names, function(x){
-      
-      return(this_df[which(this_df$county ==x), ]$totalcountconfirmed)
-    },simplify="array")
-    
-    ### Sum confirmed for daily total
-    return(sum(temp_array))
-  },simplify="array")
-  
-  daily_total_deaths <- sapply(date,function(x){
-    ### Build data frame for each date
-    this_df <- (input_df [which(input_df$date == x),])
-    
-    temp_array <- sapply(input_names, function(x){
-      
-      return(this_df[which(this_df$county ==x), ]$totalcountdeaths)
-    },simplify="array")
-    
-    ### Sum confirmed for daily total
-    return(sum(temp_array))
-  },simplify="array")
-  
-  
-  return(data.frame(date,daily_total_confirmed,daily_total_deaths))
-  
-}### END buildCounties
-build_last_30_df <- function(input_df){
-  ### Return the last 30 day of a DF
-  #### Determine the last 30 days index
-  rowCount <- nrow(input_df)
-  startIndex <- rowCount - 30
-  
-  ### get last 30 days of of offset_daily_ statewide
-  return(input_df[startIndex:rowCount,])
-  
-  
-}#///END build_last_30_df
-build_model_last_30days <- function(input_df) {
-  ############################################################
-  ### Build model for last 30 days
-  ############################################################
-  
-  #### Determine the last 30 days index
-  rowCount <- nrow(input_df)
-  startIndex <- rowCount - 30
-  
-  ### get last 30 days of of offset_daily_ statewide
-  temp_df <- input_df[startIndex:rowCount,]
-  
-  last_month_df <- data.frame( date = temp_df$date,  
-                               daily_total_confirmed = temp_df$daily_total_confirmed,
-                               daily_total_deaths = temp_df$daily_total_deaths,
-                               "offset" = temp_df[last_offset])
-  
-  colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
-  
-  
-  last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
-  
-  
-  last_month_predict_df <- data.frame( 
-    date=last_month_df$date,
-    actual_deaths=last_month_df$daily_total_deaths,
-    daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
-    daily_total_confirmed=last_month_df$daily_total_confirmed,
-    offset=last_month_df$offset
-  )
-  
-  
-  return(last_month_predict_df)
-  
-}#//END build_model_last_30days
 build_statewide_hospital_numbers <- function(input_df){
   #### Sum the numbers across the state to build a big picture estimate
   
@@ -515,8 +660,8 @@ build_statewide_hospital_numbers <- function(input_df){
     return(sum(this_df$icu_capacity) )
   },simplify="array")
   
-    ### Stitch in actual deaths - 12 days
-    return(data.frame(date=date,
+  ### Stitch in actual deaths - 12 days
+  return(data.frame(date=date,
                     daily_total_deaths = daily_covid_df$daily_total_deaths[12:nrow(daily_covid_df)],
                     hospitalized_covid_patients=hospitalized_covid_patients,
                     all_hospital_beds=all_hospital_beds,
@@ -527,181 +672,21 @@ build_statewide_hospital_numbers <- function(input_df){
   ))
   
 }#// END build statewide numbers
+
+############################
+### Population Functions ###
+###########################################
+### Get the county population per 100k. ###
+###############################################################################################
+### Useful for get counties with large population disparities on a similar per capita scale ###
+###############################################################################################
+
 county_pop_100k <- function(input_county){
   ### get the county population divided by 100,000 thousand.
   
   return(ca_population_df$pop_100k[which(ca_population_df$county==input_county)] )
   
 }#//*** END county_pop_100k
-removeCols <- function(data_df,col_vector){
-  ### col_vector is a vector of column names to remove
-  data_df <- data_df[, ! names(data_df) %in% col_vector, drop = F]
-  
-  return(data_df)
-}
-sum_and_remove_DF_Columns <- function(data_df,col1,col2,sumColName){
-  ### Adds the row values of column1 and column. The new values are stored in sumColName
-  ### SumColName added to data_df, col1 and col2 are removed.
-  ### Effectively two columns are summed and replaced with a column of the summed value
-  ### This is mostly used for combining suspected and confirmed cases
-  
-  i <- 0
-  
-  temp_col <- sapply(data_df[col1], function(x) {
-    ### Increment the outer counter
-    i <<- i + 1
-    
-    return(data_df[col1][i] + data_df[col2][i])
-    
-    
-  },simplify = "array")
-  #print(temp_col)
-  #length(temp_col)
-  ### remove old columns
-  remove_columns = c(col1,col2)
-  data_df <- data_df[, ! names(data_df) %in% remove_columns, drop = F]
-  
-  data_df[sumColName] <- temp_col
-  
-  return(data_df)
-  
-  
-}
-
-
-process_CA_covid_cases_data <- function(input_df){
-  
-  
-  ca_confirmed_df <-input_df
-  
-  
-  ### Convert Date to a Date object
-  ca_confirmed_df$date <- as.Date(ca_confirmed_df$date,"%Y-%m-%d")
-  
-  
-  ##########################################################################################
-  ### Convert NA to 0
-  ##########################################################################################
-  ### Hospital Data Frame - ca_hospital_df
-  ##########################################################################################
-  for (colCount in 1:length(ca_confirmed_df ) ) {
-    
-    ### Skip County and Date Columns
-    if (colCount == 1) { next}
-    if (colCount == 6) { next}
-    
-    
-    ### Looping through each column
-    ### Unlist converts data_frame list to vector
-    thisColumn <- unlist(ca_confirmed_df[colCount])
-    
-    ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
-    new_column <- sapply(thisColumn, function(x){
-      if (is.na(x) ) {
-        return(0)
-      } else { return(x) }
-    },simplify="array")
-    
-    
-    ca_confirmed_df[colCount] <- new_column
-    
-    
-    
-  }#//END Each Column
-  
-  ##########################################################################################
-  ### convert county to lower case
-  ##########################################################################################
-  ca_confirmed_df$county <- sapply(ca_confirmed_df$county, tolower,simplify="array")
-  
-  return(ca_confirmed_df)
-  
-  
-}#//END Process_CA_data
-process_CA_hospital_data <- function(input_df){
-  
-  ca_hospital_df <- input_df
-  
-  ca_hospital_df$todays_date <- as.Date(ca_hospital_df$todays_date,"%Y-%m-%d")
-  
-  ### Get Date Column name
-  dateCol <- colnames(ca_hospital_df[2])
-  dateCol
-  
-  ### Get county Column name
-  countyCol <- colnames(ca_hospital_df[1])
-  countyCol
-  
-  hospitalCol <-colnames(ca_hospital_df)
-  
-  ##########################################################################################
-  ### Convert NA to 0
-  ##########################################################################################
-  ### Hospital Data Frame - ca_hospital_df
-  ##########################################################################################
-  for (colCount in 1:length(ca_hospital_df ) ) {
-    
-    ### Skip County and Date Columns
-    if (colCount < 3) { next}
-    
-    ### Looping through each column
-    ### Unlist converts data_frame list to vector
-    thisColumn <- unlist(ca_hospital_df[colCount])
-    
-    ### Sapply returns a vector. The function returns 0 if NA, else returns existing value
-    new_column <- sapply(thisColumn, function(x){
-      if (is.na(x) ) {
-        return(0)
-      } else { return(x) }
-    },simplify="array")
-    
-    ca_hospital_df[colCount] <- new_column
-    
-    
-    
-  }#//END Each Column
-  
-  ##########################################################################################
-  ### convert county to lower case
-  ##########################################################################################
-  ca_hospital_df$county <- sapply(ca_hospital_df$county, tolower,simplify="array")
-  
-  
-  ##########################################################################################
-  ### Build combined tables
-  ##########################################################################################
-  ### Hospital Data Frame - ca_hospital_df
-  ##########################################################################################
-  
-  ### combine icu_confirmed with icu_suspected
-  ### Get the daily confirmed totals
-  ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"icu_suspected_covid_patients","icu_covid_confirmed_patients","icu_combined")
-  #ca_hospital_df <- sum_and_remove_DF_Columns(ca_hospital_df,"previous_days_covid_confirmed_patients","previous_days_suspected_covid_patients","confirmed_combined")
-  
-  ### remove hospitalized confirmed and suspected cases since these are already summarized
-  ca_hospital_df <- removeCols(ca_hospital_df,c("hospitalized_covid_confirmed_patients","hospitalized_suspected_covid_patients"))
-  
-  ### rename date column to date
-  names <- colnames(ca_hospital_df)
-  names[2] <- "date"
-  colnames(ca_hospital_df) <- names
-  head(ca_hospital_df)
-  
-  ####Calculations - leave these in and strip out later since we are building from these values
-  #### Let's strip out capacity since it is generating negative values.
-  #### I suspect the available bed value and icu available, are not good values to use, since they don't represent staffing
-  #### and include beds that are incompatible for COVID patients including NICU and PICU specialized units.
-  #### Notably, there are anecdotal news reports saying hospitals are at capacity, yet this is not found in the data
-  #### We'll haveto go after impact differently
-  icu_capacity <- ca_hospital_df$icu_available_beds - ca_hospital_df$icu_combined
-  hospital_capacity <- ca_hospital_df$all_hospital_beds - ca_hospital_df$hospitalized_covid_patients 
-  
-  
-  return(ca_hospital_df)
-  
-  
-  
-}#//*** END process_CA_hospital_data
 
 #### Statewide Preview Model
 correlation_model_statewide_by_summed_county <- function(input_df,input_test_field, input_predict_field){
@@ -919,24 +904,249 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
 }#//*** END build_county_models_to_file
 #build_county_models_to_file(ca_covid_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
 
+#############################################################
+#### Build statewide models from expensive county models ####
+#####################################################################################
+#### Reads county models from a file and returns a data frame of aggregated info ####
+#####################################################################################
 
+build_statewide_model_from_counties <- function(input_folder){
+  
+  #######################################
+  ### Get the Index File
+  ### Because we make it easy!
+  #######################################
+  #working_model_path <- paste0(input_folder,)
+  
+  file_index <- readRDS(paste0(input_folder,"\\1_index.dat"))
+  
+  colnames(file_index) <- c("county","filenames")
+  
+  
+  for (county_filename_counter in 1:length(file_index$filenames)){
+    
+    county_filename <- file_index$filenames[ county_filename_counter]
+    county_name <- file_index$county[ county_filename_counter]
+    
+    loop_county_df <- readRDS(county_filename)  
+    print("------------------------")
+    print(county_name)
+    print("------------------------")
+    print((loop_county_df))
+    
+    
+    if(county_filename_counter == 1){
+      ### Initialize output variables
+      
+      output_dates <- loop_county_df$date
+      
+      #### Build a vector of 0 with length of the input_df
+      #### We start with 0 and sum each field
+      dataset_length <- nrow(loop_county_df)
+      
+      for (x in 1:length(dataset_length)){
+        if (x == 1) { zero_vector <- c() }
+        zero_vector <- append(zero_vector,0)
+      }
+      
+      output_mse <- zero_vector
+      output_deaths  <- zero_vector
+      output_intercept  <- zero_vector
+      output_coefficient  <- zero_vector
+      output_offset <- zero_vector
+    }#//*** END initialize output variables
+    
+    #############################################################################
+    ### Build output values
+    ### Each value is a vector based on days. Add the vector to the output totals
+    ### to get the Statewide numbers
+    #############################################################################
+    
+    ### Start with unweighted Values
+    output_mse <- output_mse + loop_county_df$predict_mse
+    output_deaths <- output_deaths + loop_county_df$prediction
+    
+    ########################################################################################################
+    #### Build Weights based on population percentage
+    ########################################################################################################
+    
+    ### Get County Population
+    loop_pop_weight <- ca_population_df[which(ca_population_df$county==county_name),]$population
+    
+    
+    ### There are at least two invalid counties - Out of County and Unassigned. Set Weight to 0
+    if ( length(loop_pop_weight)  == 0)  {loop_pop_weight=0}
+    
+    
+    
+    ### Weight is a percentage of total population
+    loop_pop_weight <- loop_pop_weight / ca_pop
+    #print("Pop weight")
+    #print(loop_pop_weight)
+    
+    ########################################################################################################
+    #### Build Weighted values - these values are multiplied by their percentage of the population
+    ########################################################################################################
+    
+    
+    #############################################################################
+    ### Replace NA with 0. The Models should not be generating NA
+    ### But it's likely from low population counties. Let's go with it ATM.
+    #############################################################################
+    loop_county_df$predict_offset[is.na(loop_county_df$predict_offset)] <- 0
+    loop_county_df$predict_intercept[is.na(loop_county_df$predict_intercept)] <- 0
+    loop_county_df$predict_coefficient[is.na(loop_county_df$predict_coefficient)] <- 0
+    
+    
+    output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_pop_weight) )
+    
+    #offset_result <- output_offset + (loop_county_df$predict_offset * loop_pop_weight)
+    
+    output_offset <- (output_offset + (loop_county_df$predict_offset * loop_pop_weight) )
+    
+    
+    output_coefficient <- (output_coefficient + (loop_county_df$predict_coefficient * loop_pop_weight) )
+    
+  }#//*** END Each county filename
+  
+  ### Truncate the offset - might be useful to keep later
+  ### output_offset <- round(output_offset,0)
+  
+  return(data.frame(
+    prediction          = output_deaths,
+    predict_offset      = output_offset,
+    predict_mse         = output_mse,
+    predict_intercept   = output_intercept,
+    predict_coefficient = output_coefficient
+    
+  ))
+  
+  
+  
+}#//END build_statewide_model_from_counties
 
+##########################################
+### These functions May be obsolete
+##########################################
+buildCounties_df <- function(input_df,input_names){
+  #### Build a data frame of counties listed in input_names. Multiple counties will be summed
+  date <- unique(input_df$date)
+  
+  daily_total_confirmed <- sapply(date,function(x){
+    ### Build data frame for each date
+    this_df <- (input_df [which(input_df$date == x),])
+    
+    temp_array <- sapply(input_names, function(x){
+      
+      return(this_df[which(this_df$county ==x), ]$totalcountconfirmed)
+    },simplify="array")
+    
+    ### Sum confirmed for daily total
+    return(sum(temp_array))
+  },simplify="array")
+  
+  daily_total_deaths <- sapply(date,function(x){
+    ### Build data frame for each date
+    this_df <- (input_df [which(input_df$date == x),])
+    
+    temp_array <- sapply(input_names, function(x){
+      
+      return(this_df[which(this_df$county ==x), ]$totalcountdeaths)
+    },simplify="array")
+    
+    ### Sum confirmed for daily total
+    return(sum(temp_array))
+  },simplify="array")
+  
+  
+  return(data.frame(date,daily_total_confirmed,daily_total_deaths))
+  
+}### END buildCounties
+build_last_30_df <- function(input_df){
+  ### Return the last 30 day of a DF
+  #### Determine the last 30 days index
+  rowCount <- nrow(input_df)
+  startIndex <- rowCount - 30
+  
+  ### get last 30 days of of offset_daily_ statewide
+  return(input_df[startIndex:rowCount,])
+  
+  
+}#///END build_last_30_df
+build_model_last_30days <- function(input_df) {
+  ############################################################
+  ### Build model for last 30 days
+  ############################################################
+  
+  #### Determine the last 30 days index
+  rowCount <- nrow(input_df)
+  startIndex <- rowCount - 30
+  
+  ### get last 30 days of of offset_daily_ statewide
+  temp_df <- input_df[startIndex:rowCount,]
+  
+  last_month_df <- data.frame( date = temp_df$date,  
+                               daily_total_confirmed = temp_df$daily_total_confirmed,
+                               daily_total_deaths = temp_df$daily_total_deaths,
+                               "offset" = temp_df[last_offset])
+  
+  colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
+  
+  
+  last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
+  
+  
+  last_month_predict_df <- data.frame( 
+    date=last_month_df$date,
+    actual_deaths=last_month_df$daily_total_deaths,
+    daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
+    daily_total_confirmed=last_month_df$daily_total_confirmed,
+    offset=last_month_df$offset
+  )
+  
+  
+  return(last_month_predict_df)
+  
+}#//END build_model_last_30days
+##########################################
+##########################################
+##########################################
+### END Functions ########################
+##########################################
+##########################################
+##########################################
+
+###################################################################################
+### Assign the working Directory. I work on 3x PCs, hence three directory choices
+###################################################################################
 workingDir <- "C:\\DSC\\covid"
 #workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
 #workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
-## Set the working directory to the root of your DSC 520 directory
+
 setwd(workingDir)
 
-### Process and import Ca Covid Info
-### Data is at county level
+#########################################
+### Import and process original data ###
+##################################################################################
+### Data is provided directly the from state of California Open Data Portal   ###
+##################################################################################
+### https://data.ca.gov/group/covid-19
+##################################################################################
+### File downloading managed with a separate python script: getSources.py
+### Files are downloaded using: getFiles.bat
+##################################################################################
+
+### Process and import Ca COVID Confirmed and Deaths
+### Source Data is by county and date.
 ca_covid_df <- process_CA_covid_cases_data(read.csv("CA_covid_Cases.csv"))
 
 ### Process and import Ca Hospital Info
-### Data is at county level
+### Source Data is by county and date.
 ca_hospital_df <- process_CA_hospital_data(read.csv("CA_covid_Hospitalization.csv"))
 
 
-### import Testing info, only cleanup is to date column
+### import Testing info directly.
+### Cleaning: Convert date to as.Date()
 ### Data is at state level
 ca_testing_df <- read.csv("CA_testing.csv")
 ca_testing_df$date <- as.Date(ca_testing_df$date,"%Y-%m-%d")
@@ -1120,120 +1330,7 @@ build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_
 build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths")
 build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
 
-build_statewide_model_from_counties <- function(input_folder){
-  
-  #######################################
-  ### Get the Index File
-  ### Because we make it easy!
-  #######################################
-  #working_model_path <- paste0(input_folder,)
-  
-  file_index <- readRDS(paste0(input_folder,"\\1_index.dat"))
-  
-  colnames(file_index) <- c("county","filenames")
-  
-  
-  for (county_filename_counter in 1:length(file_index$filenames)){
-    
-    county_filename <- file_index$filenames[ county_filename_counter]
-    county_name <- file_index$county[ county_filename_counter]
 
-    loop_county_df <- readRDS(county_filename)  
-    print("------------------------")
-    print(county_name)
-    print("------------------------")
-    print((loop_county_df))
-    
-    
-    if(county_filename_counter == 1){
-      ### Initialize output variables
-      
-      output_dates <- loop_county_df$date
-      
-      #### Build a vector of 0 with length of the input_df
-      #### We start with 0 and sum each field
-      dataset_length <- nrow(loop_county_df)
-      
-      for (x in 1:length(dataset_length)){
-        if (x == 1) { zero_vector <- c() }
-        zero_vector <- append(zero_vector,0)
-      }
-      
-      output_mse <- zero_vector
-      output_deaths  <- zero_vector
-      output_intercept  <- zero_vector
-      output_coefficient  <- zero_vector
-      output_offset <- zero_vector
-    }#//*** END initialize output variables
-    
-    #############################################################################
-    ### Build output values
-    ### Each value is a vector based on days. Add the vector to the output totals
-    ### to get the Statewide numbers
-    #############################################################################
-    
-    ### Start with unweighted Values
-    output_mse <- output_mse + loop_county_df$predict_mse
-    output_deaths <- output_deaths + loop_county_df$prediction
-    
-    ########################################################################################################
-    #### Build Weights based on population percentage
-    ########################################################################################################
-    
-    ### Get County Population
-    loop_pop_weight <- ca_population_df[which(ca_population_df$county==county_name),]$population
-    
-    
-    ### There are at least two invalid counties - Out of County and Unassigned. Set Weight to 0
-    if ( length(loop_pop_weight)  == 0)  {loop_pop_weight=0}
-    
-    
-    
-    ### Weight is a percentage of total population
-    loop_pop_weight <- loop_pop_weight / ca_pop
-    #print("Pop weight")
-    #print(loop_pop_weight)
-    
-    ########################################################################################################
-    #### Build Weighted values - these values are multiplied by their percentage of the population
-    ########################################################################################################
-    
-    
-    #############################################################################
-    ### Replace NA with 0. The Models should not be generating NA
-    ### But it's likely from low population counties. Let's go with it ATM.
-    #############################################################################
-    loop_county_df$predict_offset[is.na(loop_county_df$predict_offset)] <- 0
-    loop_county_df$predict_intercept[is.na(loop_county_df$predict_intercept)] <- 0
-    loop_county_df$predict_coefficient[is.na(loop_county_df$predict_coefficient)] <- 0
-    
-    
-    output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_pop_weight) )
-    
-    #offset_result <- output_offset + (loop_county_df$predict_offset * loop_pop_weight)
-
-    output_offset <- (output_offset + (loop_county_df$predict_offset * loop_pop_weight) )
-    
-    
-    output_coefficient <- (output_coefficient + (loop_county_df$predict_coefficient * loop_pop_weight) )
-    
-  }#//*** END Each county filename
-  
-  ### Truncate the offset - might be useful to keep later
-  ### output_offset <- round(output_offset,0)
-  
-  return(data.frame(
-    prediction          = output_deaths,
-    predict_offset      = output_offset,
-    predict_mse         = output_mse,
-    predict_intercept   = output_intercept,
-    predict_coefficient = output_coefficient
-    
-  ))
-  
-
-  
-}#//END build_statewide_model_from_counties
 confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
 confirm_predict_death_model_df
 confirm_predict_hospital_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_hospital"))
