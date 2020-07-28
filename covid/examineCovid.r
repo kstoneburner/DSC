@@ -2,6 +2,10 @@ library(ggplot2)
 
 build_offset_columns <- function(input_df,target_col,range_vector){
   
+  #print("BEGIN: build_offset_columns")
+  #print(input_df)
+  #print(paste0("Target col: ",target_col))
+  
   ### Unlist the Target column to get a vector. Otherwise we spin our wheels in a df
   process_col <- unlist(input_df[target_col])
   
@@ -197,7 +201,7 @@ build_rolling_cor_offset <- function(input_df,prediction_field,rolling_days){
   
 }### END build rolling offset
 build_rolling_lm_offset <- function(input_df,prediction_field,rolling_days){
-  
+  #print("BEGIN: build_rolling_lm_offset")
   
   input_column_offset <- 3
   
@@ -248,8 +252,12 @@ build_rolling_lm_offset <- function(input_df,prediction_field,rolling_days){
       ### Get Each offset column name for Linear model
       loopColName <- colnames(temp_df)[lmCount]
 
+      #print((parse(text=paste0("temp_lm <-  lm(",prediction_field," ~ ",loopColName,", data=temp_df)"))))
+      
       ### dynamically build Linear Model
       eval(parse(text=paste0("temp_lm <-  lm(",prediction_field," ~ ",loopColName,", data=temp_df)")))
+      
+      #print(temp_lm)
       
       temp_predict_df <- data.frame( 
         daily_total_deaths = predict(temp_lm, newdata=temp_df), 
@@ -352,6 +360,9 @@ build_rolling_lm_offset <- function(input_df,prediction_field,rolling_days){
   
   
 }### END build rolling offset
+
+
+
 #loop_county_death_by_confirmed_df <- build_rolling_lm_offset(loop_county_confirmed_df,"daily_total_deaths",15)
 #loop_county_death_by_confirmed_df
 
@@ -692,10 +703,228 @@ process_CA_hospital_data <- function(input_df){
   
 }#//*** END process_CA_hospital_data
 
+#### Statewide Preview Model
+correlation_model_statewide_by_summed_county <- function(input_df,input_test_field, input_predict_field){
+  
+  ### Build a statewide model of an attribute by modeling each County and summing the results.
+  ### This is a relatively quick model, good for preliminary investigation. 
+  ### The Best model is a 15 day model using linear models. Correlation fails below 30. But it is fast.
+  ### 
+  
+  county_names <- sort(unique(input_df$county))
+  
+  #### Loop through each county Name and Build an offset
+  for (countyCounter in 1:length(county_names)) {
+    ### init small counties, here so we dont accidentally overlook with incremental step throughs
+    if (countyCounter == 1){
+      too_small_to_calc_counties <- c()    
+    }
+    ### Get County Name for Loop
+    loop_county_name <- county_names[countyCounter]
+    print(paste0("BEGIN:",loop_county_name))
+    ### get data frame with just the County data
+    loop_county_df <- input_df[which(input_df$county==loop_county_name),]
+    #print(tail(loop_county_df))
+    
+    ### Build offset columns for confirmed cases
+    loop_county_offset_df <- build_offset_columns(loop_county_df,input_test_field,2:30)
+    #print(tail(loop_county_offset_df))
+    
+    ### Build predictions for County: deaths ~ confirmed
+    loop_county_cor_df <- build_rolling_cor_offset(loop_county_offset_df,input_predict_field,30)
+    #print(tail(loop_county_cor_df))
+    
+    
+    ### IF the sum(mse) is less than 2, Ignore those counties and append to the too small to calc list
+    if (sum(loop_county_cor_df$mse) < 2) {
+      too_small_to_calc_counties <- append(too_small_to_calc_counties,loop_county_name)
+      next
+    }
+    
+    #print(tail(loop_county_cor_df))
+    print(paste0("Sum MSE: ",sum(loop_county_cor_df$mse)))
+    
+    ####################################
+    #### Build summed data frame
+    ####################################
+    #### First time through initialize the data frame
+    if (countyCounter == 1) {
+      output_df <- data.frame(
+        date=loop_county_cor_df$date,
+        confirm_mse=loop_county_cor_df$mse,
+        confirm_deaths=loop_county_cor_df$predicted_deaths
+      )
+      next
+    }#//*** END initialize data frame
+    
+    ### Add in County data to cor_model_statewide_by_county_30_df
+    print(loop_county_name)
+    
+    ### Sum the county data and update the statewide output_df
+    for (updateCounter in 1:nrow(loop_county_cor_df)){
+      
+      loop_master_row <- output_df[updateCounter,]
+      loop_county_cor_row <- loop_county_cor_df[updateCounter,]
+      
+      #print(sum(loop_county_cor_row$mse))
+      #print(sum(loop_county_cor_row$predicted_deaths))
+      #### Sum Confirmed MSE
+      loop_master_row$confirm_mse <- sum(loop_master_row$confirm_mse + loop_county_cor_row$mse)
+      #### Sum Confirmed predicted deaths
+      loop_master_row$confirm_deaths <- sum(loop_master_row$confirm_deaths + loop_county_cor_row$predicted_deaths)
+      output_df[updateCounter,] <- loop_master_row
+      #print(loop_master_row)
+    }#//*** END Update State Model
+    
+    #print(tail(output_df))
+    
+  }###END each county same
+  
+  return(output_df)
+  
+  
+}#// END Build a state wide model by summed County using 30 correlation Model
+####################################################
+#### Expensive County Modeling
+#### Models each County and writes to a file
+####################################################
+build_county_models_to_file <- function(input_df,folder_name,input_test_field, input_predict_field){
+  
+  ### Builds a model for each county and exports each county to a file
+  
+  ###############################################
+  #### Create Folders if they don't exist
+  ###############################################
+  ### Models Folder
+  dir.create(file.path(workingDir, "models"), showWarnings = FALSE)
+  
+  ### Create Specific Sub Folder
+  dir.create(file.path(paste0(workingDir,"\\models"), folder_name), showWarnings = FALSE)
+  
+  folder_path <- paste0(workingDir,"\\models\\",folder_name)
+  
+  ### Initialize filename vector. This will help up retrieve the folder names later
+  filename_v <- c()
+  
+  ### A few counties are too small to model, they need to be skipped
+  ### This list tracks modeled counties
+  county_filenames <- c()
+  
+  ############################################
+  ### Loop through input_df by county name
+  ############################################
+  
+  county_names <- sort(unique(input_df$county))
+  
+  
+  for (countyCounter in 1:length(county_names)) {
+    ### init small counties, here so we dont accidentally overlook with incremental step throughs
+    if (countyCounter == 1){
+      too_small_to_calc_counties <- c()    
+    }
+    ### Get County Name for Loop
+    loop_county_name <- county_names[countyCounter]
+    print(paste0("[",countyCounter,"/",length(county_names),"] Processing:",loop_county_name))
+    ### get data frame with just the County data
+    loop_county_df <- input_df[which(input_df$county==loop_county_name),]
+    #print(loop_county_df)
+    
+    ### Build offset columns for confirmed cases
+    loop_county_confirmed_df <- build_offset_columns(loop_county_df,input_test_field,2:30)
+    #print(tail(loop_county_confirmed_df))
+    ### Build predictions for County: deaths ~ confirmed
+    loop_county_death_by_confirmed_df <- build_rolling_lm_offset(loop_county_confirmed_df,input_predict_field,15)
+    
+    
+    ### IF the sum(mse) is less than 2, Ignore those counties and append to the too small to calc list
+    if (sum(loop_county_death_by_confirmed_df$mse) < 2) {
+      too_small_to_calc_counties <- append(too_small_to_calc_counties,loop_county_name)
+      next
+    }
+    
+    #print(tail(loop_county_death_by_confirmed_df))
+    print(paste0("Sum MSE: ",sum(loop_county_death_by_confirmed_df$mse)))
+    
+    ####################################
+    #### Build summed data frame
+    ####################################
+    #### First time through initialize the data frame
+    ### lm_coefficient & offset_index need to be weighted by percentage of county population
+    
+    ### Get County Population
+    #loop_pop_weight <- ca_population_df[which(ca_population_df$county==loop_county_name),]$population
+    
+    
+    ### There are at least two invalid counties - Out of County and Unassigned. Set Weight to 0
+    #if ( length(loop_pop_weight)  == 0)  {loop_pop_weight=0}
+    
+    
+    ### Weight is a percentage of total population
+    #loop_pop_weight <- loop_pop_weight / ca_pop
+    
+    
+    #### These inlcude calculations for weighted counties
+    #### We should not be weighted. Will do that at the state levels
+    #output_df <- data.frame(
+    #  date =loop_county_death_by_confirmed_df$date,
+    #  predict_mse=loop_county_death_by_confirmed_df$mse,
+    #  predict_deaths=loop_county_death_by_confirmed_df$predicted_deaths,
+    #  predict_intercept =loop_county_death_by_confirmed_df$lm_intercept * loop_pop_weight,
+    #  predict_coefficient = (loop_county_death_by_confirmed_df$lm_coefficient * loop_pop_weight ), 
+    #  predict_offset = (loop_county_death_by_confirmed_df$offset_index * loop_pop_weight)
+    #)
+    
+    output_df <- data.frame(
+      date =loop_county_death_by_confirmed_df$date,
+      predict_mse=loop_county_death_by_confirmed_df$mse,
+      predict_deaths=loop_county_death_by_confirmed_df$predicted_deaths,
+      predict_intercept =loop_county_death_by_confirmed_df$lm_intercept,
+      predict_coefficient = loop_county_death_by_confirmed_df$lm_coefficient, 
+      predict_offset = loop_county_death_by_confirmed_df$offset_index
+    )
+    
+    
+    ### Write the data frame to disk
+    
+    ### Build Filename with full path
+    write_filename <- paste0(folder_path,"\\",loop_county_name,".dat")
+    print("full File Name: ")
+    print(write_filename)
+    saveRDS(output_df, write_filename)
+    
+    ### Append filename to the filelist for later summation
+    filename_v <- append(filename_v,write_filename)
+    
+    ### Only Counties that have good data are tracked
+    county_filenames <- append(county_filenames,loop_county_name)
+    
+    
+  }#//*** END Each County
+  
+  #colnames(index_df) <- c("county","filenames")
+  index_filename <- paste0(folder_path,"\\1_index.dat")
+  #print("Index Filename")
+  #print(index_filename)
+  
+  ### Build an index data frame containing all the files for easier access
+  index_df <- data.frame(
+    county = county_filenames,
+    filenames = filename_v
+  )
+  
+  #colnames(index_df) <- c("county","filenames")
+  
+  saveRDS(index_df, index_filename)
+  
+}#//*** END build_county_models_to_file
+build_county_models_to_file(ca_covid_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
 
+
+
+workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
+#workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
 ## Set the working directory to the root of your DSC 520 directory
-setwd("C:\\Users\\newcomb\\DSCProjects\\DSC\\covid")
-#setwd("L:\\stonk\\projects\\DSC\\DSC\\covid")
+setwd(workingDir)
 
 ### Process and import Ca Covid Info
 ### Data is at county level
@@ -710,7 +939,7 @@ ca_hospital_df <- process_CA_hospital_data(read.csv("CA_covid_Hospitalization.cs
 ### Data is at state level
 ca_testing_df <- read.csv("CA_testing.csv")
 ca_testing_df$date <- as.Date(ca_testing_df$date,"%Y-%m-%d")
-
+ca_testing_df
 
 #ca_demo_df <- read.csv("Final_CA_Race_Demographic.csv")
 
@@ -763,11 +992,16 @@ daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
 ### Remove bed count for simiplication. May use this later
 ca_hospital_df <- removeCols(ca_hospital_df,c("all_hospital_beds","icu_available_beds"))
 head(removeCols(daily_hospital_df,c("all_hospital_beds","icu_available_beds","hospital_capacity","icu_capacity")))
-ca_hospital_df
 
-daily_hospital_df
+### Add Deaths to ca_hospital_df
+### Combine ca_covid and ca_hospital
+ca_combined_df <- merge(ca_covid_df,ca_hospital_df)
+ca_combined_df
 
-tail(daily_hospital_df)
+#ca_combined_df[which(ca_hopital_combined_df$county=="alameda"),]$hospitalized_covid_patients == ca_hospital_df[which(ca_hospital_df$county=="alameda"),]$hospitalized_covid_patients
+
+
+
 ### Add Statewide deaths to testing for offset building
 ca_testing_df <- data.frame(date=ca_testing_df$date,daily_total_deaths=daily_covid_df$daily_total_deaths,tested=ca_testing_df$tested)
 
@@ -775,12 +1009,19 @@ ca_testing_df <- data.frame(date=ca_testing_df$date,daily_total_deaths=daily_cov
 ### build State confirmed offset columns - 
 ### These are the columns to build days back offsets.
 ############################################################
+############################################################
+### Build the offsets data frame. 
+############################################################
+
 offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",2:30)
 
 offset_testing_df <- build_offset_columns(ca_testing_df,"tested",2:30)
 
-daily_hospital_df
 offset_hospitalization <-build_offset_columns(daily_hospital_df,"daily_total_confirmed",2:30)
+
+offset_daily_df
+#offset_daily_df
+
 
 ############################################################################################################
 ### Rolling offset calculates the offset for each day looking back over a number of days.
@@ -788,276 +1029,272 @@ offset_hospitalization <-build_offset_columns(daily_hospital_df,"daily_total_con
 ### interval is less accurate
 ############################################################################################################
 
+############################################################################################################
+#### BEGIN PREVIEW Modeling
+############################################################################################################
 
+##### Build prediction model from correlation, but for each county. Sum the county deaths
+offset_df <- build_rolling_cor_offset(offset_daily_df,"daily_total_deaths",30)
+offset_df
 
+### Testing to deaths model is very noisy. Olny have State
 offset_testing_lm15_df <- build_rolling_lm_offset(offset_testing_df,"daily_total_deaths",15)
-offset_testing_lm15_df
+sum(offset_testing_lm15_df$mse)
 
 sum(offset_testing_lm15_df$mse)
 
-ca_covid_df
+cor_model_confirmed_statewide <- correlation_model_statewide_by_summed_county(ca_covid_df,"daily_total_confirmed","daily_total_deaths")
 
 
-############################################################
-### Build the offsets data frame. 
-############################################################
-#offset_daily_df
-##### Build prediction model from correlation, but for each county. Sum the county deaths
-offset_df <- build_rolling_cor_offset(offset_daily_df,"daily_total_deaths",30)
+cor_model_confirmed_to_hospital_statewide <- correlation_model_statewide_by_summed_county(ca_combined_df,"daily_total_confirmed","hospitalized_covid_patients")
 
-county_names <- sort(unique(ca_covid_df$county))
+cor_model_confirmed_to_hospital_statewide$confirm_deaths
 
-length(county_names)
-
-#### Loop through each county Name and Build an offset
-for (countyCounter in 1:length(county_names)) {
-  ### init small counties, here so we dont accidentally overlook with incremental step throughs
-  if (countyCounter == 1){
-    too_small_to_calc_counties <- c()    
-  }
-  ### Get County Name for Loop
-  loop_county_name <- county_names[countyCounter]
-  print(paste0("BEGIN:",loop_county_name))
-  ### get data frame with just the County data
-  loop_county_df <- ca_covid_df[which(ca_covid_df$county==loop_county_name),]
-  #print(tail(loop_county_df))
-  
-  ### Build offset columns for confirmed cases
-  loop_county_confirmed_df <- build_offset_columns(loop_county_df,"daily_total_confirmed",2:30)
-  #print(tail(loop_county_confirmed_df))
-  ### Build predictions for County: deaths ~ confirmed
-  loop_county_death_by_confirmed_df <- build_rolling_cor_offset(loop_county_confirmed_df,"daily_total_deaths",30)
-  
-  
-  ### IF the sum(mse) is less than 2, Ignore those counties and append to the too small to calc list
-  if (sum(loop_county_death_by_confirmed_df$mse) < 2) {
-    too_small_to_calc_counties <- append(too_small_to_calc_counties,loop_county_name)
-    next
-  }
-  
-  print(tail(loop_county_death_by_confirmed_df))
-  print(paste0("Sum MSE: ",sum(loop_county_death_by_confirmed_df$mse)))
-  
-  ####################################
-  #### Build summed data frame
-  ####################################
-  #### First time through initialize the data frame
-  if (countyCounter == 1) {
-    cor_model_statewide_by_county_30_df <- data.frame(
-      date=loop_county_death_by_confirmed_df$date,
-      confirm_mse=loop_county_death_by_confirmed_df$mse,
-      confirm_deaths=loop_county_death_by_confirmed_df$predicted_deaths
-    )
-    next
-  }#//*** END initialize data frame
-  
-  ### Add in County data to cor_model_statewide_by_county_30_df
-  print(loop_county_name)
-  
-  for (updateCounter in 1:nrow(cor_model_statewide_by_county_30_df)){
-    
-    loop_master_row <- cor_model_statewide_by_county_30_df[updateCounter,]
-    loop_county_confirmed_row <- loop_county_death_by_confirmed_df[updateCounter,]
-    
-    #### Sum Confirmed MSE
-    loop_master_row$confirm_mse <- sum(loop_master_row$confirm_mse + loop_county_confirmed_row$mse)
-    #### Sum Confirmed predicted deaths
-    loop_master_row$confirm_deaths <- sum(loop_master_row$confirm_deaths + loop_county_confirmed_row$predicted_deaths)
-    cor_model_statewide_by_county_30_df[updateCounter,] <- loop_master_row
-  }#//*** END Update State Model
-
-  #print(tail(cor_model_statewide_by_county_30_df))
-  
-}###END each county same
+daily_hospital_df$hospitalized_covid_patients 
 
 
+sum(cor_model_confirmed_to_hospital_statewide$confirm_mse)
 
-cor_model_statewide_by_county_30_df
+ca_hospital_df
 
-for (x in 1:length(too_small_to_calc_counties)){
-  if (x==1){
+sum(cor_model_statewide$confirm_mse)
+
+cor_model_hospital_statewide <- correlation_model_statewide_by_summed_county(ca_combined_df,"hospitalized_covid_patients","daily_total_deaths")
+
+sum(cor_model_hospital_statewide$confirm_mse)
+
+cor_model_hospital_icu_statewide <- correlation_model_statewide_by_summed_county(ca_combined_df,"icu_combined","daily_total_deaths")
+
+sum(cor_model_hospital_icu_statewide$confirm_mse)
+
+cor_model_hospital_icu_statewide
+
+### Alternate statewide models - cor is probably best for investigation
+### These are medium level models in terms of complexity
+#offset_lm_7_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",7)
+#offset_lm_15_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
+#offset_lm_30_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",30)
+
+############################################################################################################
+#### END PREVIEW Modeling
+############################################################################################################
+
+
+############################################################################################################
+### Need to do something about uncounted counties,
+### Save this for later
+############################################################################################################
+
+#for (x in 1:length(too_small_to_calc_counties)){
+#  if (x==1){
     #### initialize population counter
-    too_small_population_count <- 0
-  
-  }
-  loop_county <- too_small_to_calc_counties[x]
-  value <- ca_population_df$population[which(ca_population_df$county==loop_county)]
-  too_small_population_count <- sum(too_small_population_count + ca_population_df$population[which(ca_population_df$county==loop_county)])
+#    too_small_population_count <- 0
+#  }
+#  loop_county <- too_small_to_calc_counties[x]
+#  value <- ca_population_df$population[which(ca_population_df$county==loop_county)]
+#  too_small_population_count <- sum(too_small_population_count + ca_population_df$population[which(ca_population_df$county==loop_county)])
+#}
+#print(paste0(round(too_small_population_count / ca_pop,6)*100,"% Population Not Counted: ",too_small_population_count," out of ", ca_pop))
 
-}
-print(paste0(round(too_small_population_count / ca_pop,6)*100,"% Population Not Counted: ",too_small_population_count," out of ", ca_pop))
 
-########################################################################
-#### Build lm models by statewide data
-#### Loop through each county Name and Build an offset
-#########################################################################
-for (countyCounter in 1:length(county_names)) {
-  ### init small counties, here so we dont accidentally overlook with incremental step throughs
-  if (countyCounter == 1){
-    too_small_to_calc_counties <- c()    
-  }
-  ### Get County Name for Loop
-  loop_county_name <- county_names[countyCounter]
-  print(paste0("[",countyCounter,"/",length(county_names),"] Processing:",loop_county_name))
-  ### get data frame with just the County data
-  loop_county_df <- ca_covid_df[which(ca_covid_df$county==loop_county_name),]
-  #print(tail(loop_county_df))
-  
-  ### Build offset columns for confirmed cases
-  loop_county_confirmed_df <- build_offset_columns(loop_county_df,"daily_total_confirmed",2:30)
-  #print(tail(loop_county_confirmed_df))
-  ### Build predictions for County: deaths ~ confirmed
-  loop_county_death_by_confirmed_df <- build_rolling_lm_offset(loop_county_confirmed_df,"daily_total_deaths",15)
-  
-  
-  ### IF the sum(mse) is less than 2, Ignore those counties and append to the too small to calc list
-  if (sum(loop_county_death_by_confirmed_df$mse) < 2) {
-    too_small_to_calc_counties <- append(too_small_to_calc_counties,loop_county_name)
-    next
-  }
-  
-  #print(tail(loop_county_death_by_confirmed_df))
-  print(paste0("Sum MSE: ",sum(loop_county_death_by_confirmed_df$mse)))
-  
-  ####################################
-  #### Build summed data frame
-  ####################################
-  #### First time through initialize the data frame
-  ### lm_coefficient & offset_index need to be weighted by percentage of county population
-  
-  ### Get County Population
-  loop_pop_weight <- ca_population_df[which(ca_population_df$county==loop_county_name),]$population
-  
-  
-  ### There are at least two invalid counties - Out of County and Unassigned. Set Weight to 0
-  if ( length(loop_pop_weight)  == 0)  {loop_pop_weight=0}
-  
 
-  
-  
-  
-  ### Weight is a percentage of total population
-  loop_pop_weight <- loop_pop_weight / ca_pop
 
-    if (countyCounter == 1) {
-    lm_model_statewide_by_county_15_df <- data.frame(
-      date =loop_county_death_by_confirmed_df$date,
-      confirm_mse=loop_county_death_by_confirmed_df$mse,
-      confirm_deaths=loop_county_death_by_confirmed_df$predicted_deaths,
-      confirm_intercept =loop_county_death_by_confirmed_df$lm_intercept * loop_pop_weight,
-      confirm_coefficient = (loop_county_death_by_confirmed_df$lm_coefficient * loop_pop_weight ), 
-      confirm_offset = (loop_county_death_by_confirmed_df$offset_index * loop_pop_weight)
-    )
+
+
+###################################################################################################
+#### Build Expensive Models to the county level.
+#### Write data to folders
+#### So only to do this once per data set
+#### If I was really cool, i'd build an update function so I don't have to remodel old data
+#### But i'm not that cool on this timeline
+###################################################################################################
+ca_combined_df[which(ca_combined_df$county==is.na),]
+ca_combined_df
+
+unique(ca_hospital_df$county)
+
+#build_county_models_to_file(ca_combined_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
+#build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients")
+#build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined")
+#build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined")
+#build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths")
+#build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
+
+build_statewide_model_from_counties <- function(input_folder){
+  
+  #######################################
+  ### Get the Index File
+  ### Because we make it easy!
+  #######################################
+  file_index <- readRDS(paste0(working_model_path,"\\1_index.dat"))
+  
+  colnames(file_index) <- c("county","filenames")
+  
+  
+  for (county_filename_counter in 1:length(file_index$filenames)){
     
-    next
-  }#//*** END initialize data frame
-  
-  ### Add in County data to cor_model_statewide_by_county_30_df
-  
-  
-  for (updateCounter in 1:nrow(lm_model_statewide_by_county_15_df)){
-    
-    loop_master_row <- lm_model_statewide_by_county_15_df[updateCounter,]
-    loop_county_confirmed_row <- loop_county_death_by_confirmed_df[updateCounter,]
-    
-    #### Sum Confirmed MSE
-    loop_master_row$confirm_mse <- sum(loop_master_row$confirm_mse + loop_county_confirmed_row$mse)
-    #### Sum Confirmed predicted deaths
-    loop_master_row$confirm_deaths <- sum(loop_master_row$confirm_deaths + loop_county_confirmed_row$predicted_deaths)
+    county_filename <- file_index$filenames[ county_filename_counter]
+    county_name <- file_index$county[ county_filename_counter]
 
-    #### Add in the Intercept
-    loop_master_row$confirm_intercept <- ( loop_master_row$confirm_intercept + (loop_county_confirmed_row$lm_intercept* loop_pop_weight) )
-    
-    #### Add in Weighted lm_coefficient 
-    loop_master_row$confirm_coefficient <- (loop_master_row$confirm_coefficient + (loop_county_confirmed_row$lm_coefficient * loop_pop_weight))
-
-    #### Add in Weighted offset_index
-    loop_master_row$confirm_offset <- (loop_master_row$confirm_offset + (loop_county_confirmed_row$offset_index * loop_pop_weight))
+    loop_county_df <- readRDS(county_filename)  
+    print("------------------------")
+    print(county_name)
+    print("------------------------")
+    print((loop_county_df))
     
     
+    if(county_filename_counter == 1){
+      ### Initialize output variables
+      
+      output_dates <- loop_county_df$date
+      
+      #### Build a vector of 0 with length of the input_df
+      #### We start with 0 and sum each field
+      dataset_length <- nrow(loop_county_df)
+      
+      for (x in 1:length(dataset_length)){
+        if (x == 1) { zero_vector <- c() }
+        zero_vector <- append(zero_vector,0)
+      }
+      
+      output_mse <- zero_vector
+      output_deaths  <- zero_vector
+      output_intercept  <- zero_vector
+      output_coefficient  <- zero_vector
+      output_offset <- zero_vector
+    }#//*** END initialize output variables
     
-    ### Update the model
-    lm_model_statewide_by_county_15_df[updateCounter,] <- loop_master_row
-  }#//*** END Update State Model
+    #############################################################################
+    ### Build output values
+    ### Each value is a vector based on days. Add the vector to the output totals
+    ### to get the Statewide numbers
+    #############################################################################
+    
+    ### Start with unweighted Values
+    output_mse <- output_mse + loop_county_df$predict_mse
+    output_deaths <- output_deaths + loop_county_df$predict_deaths
+    
+    ########################################################################################################
+    #### Build Weights based on population percentage
+    ########################################################################################################
+    
+    ### Get County Population
+    loop_pop_weight <- ca_population_df[which(ca_population_df$county==county_name),]$population
+    
+    
+    ### There are at least two invalid counties - Out of County and Unassigned. Set Weight to 0
+    if ( length(loop_pop_weight)  == 0)  {loop_pop_weight=0}
+    
+    
+    
+    ### Weight is a percentage of total population
+    loop_pop_weight <- loop_pop_weight / ca_pop
+    #print("Pop weight")
+    #print(loop_pop_weight)
+    
+    ########################################################################################################
+    #### Build Weighted values - these values are multiplied by their percentage of the population
+    ########################################################################################################
+    
+    if (is.na(loop_county_df$predict_offset)) {
+      print("DING")
+      return()
+      break
+    }
+    
+    print(loop_county_df$predict_offset)
+    print(length(loop_county_df$predict_offset))
+    
+      
   
-  print(paste0("Running Total MSE: ",sum(lm_model_statewide_by_county_15_df$confirm_mse)))
-  print(lm_model_statewide_by_county_15_df)
+    
+    
+    
+    output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_pop_weight) )
+    
+    offset_result <- output_offset + (loop_county_df$predict_offset * loop_pop_weight)
+    ### Check for NAs for some reason These are occurring in low population counties
+     if (is.na(offset_result) == TRUE){
+       print(loop_county_df)
+       print("OFFSET NA!")
+       break
+     }
+    output_offset <- (output_offset + (loop_county_df$predict_offset * loop_pop_weight) )
+    
+    
+    output_coefficient <- (output_coefficient + (loop_county_df$predict_coefficient * loop_pop_weight) )
+    
+  }#//*** END Each county filename
+  
+  ### Truncate the offset - might be useful to keep later
+  ### output_offset <- round(output_offset,0)
+  
+  return(data.frame(
+    predict_deaths      = output_deaths,
+    predict_offset      = output_offset,
+    predict_mse         = output_mse,
+    predict_intercept   = output_intercept,
+    predict_coefficient = output_coefficient
+    
+  ))
   
 
   
-}###END each county same
-
-### Remove the fraction of offset, might be useful to keep, if we want to add a fractional value to the model
-lm_model_statewide_by_county_15_df$confirm_offset <- round(lm_model_statewide_by_county_15_df$confirm_offset,0)
+}#//END build_statewide_model_from_counties
 
 
-lm_model_statewide_by_county_15_df
+confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
+confirm_predict_hospital_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_hospital"))
+confirm_predict_icu_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_icu"))
 
-### Save the Model
-saveRDS(lm_model_statewide_by_county_15_df, "lm_model_statewide_by_county_15_df")
-lm_model_statewide_by_county_15_df
-cor_model_statewide_by_county_30_df
-lm_model_statewide_by_county_15_df
+sum(confirm_predict_death_model_df$predict_mse)
+sum(confirm_predict_hospital_model_df$predict_mse)
+confirm_predict_death_model_df
+confirm_predict_hospital_model_df
 
-cor(lm_model_statewide_by_county_15_df$confirm_offset,lm_model_statewide_by_county_15_df$confirm_mse)
-# Save a single object to a file
+cor(confirm_predict_death_model_df$predict_offset,confirm_predict_death_model_df$predict_mse)  
 
-# Restore it under a different name
-#my_data <- readRDS("mtcars.rds")
+### Testing to deaths model is very noisy. Can only build from aggregate state numbers have State
+offset_testing_lm15_df <- build_rolling_lm_offset(offset_testing_df,"daily_total_deaths",15)
 
-lm_model_statewide_by_county_15_df
+  
+###############################
+### END Modeling
+###############################
 
-head(daily_covid_df)
-
-test_model_df <- data.frame(date=daily_covid_df$date,
-                 daily_total_confirmed=daily_covid_df$daily_total_confirmed,
-                 daily_total_deaths=daily_covid_df$daily_total_deaths,
-                 predicted_deaths=lm_model_statewide_by_county_15_df$confirm_deaths
-                )
-
-test_model_df
-
-
-loop_county_df <- ca_covid_df[which(ca_covid_df$county=="kern"),]
-#print(tail(loop_county_df))
-
-### Build offset columns for confirmed cases
-loop_county_confirmed_df <- build_offset_columns(loop_county_df,"daily_total_confirmed",2:30)
-#print(tail(loop_county_confirmed_df))
-### Build predictions for County: deaths ~ confirmed
-loop_county_death_by_confirmed_df <- build_rolling_lm_offset(loop_county_confirmed_df,"daily_total_deaths",15)
-loop_county_death_by_confirmed_df
-
-
-####################################################################
-sum(lm_model_statewide_by_county_15_df$confirm_mse)
-sum(cor_model_statewide_by_county_30_df$confirm_mse)
-
-offset_lm_7_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",7)
-offset_lm_15_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
-offset_lm_30_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",30)
-
-sum(offset_lm_30_df$mse)
-offset_lm_7_df
-sum(offset_lm_15_df$mse)
-offset_lm_30_df
-
-sum(cor_model_statewide_by_county_30_df$confirm_mse)
+### Build Master Death Data frame by combining actual data and models
+confirm_predict_death_model_df$predict_offset
+nrow(confirm_predict_death_model_df)
+nrow(daily_covid_df)
 #lm_model_statewide_by_county_15_df$confirm_offset<-round(lm_model_statewide_by_county_15_df$confirm_offset,0)
-tail(lm_model_statewide_by_county_15_df)
-daily_covid_df
 ### Build the death model. This is predicting deaths based on testing, confirmed and hospitalization
 death_model_df <- data.frame(date=daily_covid_df$date,
           daily_total_confirmed=daily_covid_df$daily_total_confirmed,
           daily_total_deaths   =daily_covid_df$daily_total_deaths,
-          confirmed_offset=lm_model_statewide_by_county_15_df$confirm_offset,
-          confirm_predict=lm_model_statewide_by_county_15_df$confirm_deaths,
-          confirm_mse=lm_model_statewide_by_county_15_df$confirm_mse,
-          confirm_intercept=lm_model_statewide_by_county_15_df$confirm_intercept,
-          confirm_coefficient=lm_model_statewide_by_county_15_df$confirm_coefficient 
+          confirmed_offset=confirm_predict_death_model_df$predict_offset,
+          confirm_predict=confirm_predict_death_model_df$predict_deaths,
+          confirm_mse=confirm_predict_death_model_df$predict_mse,
+          confirm_intercept=confirm_predict_death_model_df$predict_intercept,
+          confirm_coefficient=confirm_predict_death_model_df$predict_coefficient 
 )
-
 tail(death_model_df)
+
+#### Predicted Deaths by Confirmed cases
+death_model_last_row <- death_model_df[nrow(death_model_df),]
+death_model_last_row
+
+error_rate <- abs( (death_model_last_row$daily_total_deaths - death_model_last_row$confirm_predict) / death_model_last_row$daily_total_deaths ) / 2
+error_rate
+
+death_statement_confirmed_1 <- paste0("Based on today's California confirmed case count of: ",death_model_last_row$daily_total_confirmed )
+death_statement_confirmed_2 <- paste0(" California is facing: ",
+( round(
+  (death_model_last_row$daily_total_confirmed * death_model_last_row$confirm_coefficient) + death_model_last_row$confirm_intercept
+)) ," total deaths in ",
+round(death_model_last_row$confirmed_offset,2)," days +/- < 1%" )
+
+print(death_statement_confirmed_1)
+print(death_statement_confirmed_2)
 
 ##############################################
 ### Plot Death Model over entire Data set
@@ -1091,13 +1328,17 @@ last_30_confirmed$confirm_predict <- death_model_df$confirm_predict[startIndex:r
 
 last_30_confirmed
 
-
-
-
+#### Correlated Model. Will keep this for reference testing.
+#### This is our preview Model.
+#cor_model_statewide
+#last_30_cor_statewide <- cor_model_statewide[startIndex:rowCount,]
+#last_30_cor_statewide$daily_total_confirmed <- last_30_confirmed$daily_total_confirmed
+#last_30_cor_statewide
 
 ggplot(data = last_30_confirmed, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue', size=2) +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
   geom_line(color='red'   ,data = last_30_confirmed, aes(y=daily_total_confirmed, x=confirm_predict), size=.75) +
+  #geom_line(color='green'   ,data = last_30_cor_statewide, aes(y=daily_total_confirmed, x=confirm_deaths), size=.75) +
   labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California (last 30 days)",subtitle=paste0("Red: Confirmed Cases predicting deaths\nCorrelated with cases ",last_confirmed_offset_index," day prior"))
 
 
