@@ -916,23 +916,29 @@ build_statewide_model_from_counties <- function(input_folder){
   ### Get the Index File
   ### Because we make it easy!
   #######################################
-  #working_model_path <- paste0(input_folder,)
-  
   file_index <- readRDS(paste0(input_folder,"\\1_index.dat"))
+  
   
   colnames(file_index) <- c("county","filenames")
   
   
-  for (county_filename_counter in 1:length(file_index$filenames)){
+  ############################################################
+  #### Build filenames from the county names in file_index
+  #### Turns out the folder paths only on the machine that 
+  #### did the modeling....Ooops.
+  ############################################################
+  filenames <- paste0(input_folder,"\\",file_index$county,".dat")
+  
+  for (county_filename_counter in 1:length(filenames)){
     
-    county_filename <- file_index$filenames[ county_filename_counter]
+    county_filename <- filenames[ county_filename_counter]
     county_name <- file_index$county[ county_filename_counter]
     
     loop_county_df <- readRDS(county_filename)  
     print("------------------------")
     print(county_name)
     print("------------------------")
-    print((loop_county_df))
+    print(tail(loop_county_df))
     
     
     if(county_filename_counter == 1){
@@ -1024,6 +1030,9 @@ build_statewide_model_from_counties <- function(input_folder){
   
   
 }#//END build_statewide_model_from_counties
+
+#confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
+
 
 ##########################################
 ### These functions May be obsolete
@@ -1119,9 +1128,9 @@ build_model_last_30days <- function(input_df) {
 ###################################################################################
 ### Assign the working Directory. I work on 3x PCs, hence three directory choices
 ###################################################################################
-workingDir <- "C:\\DSC\\covid"
+#workingDir <- "C:\\DSC\\covid"
 #workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
-#workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
+workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
 
 setwd(workingDir)
 
@@ -1136,22 +1145,29 @@ setwd(workingDir)
 ### Files are downloaded using: getFiles.bat
 ##################################################################################
 
-### Process and import Ca COVID Confirmed and Deaths
-### Source Data is by county and date.
+########################################################
+### Build Covid Confirmed and Deaths                 ###
+### Source Data is by county and date.               ###
+########################################################
 ca_covid_df <- process_CA_covid_cases_data(read.csv("CA_covid_Cases.csv"))
 
-### Process and import Ca Hospital Info
+##############################
+### Build Hospital Dataset ###
+##############################
 ### Source Data is by county and date.
 ca_hospital_df <- process_CA_hospital_data(read.csv("CA_covid_Hospitalization.csv"))
 
-
-### import Testing info directly.
-### Cleaning: Convert date to as.Date()
-### Data is at state level
+#############################
+### Build Testing Dataset ###
+###########################################
+### import Testing info directly.       ###
+### Cleaning: Convert date to as.Date() ###
+### Data is at state level              ###
+###########################################
 ca_testing_df <- read.csv("CA_testing.csv")
 ca_testing_df$date <- as.Date(ca_testing_df$date,"%Y-%m-%d")
-ca_testing_df
 
+### California Demographics - May use later
 #ca_demo_df <- read.csv("Final_CA_Race_Demographic.csv")
 
 ####################################################################
@@ -1183,7 +1199,6 @@ ca_pop_100k <- round(ca_pop / 100000,2)
 ### build statewide Numbers - daily_covid_df
 ############################################################
 daily_covid_df <- build_statewide_confirmed_numbers(ca_covid_df)
-
 ####################################################
 ### Process ca_covid_df again
 ### Rename columns and remove new count numbers
@@ -1198,20 +1213,18 @@ colnames(ca_covid_df) <- c("county","daily_total_confirmed","daily_total_deaths"
 #### Build statewide Hospital numbers
 ############################################
 ### Hospital has least least rows start there
-
 daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
+
 ### Remove bed count for simiplication. May use this later
 ca_hospital_df <- removeCols(ca_hospital_df,c("all_hospital_beds","icu_available_beds"))
-head(removeCols(daily_hospital_df,c("all_hospital_beds","icu_available_beds","hospital_capacity","icu_capacity")))
+daily_hospital_df <- removeCols(daily_hospital_df,c("all_hospital_beds","icu_available_beds","hospital_capacity","icu_capacity"))
+
+daily_hospital_df
 
 ### Add Deaths to ca_hospital_df
 ### Combine ca_covid and ca_hospital
 ca_combined_df <- merge(ca_covid_df,ca_hospital_df)
 ca_combined_df
-
-#ca_combined_df[which(ca_hopital_combined_df$county=="alameda"),]$hospitalized_covid_patients == ca_hospital_df[which(ca_hospital_df$county=="alameda"),]$hospitalized_covid_patients
-
-
 ### Add Statewide deaths to testing for offset building
 ca_testing_df <- data.frame(date=ca_testing_df$date,daily_total_deaths=daily_covid_df$daily_total_deaths,tested=ca_testing_df$tested)
 
@@ -1223,15 +1236,24 @@ ca_testing_df <- data.frame(date=ca_testing_df$date,daily_total_deaths=daily_cov
 ### Build the offsets data frame. 
 ############################################################
 
+
+
 offset_daily_df <- build_offset_columns(daily_covid_df,"daily_total_confirmed",2:30)
 
 offset_testing_df <- build_offset_columns(ca_testing_df,"tested",2:30)
 
-offset_hospitalization <-build_offset_columns(daily_hospital_df,"daily_total_confirmed",2:30)
+#offset_hospitalization <-build_offset_columns(daily_hospital_df,"daily_total_confirmed",2:30)
 
-offset_daily_df
 #offset_daily_df
 
+
+############################################################################################################
+############################################################################################################
+############################################################################################################
+#### BEGIN PREVIEW Modeling
+############################################################################################################
+############################################################################################################
+############################################################################################################
 
 ############################################################################################################
 ### Rolling offset calculates the offset for each day looking back over a number of days.
@@ -1239,13 +1261,9 @@ offset_daily_df
 ### interval is less accurate
 ############################################################################################################
 
-############################################################################################################
-#### BEGIN PREVIEW Modeling
-############################################################################################################
 
 ##### Build prediction model from correlation, but for each county. Sum the county deaths
 offset_df <- build_rolling_cor_offset(offset_daily_df,"daily_total_deaths",30)
-offset_df
 
 ### Testing to deaths model is very noisy. Olny have State
 offset_testing_lm15_df <- build_rolling_lm_offset(offset_testing_df,"daily_total_deaths",15)
@@ -1308,75 +1326,198 @@ cor_model_hospital_icu_statewide
 
 
 
-
-
-
 ###################################################################################################
-#### Build Expensive Models to the county level.
-#### Write data to folders
-#### So only to do this once per data set
-#### If I was really cool, i'd build an update function so I don't have to remodel old data
-#### But i'm not that cool on this timeline
+#### Build Expensive Models to the county level.                                                ###
+#### Write data to folders                                                                      ###
+#### So only to do this once per data set                                                       ###
+#### If I was really cool, i'd build an update function so I don't have to remodel old data     ###
+#### But i'm not that cool on this timeline                                                     ###
 ###################################################################################################
-ca_combined_df[which(ca_combined_df$county==is.na),]
-ca_combined_df
-
-unique(ca_hospital_df$county)
 
 #build_county_models_to_file(ca_combined_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
-build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients")
-build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined")
-build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined")
-build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths")
-build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
+#build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients")
+#build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined")
+#build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined")
+#build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths")
+#build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
 
+##############################
+### Build Statewide Models ###
+#############################################################################
+### Aggregates expensive county models into statewide California numbers. ###
+#############################################################################
 
+print(paste0(workingDir,"\\models\\confirm_~_deaths"))
+
+### Confirmed cases predicting outcomes
 confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
-confirm_predict_death_model_df
 confirm_predict_hospital_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_hospital"))
-confirm_predict_hospital_model_df
 confirm_predict_icu_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_icu"))
-confirm_predict_icu_model_df
-confirm_predict_hospital_model_df
-sum(confirm_predict_death_model_df$predict_mse)
-sum(confirm_predict_death_model_df$predict_deaths)
-sum(confirm_predict_hospital_model_df$predict_mse)
-confirm_predict_icu_model_df$prediction
-daily_hospital_df$icu_combined
 
-daily_hospital_df$hospitalized_covid_patients
+#### Hospitalization predict outcomes
+hospital_predict_icu_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\hospital_~_icu"))
+hospital_predict_deaths_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\hospital_~_deaths"))
+
+#### ICU predict death
+icu_predict_deaths_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\icu_~_deaths"))
 
 
-confirm_predict_death_model_df
-confirm_predict_hospital_model_df
-confirm_predict_hospital_model_df$predict_deaths
-
+### Correlate offset with MSE. I wonder what else correlates with MSE
 cor(confirm_predict_death_model_df$predict_offset,confirm_predict_death_model_df$predict_mse)  
 
 ### Testing to deaths model is very noisy. Can only build from aggregate state numbers have State
-offset_testing_lm15_df <- build_rolling_lm_offset(offset_testing_df,"daily_total_deaths",15)
+### Build testing Model from aggreagte state numbers
+testing_predict_deaths_df <- build_rolling_lm_offset(offset_testing_df,"daily_total_deaths",15)
 
-  
-###############################
-### END Modeling
-###############################
+#########################################################
+### Trim up testing to same Data length as other models
+#########################################################
+### Yes, it's ugly but it runs with one command.
+### Basicially, it's start at the row difference to the nrows in data frame
+###############################################################################
+
+testing_predict_deaths_df <- testing_predict_deaths_df[
+  (nrow(testing_predict_deaths_df) - nrow(confirm_predict_death_model_df) + 1):
+    nrow(testing_predict_deaths_df),]
+######################################################################
+######################################################################
+######################################################################
+### END Modeling #####################################################
+######################################################################
+######################################################################
+######################################################################
 
 ### Build Master Death Data frame by combining actual data and models
 confirm_predict_death_model_df$predict_offset
-nrow(confirm_predict_death_model_df)
-nrow(daily_covid_df)
-#lm_model_statewide_by_county_15_df$confirm_offset<-round(lm_model_statewide_by_county_15_df$confirm_offset,0)
-### Build the death model. This is predicting deaths based on testing, confirmed and hospitalization
-death_model_df <- data.frame(date=daily_covid_df$date,
-          daily_total_confirmed=daily_covid_df$daily_total_confirmed,
-          daily_total_deaths   =daily_covid_df$daily_total_deaths,
-          confirmed_offset=confirm_predict_death_model_df$predict_offset,
-          confirm_predict=confirm_predict_death_model_df$predict_deaths,
-          confirm_mse=confirm_predict_death_model_df$predict_mse,
-          confirm_intercept=confirm_predict_death_model_df$predict_intercept,
-          confirm_coefficient=confirm_predict_death_model_df$predict_coefficient 
-)
+
+
+confirm_predict_death_model_df
+confirm_predict_hospital_model_df
+confirm_predict_icu_model_df
+hospital_predict_icu_model_df
+hospital_predict_deaths_df
+icu_predict_deaths_df
+
+daily_hospital_df
+
+
+
+##############################################################
+### Build the death model.
+### Death model combines actual data points with the models
+####################################################################
+### Death Model: Initialize with Testing and Confirmed/Deaths
+####################################################################
+death_model_df <- merge(removeCols(ca_testing_df,"daily_total_deaths"),daily_covid_df)
+
+###############################################
+### Death Model: Add Actual Hospital Values
+###############################################
+death_model_df <- merge(death_model_df,daily_hospital_df)
+
+#######################################
+### Death Model: Add Testing ~ Deaths
+#######################################
+death_model_df$testing_death_mse         <- testing_predict_deaths_df$mse
+death_model_df$testing_death_predict      <- testing_predict_deaths_df$predicted_deaths
+death_model_df$testing_death_offset      <- testing_predict_deaths_df$offset_index
+death_model_df$testing_death_intercept   <- testing_predict_deaths_df$lm_intercept
+death_model_df$testing_death_coefficient <- testing_predict_deaths_df$lm_coefficient
+
+
+#######################################
+### Death Model: Add Confirmed ~ Deaths
+#######################################
+death_model_df$confirm_death_mse         <- confirm_predict_death_model_df$predict_mse
+death_model_df$confirm_death_predict     <- confirm_predict_death_model_df$prediction
+death_model_df$confirm_death_offset      <- confirm_predict_death_model_df$predict_offset
+death_model_df$confirm_death_intercept   <- confirm_predict_death_model_df$predict_intercept
+death_model_df$confirm_death_coefficient <- confirm_predict_death_model_df$predict_coefficient
+
+#######################################
+### Death Model: Add Confirm ~ Hospital
+#######################################
+death_model_df$confirm_hospital_mse         <- confirm_predict_hospital_model_df$predict_mse
+death_model_df$confirm_hospital_predict     <- confirm_predict_hospital_model_df$prediction
+death_model_df$confirm_hospital_offset      <- confirm_predict_hospital_model_df$predict_offset
+death_model_df$confirm_hospital_intercept   <- confirm_predict_hospital_model_df$predict_intercept
+death_model_df$confirm_hospital_coefficient <- confirm_predict_hospital_model_df$predict_coefficient
+
+#######################################
+### Death Model: Add confirm ~ icu 
+#######################################
+death_model_df$confirm_icu_mse         <- confirm_predict_icu_model_df$predict_mse
+death_model_df$confirm_icu_predict     <- confirm_predict_icu_model_df$prediction
+death_model_df$confirm_icu_offset      <- confirm_predict_icu_model_df$predict_offset
+death_model_df$confirm_icu_intercept   <- confirm_predict_icu_model_df$predict_intercept
+death_model_df$confirm_icu_coefficient <- confirm_predict_icu_model_df$predict_coefficient
+
+#######################################
+### Death Model: Add hospital ~ icu
+#######################################
+death_model_df$hospital_icu_mse         <- hospital_predict_icu_model_df$predict_mse
+death_model_df$hospital_icu_predict     <- hospital_predict_icu_model_df$prediction
+death_model_df$hospital_icu_offset      <- hospital_predict_icu_model_df$predict_offset
+death_model_df$hospital_icu_intercept   <- hospital_predict_icu_model_df$predict_intercept
+death_model_df$hospital_icu_coefficient <- hospital_predict_icu_model_df$predict_coefficient
+
+#######################################
+### Death Model: Add hospital ~ death
+#######################################
+death_model_df$hospital_death_mse         <- hospital_predict_deaths_df$predict_mse
+death_model_df$hospital_death_predict     <- hospital_predict_deaths_df$prediction
+death_model_df$hospital_death_offset      <- hospital_predict_deaths_df$predict_offset
+death_model_df$hospital_death_intercept   <- hospital_predict_deaths_df$predict_intercept
+death_model_df$hospital_death_coefficient <- hospital_predict_deaths_df$predict_coefficient
+
+#######################################
+### Death Model: Add icu ~ death
+#######################################
+death_model_df$icu_death_mse         <- hospital_predict_deaths_df$predict_mse
+death_model_df$icu_death_prediction  <- hospital_predict_deaths_df$prediction
+death_model_df$icu_death_offset      <- hospital_predict_deaths_df$predict_offset
+death_model_df$icu_death_intercept   <- hospital_predict_deaths_df$predict_intercept
+death_model_df$icu_death_coefficient <- hospital_predict_deaths_df$predict_coefficient
+
 tail(death_model_df)
+
+str(death_model_df)
+
+cor(death_model_df[-1])
+
+### Testing correlation
+sort(cor(death_model_df[-1])[,2], decreasing=TRUE)
+### Confirmed Correlation
+sort(cor(death_model_df[-1])[,3], decreasing=TRUE)
+### Confirmed Death Offset Correlation
+sort(cor(death_model_df[-1])[,13], decreasing=TRUE)
+
+#tail(testing_predict_deaths_df)
+#tail(confirm_predict_death_model_df)
+#tail(confirm_predict_hospital_model_df)
+#tail(confirm_predict_icu_model_df)
+#tail(hospital_predict_icu_model_df)
+#tail(hospital_predict_deaths_df)
+#tail(icu_predict_deaths_df)
+
+
+
+sum(death_model_df$testing_mse)
+sum(death_model_df$confirm_mse)
+sum(death_model_df$hospital_mse)
+sum(death_model_df$icu_mse)
+
+
+
+ggplot(data = death_model_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue', size=2) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(color='red'   ,data = death_model_df, aes(y=daily_total_confirmed, x=confirm_death_predict), size=.75) +
+  geom_line(color='green'   ,data = death_model_df, aes(y=daily_total_confirmed, x=testing_death_predict), size=.75) +
+  geom_line(color='black'   ,data = death_model_df, aes(y=daily_total_confirmed, x=hospital_death_predict), size=.75) +
+  geom_line(color='purple'   ,data = death_model_df, aes(y=daily_total_confirmed, x=icu_death_prediction), size=.75) +
+  #labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California (last 30 days)",subtitle=paste0("Red: Confirmed Cases predicting deaths\nCorrelated with cases ",last_confirmed_offset_index," day prior"))
+  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California ",subtitle=paste0("Red: Confirmed Cases predicting deaths"))
+  
 
 #### Predicted Deaths by Confirmed cases
 death_model_last_row <- death_model_df[nrow(death_model_df),]
