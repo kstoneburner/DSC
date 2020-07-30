@@ -612,25 +612,25 @@ build_statewide_confirmed_numbers <- function(input_df){
     ### Build data frame for each date
     this_df <- (input_df [which(input_df$date == x),])
     ### Sum confirmed for daily total
-    return(sum(this_df$totalcountconfirmed) )
+    return(sum(this_df$daily_total_confirmed) )
   },simplify="array")
   
   daily_total_deaths <- sapply(date,function(x){
     this_df <- (input_df [which(input_df$date == x),])
     ### Sum deaths for daily total
-    return(sum(this_df$totalcountdeaths) )
+    return(sum(this_df$daily_total_deaths) )
   },simplify="array")
   
   new_deaths <- sapply(date,function(x){
     this_df <- (input_df [which(input_df$date == x),])
     ### Sum deaths for daily total
-    return(sum(this_df$newcountdeaths) )
+    return(sum(this_df$new_deaths) )
   },simplify="array")
   
   new_confimed <- sapply(date,function(x){
     this_df <- (input_df [which(input_df$date == x),])
     ### Sum deaths for daily total
-    return(sum(this_df$newcountconfirmed) )
+    return(sum(this_df$new_confirmed) )
   },simplify="array")
   
    
@@ -799,6 +799,7 @@ correlation_model_statewide_by_summed_county <- function(input_df,input_test_fie
 ####################################################
 build_county_models_to_file <- function(input_df,folder_name,input_test_field, input_predict_field){
   
+  
   ### Builds a model for each county and exports each county to a file
   
   ###############################################
@@ -837,6 +838,10 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
     ### get data frame with just the County data
     loop_county_df <- input_df[which(input_df$county==loop_county_name),]
     #print(loop_county_df)
+    
+    ### Build the dependent variable
+    eval(parse(text=paste0("dependent_variable <- input_df[which(input_df$county==loop_county_name),]$",input_test_field)))
+    
     
     ### Build offset columns for confirmed cases
     loop_county_confirmed_df <- build_offset_columns(loop_county_df,input_test_field,2:30)
@@ -885,6 +890,7 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
     
     output_df <- data.frame(
       date =loop_county_death_by_confirmed_df$date,
+      dependent=dependent_variable,
       predict_mse=loop_county_death_by_confirmed_df$mse,
       prediction=loop_county_death_by_confirmed_df$predicted_deaths,
       predict_intercept =loop_county_death_by_confirmed_df$lm_intercept,
@@ -928,132 +934,11 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
 }#//*** END build_county_models_to_file
 #build_county_models_to_file(ca_covid_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
 
-#############################################################
+##############################################################
 #### Build statewide models from expensive county models ####
 #####################################################################################
 #### Reads county models from a file and returns a data frame of aggregated info ####
 #####################################################################################
-
-build_statewide_model_from_counties <- function(input_folder){
-  
-  #######################################
-  ### Get the Index File
-  ### Because we make it easy!
-  #######################################
-  file_index <- readRDS(paste0(input_folder,"\\1_index.dat"))
-  
-  
-  colnames(file_index) <- c("county","filenames")
-  
-  
-  ############################################################
-  #### Build filenames from the county names in file_index
-  #### Turns out the folder paths only on the machine that 
-  #### did the modeling....Ooops.
-  ############################################################
-  filenames <- paste0(input_folder,"\\",file_index$county,".dat")
-  
-  for (county_filename_counter in 1:length(filenames)){
-    
-    county_filename <- filenames[ county_filename_counter]
-    county_name <- file_index$county[ county_filename_counter]
-    
-    loop_county_df <- readRDS(county_filename)  
-    print("------------------------")
-    print(county_name)
-    print("------------------------")
-    print(tail(loop_county_df))
-    
-    
-    if(county_filename_counter == 1){
-      ### Initialize output variables
-      
-      output_dates <- loop_county_df$date
-      
-      #### Build a vector of 0 with length of the input_df
-      #### We start with 0 and sum each field
-      dataset_length <- nrow(loop_county_df)
-      
-      for (x in 1:length(dataset_length)){
-        if (x == 1) { zero_vector <- c() }
-        zero_vector <- append(zero_vector,0)
-      }
-      
-      output_mse <- zero_vector
-      output_deaths  <- zero_vector
-      output_intercept  <- zero_vector
-      output_coefficient  <- zero_vector
-      output_offset <- zero_vector
-    }#//*** END initialize output variables
-    
-    #############################################################################
-    ### Build output values
-    ### Each value is a vector based on days. Add the vector to the output totals
-    ### to get the Statewide numbers
-    #############################################################################
-    
-    ### Start with unweighted Values
-    output_mse <- output_mse + loop_county_df$predict_mse
-    output_deaths <- output_deaths + loop_county_df$prediction
-    
-    ########################################################################################################
-    #### Build Weights based on population percentage
-    ########################################################################################################
-    
-    ### Get County Population
-    loop_pop_weight <- ca_population_df[which(ca_population_df$county==county_name),]$population
-    
-    
-    ### There are at least two invalid counties - Out of County and Unassigned. Set Weight to 0
-    if ( length(loop_pop_weight)  == 0)  {loop_pop_weight=0}
-    
-    
-    
-    ### Weight is a percentage of total population
-    loop_pop_weight <- loop_pop_weight / ca_pop
-    #print("Pop weight")
-    #print(loop_pop_weight)
-    
-    ########################################################################################################
-    #### Build Weighted values - these values are multiplied by their percentage of the population
-    ########################################################################################################
-    
-    
-    #############################################################################
-    ### Replace NA with 0. The Models should not be generating NA
-    ### But it's likely from low population counties. Let's go with it ATM.
-    #############################################################################
-    loop_county_df$predict_offset[is.na(loop_county_df$predict_offset)] <- 0
-    loop_county_df$predict_intercept[is.na(loop_county_df$predict_intercept)] <- 0
-    loop_county_df$predict_coefficient[is.na(loop_county_df$predict_coefficient)] <- 0
-    
-    
-    output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_pop_weight) )
-    
-    #offset_result <- output_offset + (loop_county_df$predict_offset * loop_pop_weight)
-    
-    output_offset <- (output_offset + (loop_county_df$predict_offset * loop_pop_weight) )
-    
-    
-    output_coefficient <- (output_coefficient + (loop_county_df$predict_coefficient * loop_pop_weight) )
-    
-  }#//*** END Each county filename
-  
-  ### Truncate the offset - might be useful to keep later
-  ### output_offset <- round(output_offset,0)
-  
-  return(data.frame(
-    prediction          = output_deaths,
-    predict_offset      = output_offset,
-    predict_mse         = output_mse,
-    predict_intercept   = output_intercept,
-    predict_coefficient = output_coefficient
-    
-  ))
-  
-  
-  
-}#//END build_statewide_model_from_counties
 
 #confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
 
@@ -1072,8 +957,8 @@ print("DONE: Build Functions")
 ### Assign the working Directory. I work on 3x PCs, hence three directory choices
 ###################################################################################
 #workingDir <- "C:\\DSC\\covid"
-#workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
-workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
+workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
+#workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
 
 setwd(workingDir)
 
@@ -1097,7 +982,7 @@ setwd(workingDir)
   ### Source Data is by county and date.               ###
   ########################################################
   ca_covid_df <- process_CA_covid_cases_data(read.csv("CA_covid_Cases.csv"))
-  ca_covid_df
+  
   ##############################
   ### Build Hospital Dataset ###
   ##############################
@@ -1148,7 +1033,6 @@ setwd(workingDir)
   daily_covid_df <- build_statewide_confirmed_numbers(ca_covid_df)
   
   
-  
   ####################################################
   ### Process ca_covid_df again
   ### Rename columns and remove new count numbers
@@ -1164,15 +1048,16 @@ setwd(workingDir)
   ############################################
   ### Hospital has least least rows start there
   daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
-  
+  daily_hospital_df
   ### Remove bed count for simiplication. May use this later
   ca_hospital_df <- removeCols(ca_hospital_df,c("all_hospital_beds","icu_available_beds"))
   daily_hospital_df <- removeCols(daily_hospital_df,c("all_hospital_beds","icu_available_beds","hospital_capacity","icu_capacity"))
-  
+  daily_hospital_df
   
   ### Add Deaths to ca_hospital_df
   ### Combine ca_covid and ca_hospital
   ca_combined_df <- merge(ca_covid_df,ca_hospital_df)
+  ca_combined_df
   ### Add Statewide deaths to testing for offset building
   ca_testing_df <- data.frame(date=ca_testing_df$date,daily_total_deaths=daily_covid_df$daily_total_deaths,tested=ca_testing_df$tested)
   
@@ -1293,6 +1178,169 @@ setwd(workingDir)
   #build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
 ca_combined_df
 
+
+build_statewide_model_from_counties <- function(input_folder){
+  
+  #######################################
+  ### Get the Index File
+  ### Because we make it easy!
+  #######################################
+  file_index <- readRDS(paste0(input_folder,"\\1_index.dat"))
+  
+  
+  colnames(file_index) <- c("county","filenames")
+  
+  total_pop_weight <- 0
+  
+  ############################################################
+  #### Build filenames from the county names in file_index
+  #### Turns out the folder paths only on the machine that 
+  #### did the modeling....Ooops.
+  ############################################################
+  filenames <- paste0(input_folder,"\\",file_index$county,".dat")
+  
+  loop_coef <- c()
+  
+  for (county_filename_counter in 1:length(filenames)){
+    
+    county_filename <- filenames[ county_filename_counter]
+    county_name <- file_index$county[ county_filename_counter]
+    
+    loop_county_df <- readRDS(county_filename)  
+
+    #######################################################
+    ### We shouldnt have NAs in our models but we do.
+    ### These should be zeros in the model generation
+    ### But that is a huge pain to fix.
+    #######################################################
+    ### Bolt on and move on 
+    #######################################################
+    loop_county_df[is.na(loop_county_df)] = 0
+    
+    print("------------------------")
+    print(county_name)
+    print("------------------------")
+    print(tail(loop_county_df))
+    
+  
+    
+    if(county_filename_counter == 1){
+      ### Initialize output variables
+      
+      output_dates <- loop_county_df$date
+      
+      #### Build a vector of 0 with length of the input_df
+      #### We start with 0 and sum each field
+      dataset_length <- nrow(loop_county_df)
+      
+      for (x in 1:length(dataset_length)){
+        if (x == 1) { zero_vector <- c() }
+        zero_vector <- append(zero_vector,0)
+      }
+      
+      output_mse <- zero_vector
+      output_dependent <- zero_vector
+      output_deaths  <- zero_vector
+      output_intercept  <- zero_vector
+      output_coefficient  <- zero_vector
+      output_offset <- zero_vector
+    }#//*** END initialize output variables
+    
+    #############################################################################
+    ### Build output values
+    ### Each value is a vector based on days. Add the vector to the output totals
+    ### to get the Statewide numbers
+    #############################################################################
+    
+    ### Start with unweighted Values
+    output_mse <- output_mse + loop_county_df$predict_mse
+    output_deaths <- output_deaths + loop_county_df$prediction
+    output_dependent <- output_dependent + loop_county_df$dependent
+    
+    
+    ########################################################################################################
+    #### Build Weights based on population percentage
+    ########################################################################################################
+    
+    ### Get County Population
+    loop_pop_weight <- ca_population_df[which(ca_population_df$county==county_name),]$population
+    
+    
+    ### There are at least two invalid counties - Out of County and Unassigned. Set Weight to 0
+    if ( length(loop_pop_weight)  == 0)  {loop_pop_weight=0}
+    
+    
+    
+    ### Weight is a percentage of total population
+    loop_pop_weight <- loop_pop_weight / ca_pop
+    #print("Pop weight")
+    #print(loop_pop_weight)
+    
+    ########################################################################################################
+    #### Build Weighted values - these values are multiplied by their percentage of the population
+    ########################################################################################################
+    
+    
+    #############################################################################
+    ### Replace NA with 0. The Models should not be generating NA
+    ### But it's likely from low population counties. Let's go with it ATM.
+    #############################################################################
+    #loop_county_df$predict_offset[is.na(loop_county_df$predict_offset)] <- 0
+    #loop_county_df$predict_intercept[is.na(loop_county_df$predict_intercept)] <- 0
+    #loop_county_df$predict_coefficient[is.na(loop_county_df$predict_coefficient)] <- 0
+    
+    
+    output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_pop_weight) )
+    
+    
+    
+    output_offset <-    (output_offset + (loop_county_df$predict_offset * loop_pop_weight) )
+    
+    
+    output_coefficient <- (output_coefficient + (loop_county_df$predict_coefficient * loop_pop_weight) )
+    
+    
+    
+    thisCoef <- (loop_county_df$predict_coefficient * loop_pop_weight)
+    loop_coef <- append(loop_coef,thisCoef[length(thisCoef)])
+    #last_coef <- append(last_coef,loop_county_df$predict_coefficient[length(loop_county_df$predict_coefficient)])
+  }#//*** END Each county filename
+  
+  ### Truncate the offset - might be useful to keep later
+  ### output_offset <- round(output_offset,0)
+  
+  
+  ### Insetad of pop weight...
+  ### Let's try a remodel to get the coefficients
+  
+  target_offset <- round(output_offset,0)
+  remainder_offset <- (output_offset - target_offset)
+  
+  #eval(parse(text=paste0("temp_lm <-  lm(",output_dependent," ~ ",paste0(target_offset),", data=",loop_county_df,")")))
+  #print(temp_lm)
+  #print(str(temp_lm))
+  #print(temp_lm$coefficients)
+  
+    
+  return(data.frame(
+    prediction          = output_deaths,
+    dependent           = output_dependent,
+    predict_offset      = output_offset,
+    predict_mse         = output_mse,
+    predict_intercept   = output_intercept,
+    predict_coefficient = output_coefficient
+    
+  ))
+  
+  
+  
+}#//END build_statewide_model_from_counties
+
+confirm_predict_death_model_df<- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
+confirm_predict_death_model_df
+
+ca_combined_df
+daily
 { #//BEGIN Code Chunk #2: Build State Models and Death_frame
   print("Processing: Code Chunk#2")
   ##############################
@@ -1503,7 +1551,9 @@ get_county_models <- function(county_name, input_folder_name) {
 los_angeles_temp_model_df <- get_county_models("los angeles", "\\models\\confirm_~_deaths")
 los_angeles_temp_model_df
 #,"\\models\\confirm_~_hospital", "\\models\\confirm_~_icu", "\\models\\hospital_~_icu","\\models\\hospital_~_deaths", "\\models\\icu_~_deaths") )
-  
+
+ca_covid_df[which(ca_covid_df$county=="los angeles"),]
+
 ####################################################################################
 ####################################################################################
 ####################################################################################
