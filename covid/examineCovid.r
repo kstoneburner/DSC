@@ -1,10 +1,10 @@
 #install.packages("tidyverse")
 #install.packages("ggplot2")
-{
+
 library(ggplot2)
 library(tidyverse)
 
-
+{
 ########################################################
 ### Process and clean the California COVID data set. ###
 ### Outboarded to a function to keep the code tidier ###
@@ -957,7 +957,8 @@ print("DONE: Build Functions")
 ### Assign the working Directory. I work on 3x PCs, hence three directory choices
 ###################################################################################
 #workingDir <- "C:\\DSC\\covid"
-workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
+#workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
+workingDir <- "C:\\Users\\stonk013\\Documents\\GitHub\\DSC\\covid"
 #workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
 
 setwd(workingDir)
