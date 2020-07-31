@@ -797,7 +797,7 @@ correlation_model_statewide_by_summed_county <- function(input_df,input_test_fie
 #### Expensive County Modeling
 #### Models each County and writes to a file
 ####################################################
-build_county_models_to_file <- function(input_df,folder_name,input_test_field, input_predict_field){
+build_county_models_to_file <- function(input_df,folder_name,input_test_field, input_predict_field,rolling_days){
   
   
   ### Builds a model for each county and exports each county to a file
@@ -847,7 +847,7 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
     loop_county_confirmed_df <- build_offset_columns(loop_county_df,input_test_field,2:30)
     #print(tail(loop_county_confirmed_df))
     ### Build predictions for County: deaths ~ confirmed
-    loop_county_death_by_confirmed_df <- build_rolling_lm_offset(loop_county_confirmed_df,input_predict_field,15)
+    loop_county_death_by_confirmed_df <- build_rolling_lm_offset(loop_county_confirmed_df,input_predict_field,rolling_days)
     
     
     ### IF the sum(mse) is less than 2, Ignore those counties and append to the too small to calc list
@@ -1169,19 +1169,21 @@ setwd(workingDir)
 #### If I was really cool, i'd build an update function so I don't have to remodel old data     ###
 #### But i'm not that cool on this timeline                                                     ###
 ###################################################################################################
+  ### Twice the error with 30 days
+  ##build_county_models_to_file(ca_combined_df,"confirm_~_deaths_30","daily_total_confirmed","daily_total_deaths",30)
 
-  #build_county_models_to_file(ca_combined_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths")
-  #build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients")
-  #build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined")
-  #build_county_models_to_file(ca_combined_df,"confirm_~_newdeaths","daily_total_confirmed","new_deaths")
-  #build_county_models_to_file(ca_combined_df,"newconfirm_~_newdeaths","new_confirmed","new_deaths")
-  #build_county_models_to_file(ca_combined_df,"newconfirm_~_hospital","new_confirmed","hospitalized_covid_patients")
-  #build_county_models_to_file(ca_combined_df,"newconfirm_~_icu","new_confirmed","icu_combined")
-  #build_county_models_to_file(ca_combined_df,"hospital_~_newdeaths","hospitalized_covid_patients","new_deaths")
-  #build_county_models_to_file(ca_combined_df,"icu_~_newdeaths","icu_combined","new_deaths")
-  #build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined")
-  #build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths")
-  #build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths")
+  #build_county_models_to_file(ca_combined_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients",15)
+  #build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined",15)
+  #build_county_models_to_file(ca_combined_df,"confirm_~_newdeaths","daily_total_confirmed","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"newconfirm_~_newdeaths","new_confirmed","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"newconfirm_~_hospital","new_confirmed","hospitalized_covid_patients",15)
+  #build_county_models_to_file(ca_combined_df,"newconfirm_~_icu","new_confirmed","icu_combined",15)
+  #build_county_models_to_file(ca_combined_df,"hospital_~_newdeaths","hospitalized_covid_patients","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"icu_~_newdeaths","icu_combined","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined",15)
+  #build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths",15)
 
 
 build_statewide_model_from_counties <- function(input_folder){
@@ -1433,6 +1435,8 @@ build_statewide_model_from_counties <- function(input_folder){
   #############################################################################
   ### Aggregates expensive county models into statewide California numbers. ###
   #############################################################################
+  ## Twice the error with 30 days
+  #confirm_predict_death_30_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths_30"))
   
   ### Confirmed cases predicting outcomes
   confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
