@@ -4,7 +4,7 @@
 library(ggplot2)
 library(tidyverse)
 
-{
+{ #//Code Chunk 1: Load Functions
 ########################################################
 ### Process and clean the California COVID data set. ###
 ### Outboarded to a function to keep the code tidier ###
@@ -943,7 +943,7 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
 #confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
 
 print("DONE: Build Functions")
-} #//***END Code Chunk Build Functions!
+} #//Code Chunk 1: Load Functions
 
 ##########################################
 ##########################################
@@ -974,7 +974,7 @@ setwd(workingDir)
 ### Files are downloaded using: getFiles.bat
 ##################################################################################
 
-{ #*//BEGIN - Code Chunk #1 - Initialization
+{ #*//BEGIN - Code Chunk #2 - Initialization
 
   print("PROCESSING: Code Chunk #1")  
   
@@ -1088,7 +1088,7 @@ setwd(workingDir)
   
   #offset_daily_df
   print("END: Code Chunk #1")  
-}#*//END - Code Chunk #1 - Initialization
+}#*//END - Code Chunk #2 - Initialization
 
 ############################################################################################################
 ############################################################################################################
@@ -1249,6 +1249,9 @@ build_statewide_model_from_counties <- function(input_folder){
       output_intercept  <- zero_vector
       output_coefficient  <- zero_vector
       output_offset <- zero_vector
+      total_offset <- zero_vector
+      total_coefficient <- zero_vector
+      total_intercept <- zero_vector
     }#//*** END initialize output variables
     
     #############################################################################
@@ -1262,6 +1265,9 @@ build_statewide_model_from_counties <- function(input_folder){
     output_deaths <- output_deaths + loop_county_df$prediction
     output_dependent <- output_dependent + loop_county_df$dependent
     
+    total_offset <- total_offset + loop_county_df$predict_offset 
+    total_intercept <- total_intercept + loop_county_df$predict_intercept
+    total_coefficient <- total_coefficient + loop_county_df$predict_coefficient
     
     ########################################################################################################
     #### Build Weights based on population percentage
@@ -1368,29 +1374,45 @@ build_statewide_model_from_counties <- function(input_folder){
     #loop_county_df$predict_coefficient[i/2s.na(loop_county_df$predict_coefficient)] <- 0
     
     loop_death_weight <- loop_county_df$prediction/output_deaths
+    
     loop_death_weight[is.na(loop_death_weight)] = 0
-    #print(loop_death_weight)
+    #print(sum(loop_death_weight))
     
-    total_weight <- total_weight +  loop_death_weight
+    loop_offset_weight <- loop_county_df$predict_offset/total_offset
+    loop_offset_weight[is.na(loop_offset_weight)] = 0
     
     
+    print(loop_county_df)
     
+    loop_intercept_weight <- loop_county_df$predict_intercept/total_intercept
+    loop_intercept_weight[is.na(loop_intercept_weight)] = 0
     
-    output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_death_weight) )
-    
+    loop_coefficient_weight <- loop_county_df$predict_coefficient/total_coefficient
+    loop_coefficient_weight[is.na(loop_coefficient_weight)] = 0
     
     
     output_offset <-    (output_offset + (loop_county_df$predict_offset * loop_death_weight) )
+    #norm_offset <-      (total_offset - min(total_offset)) / ( max(total_offset) - min(total_offset) )
+    #norm_offset <-       norm_offset * loop_death_weight
+    #output_offset <- (   output_offset +  (loop_county_df$predict_offset * norm_offset) )
     
-    temp_co <- (loop_county_df$predict_coefficient * loop_death_weight)
-    output_coefficient <- (output_coefficient +  temp_co)
+        
+    output_intercept <- (output_intercept + (loop_county_df$predict_intercept * loop_death_weight) )
+    #norm_intercept <- (total_intercept - min(total_intercept)) / ( max(total_intercept) - min(total_intercept) )
+    #norm_intercept <- norm_intercept * loop_death_weight
+    #output_intercept <- (output_intercept +  (loop_county_df$predict_intercept * norm_intercept) )
     
-    total_predict <- ( total_predict + (loop_county_df$prediction * loop_death_weight) )
+    output_coefficient <- (output_coefficient +  (loop_county_df$predict_coefficient * loop_death_weight) )
+
+    #norm_coefficient <- (total_coefficient - min(total_coefficient)) / ( max(total_coefficient) - min(total_coefficient) )
+    #norm_coefficient <- norm_coefficient * loop_death_weight
+    #output_coefficient <- (output_coefficient +  (loop_county_df$predict_coefficient * norm_coefficient) )
+
     #print(loop_county_df$predict_coefficient)
     #print(loop_county_df$predict_coefficient * loop_death_weight)
     
     
-    #print(loop_county_df$prediction * loop_death_weight)
+    
     
     #print(tail(
     #  data.frame(
@@ -1403,6 +1425,7 @@ build_statewide_model_from_counties <- function(input_folder){
     
   }#//*** END Each county filename
   
+
   
 
   
@@ -1414,9 +1437,9 @@ build_statewide_model_from_counties <- function(input_folder){
     prediction          = output_deaths,
     dependent           = output_dependent,
     predict_offset      = output_offset,
-    predict_mse         = output_mse
-    #predict_intercept   = output_intercept,
-    #predict_coefficient = output_coefficient
+    predict_mse         = output_mse,
+    predict_intercept   = output_intercept,
+    predict_coefficient = output_coefficient
     
   ))
   
@@ -1424,12 +1447,12 @@ build_statewide_model_from_counties <- function(input_folder){
   
 }#//END build_statewide_model_from_counties
 
-#confirm_predict_death_model_df<- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
-#confirm_predict_death_model_df
+confirm_predict_death_model_df<- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
+confirm_predict_death_model_df
 #tail(offset_lm_15_df)
 
-{ #//BEGIN Code Chunk #2: Build State Models and Death_frame
-  print("Processing: Code Chunk#2")
+{ #//BEGIN Code Chunk #3: Build State Models and Death_frame
+  print("Processing: Code Chunk#3")
   ##############################
   ### Build Statewide Models ###
   #############################################################################
@@ -1600,7 +1623,7 @@ build_statewide_model_from_counties <- function(input_folder){
   
   
   print("DONE: Code Chunk#2")
-}#//END Code Chunk #2: Build State Models and Death_frame
+}#//END Code Chunk #3: Build State Models and Death_frame
 
 ### Build state level models to see if less granularity helps
 offset_daily_df
