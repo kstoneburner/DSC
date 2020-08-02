@@ -1,8 +1,8 @@
 #install.packages("tidyverse")
 #install.packages("ggplot2")
-
+# Load
 library(ggplot2)
-library(tidyverse)
+
 
 { #//Code Chunk 1: Load Functions
 ########################################################
@@ -958,11 +958,12 @@ print("DONE: Build Functions")
 ###################################################################################
 #workingDir <- "C:\\DSC\\covid"
 #workingDir <- "C:\\Users\\newcomb\\DSCProjects\\DSC\\covid"
-workingDir <- "C:\\Users\\stonk013\\Documents\\GitHub\\DSC\\covid"
+#workingDir <- "C:\\Users\\stonk013\\Documents\\GitHub\\DSC\\covid"
 #workingDir <- "L:\\stonk\\projects\\DSC\\DSC\\covid"
+#setwd(workingDir)
 
+workingDir <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(workingDir)
-
 #########################################
 ### Import and process original data ###
 ##################################################################################
@@ -1049,11 +1050,11 @@ setwd(workingDir)
   ############################################
   ### Hospital has least least rows start there
   daily_hospital_df <- build_statewide_hospital_numbers(ca_hospital_df)
-  daily_hospital_df
+  
   ### Remove bed count for simiplication. May use this later
   ca_hospital_df <- removeCols(ca_hospital_df,c("all_hospital_beds","icu_available_beds"))
   daily_hospital_df <- removeCols(daily_hospital_df,c("all_hospital_beds","icu_available_beds","hospital_capacity","icu_capacity"))
-  daily_hospital_df
+  
   
   ### Add Deaths to ca_hospital_df
   ### Combine ca_covid and ca_hospital
@@ -1062,11 +1063,7 @@ setwd(workingDir)
   ### Add Statewide deaths to testing for offset building
   ca_testing_df <- data.frame(date=ca_testing_df$date,daily_total_deaths=daily_covid_df$daily_total_deaths,tested=ca_testing_df$tested)
   
-  tail(ca_combined_df)
-  
-  daily_hospital_df
-  daily_covid_df
-  
+  ### Combine Statewide totalsL Confirm Death and hospitalization numbers
   daily_combined_df <- merge(daily_covid_df,daily_hospital_df)
   
   #colnames(ca_covid_df)
@@ -1087,7 +1084,7 @@ setwd(workingDir)
   #offset_hospitalization <-build_offset_columns(daily_hospital_df,"daily_total_confirmed",2:30)
   
   #offset_daily_df
-  print("END: Code Chunk #1")  
+  print("END: Code Chunk #2")  
 }#*//END - Code Chunk #2 - Initialization
 
 ############################################################################################################
@@ -1162,16 +1159,20 @@ setwd(workingDir)
 
 
 
-###################################################################################################
-#### Build Expensive Models to the county level.                                                ###
-#### Write data to folders                                                                      ###
-#### So only to do this once per data set                                                       ###
-#### If I was really cool, i'd build an update function so I don't have to remodel old data     ###
-#### But i'm not that cool on this timeline                                                     ###
-###################################################################################################
-  ### Twice the error with 30 days
-  ##build_county_models_to_file(ca_combined_df,"confirm_~_deaths_30","daily_total_confirmed","daily_total_deaths",30)
-
+##########################################################################################################
+#### Build Expensive Models to the county level.                                                       ###
+#### Write data to folders                                                                             ###
+#### So only to do this once per data set                                                              ###
+#### If I was really cool, i'd build an update function so I don't have to remodel old data            ###
+#### But i'm not that cool on this timeline                                                            ###
+#### Function Input Variables:                                                                         ###
+#### Data Frame: The Data frame containing all the values to model                                     ###
+#### String: folder name to contain the models                                                         ###
+#### String: Dependent Variable Column Name                                                            ###
+#### String: Independent Variable Name                                                                 ###
+#### Integer: Number of prior days to model the dependent variables affect on the independent variable ###
+##########################################################################################################
+  
   #build_county_models_to_file(ca_combined_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths",15)
   #build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients",15)
   #build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined",15)
@@ -1447,8 +1448,8 @@ build_statewide_model_from_counties <- function(input_folder){
   
 }#//END build_statewide_model_from_counties
 
-confirm_predict_death_model_df<- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
-confirm_predict_death_model_df
+#confirm_predict_death_model_df<- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
+#confirm_predict_death_model_df
 #tail(offset_lm_15_df)
 
 { #//BEGIN Code Chunk #3: Build State Models and Death_frame
@@ -1523,24 +1524,23 @@ confirm_predict_death_model_df
   ####################################################################
   ### Death Model: Initialize with Testing and Confirmed/Deaths
   ####################################################################
-  death_model_df <- merge(removeCols(ca_testing_df,"daily_total_deaths"),daily_covid_df)
+  death_model_df <- merge(removeCols(ca_testing_df,"daily_total_deaths"),daily_combined_df)
   
-  ###############################################
-  ### Death Model: Add Actual Hospital Values
-  ###############################################
-  death_model_df <- merge(death_model_df,daily_hospital_df)
   
   #######################################
   ### Death Model: Add Testing ~ Deaths
   #######################################
-  death_model_df$testing_death_mse         <- testing_predict_deaths_df$mse
-  death_model_df$testing_death_predict     <- testing_predict_deaths_df$predicted_deaths
-  death_model_df$testing_death_offset      <- testing_predict_deaths_df$offset_index
-#  death_model_df$testing_death_intercept   <- testing_predict_deaths_df$lm_intercept
-#  death_model_df$testing_death_coefficient <- testing_predict_deaths_df$lm_coefficient
+  ### Move Testing into spearate data frame to merge with death model. Testing has a different number of row.
+  ### merge() will correct this magically. The Date column is important, it is a reference column to knit the frames together
   
-  
-  
+  death_model_df <- merge(death_model_df, data.frame(
+    date=ca_testing_df$date,
+    testing_death_mse=testing_predict_deaths_df$mse,
+    testing_death_predict=testing_predict_deaths_df$predicted_deaths,
+    testing_death_offset=testing_predict_deaths_df$offset_index
+  ))
+
+
   #######################################
   ### Death Model: Add Confirmed ~ Deaths
   #######################################
@@ -1620,26 +1620,18 @@ confirm_predict_death_model_df
   death_model_df$icu_newdeaths_prediction <- icu_predict_newdeaths_model_df$prediction
   death_model_df$icu_newdeaths_offset     <- icu_predict_newdeaths_model_df$predict_offset
    
+
+  #### Build a separate Death Model Comprising the last 30 days
+  death_model_last_30_df <- death_model_df[ (nrow(death_model_df)-30) : nrow(death_model_df),]
+  
+  #### Build Post May Death Model
+  death_model_post_may_df <- death_model_df[ 36 : nrow(death_model_df),]
+  
   
   
   print("DONE: Code Chunk#2")
 }#//END Code Chunk #3: Build State Models and Death_frame
 
-### Build state level models to see if less granularity helps
-offset_daily_df
-
-#offset_lm_15_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
-confirm_predict_death_model_lm_df  <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
-
-confirm_predict_hospital_model_lm_df <- build_rolling_lm_offset(offset_daily_df,"hospitalized_covid_patients",15)
-
-data.frame(
-
-actual=daily_combined_df$hospitalized_covid_patients,
-predict=confirm_predict_hospital_model_lm_df$predicted_deaths
-)
-
-1- sum(confirm_predict_hospital_model_lm_df$predicted_deaths) / sum(daily_combined_df$hospitalized_covid_patients)
 
 ####################################################################################
 ####################################################################################
@@ -1649,6 +1641,8 @@ predict=confirm_predict_hospital_model_lm_df$predicted_deaths
 ####################################################################################
 ####################################################################################
 
+
+{
 #### Predicted Deaths by Confirmed cases
 #death_model_last_row <- death_model_df[nrow(death_model_df),]
 #death_model_last_row
@@ -1665,6 +1659,21 @@ predict=confirm_predict_hospital_model_lm_df$predicted_deaths
 #                                      round(death_model_last_row$confirm_death_offset,2)," days +/- < 1%" )
 #print(death_statement_confirmed_1)
 #print(death_statement_confirmed_2)
+### Build state level models to see if less granularity helps
+offset_daily_df
+
+#offset_lm_15_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
+confirm_predict_death_model_lm_df  <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
+
+confirm_predict_hospital_model_lm_df <- build_rolling_lm_offset(offset_daily_df,"hospitalized_covid_patients",15)
+
+data.frame(
+  
+  actual=daily_combined_df$hospitalized_covid_patients,
+  predict=confirm_predict_hospital_model_lm_df$predicted_deaths
+)
+
+1- sum(confirm_predict_hospital_model_lm_df$predicted_deaths) / sum(daily_combined_df$hospitalized_covid_patients)
 
 
 data.frame(
@@ -1816,7 +1825,7 @@ los_angeles_temp_model_df
 #,"\\models\\confirm_~_hospital", "\\models\\confirm_~_icu", "\\models\\hospital_~_icu","\\models\\hospital_~_deaths", "\\models\\icu_~_deaths") )
 
 ca_covid_df[which(ca_covid_df$county=="los angeles"),]
-
+}
 ####################################################################################
 ####################################################################################
 ####################################################################################
@@ -1826,24 +1835,127 @@ ca_covid_df[which(ca_covid_df$county=="los angeles"),]
 ####################################################################################
 
 
+#######################################################
+#######################################################
+#######################################################
+#### Initial Plotting #################################
+#######################################################
+#######################################################
+#######################################################
 
-#### Plotting
+############################################################################
+#### Model Error rates as a function of California testing effectiveness
+###########################################################################
+#Color Pallette
+#6A3534,#43536A,#366A46,#966233
+#E17876,#6C7A9D,#2D6A4D,#59411A
+## backgorund= lavenderblush, aliceblue
+
+### Model Error Rate Comparison
+ggplot() + theme_light() + theme(panel.background = element_rect(fill = "lavenderblush")) +
+  geom_line(data = death_model_df, size=1.5 ,aes(y = confirm_death_mse, x = date, color="Confirmed Predict Death") ) +
+  geom_line(data = death_model_df, size=1,   aes(y = testing_death_mse, x = date, color="Testing Predict Death" )) +
+  geom_line(data = death_model_df, size=.5, aes(y = hospital_death_mse, x = date, color="Hospital Predict Death" ),  ) +
+  geom_line(data = death_model_df, size=.5, aes(y = icu_death_mse,      x = date, color="ICU Predict Death" ) ) +
+  scale_color_manual(values = c(
+  "Confirmed Predict Death" = "darkred",
+  "Testing Predict Death" = "#E17876",
+  "Hospital Predict Death" = "#2D6A4D",
+  "ICU Predict Death" = "#59411A"
+  ),name="models") +
+  labs( x="Date", 
+        y="Relative Model Error (MSE)", 
+        name="Models:", 
+        title="Relative Model Error Rates", 
+        subtitle="Combined County Models (Lower is Better)"  )  
+
+########################################
+### MSE
+### Confirmed Predicting Deaths 
+########################################
+ggplot() + theme_light() + theme(panel.background = element_rect(fill = "lavenderblush")) +
+  geom_line(data = death_model_df ,aes(y = confirm_death_mse, x = date, color="Confirmed Cases Predicting Death") ) +
+  scale_color_manual(values = c(
+    "Confirmed Cases Predicting Death" = "darkred"
+  ),name="Model") +
+  labs( x="Date", y="Model Error (MSE)", name="", 
+        title="Relative California COVID Testing effectiveness", subtitle="Model error as a proxy for effectiveness\n(Lower is Better)"  )  
 
 
-### Data Prep
+############################################################
+### Confirmed Predicting Deaths vs actual Confirmed/Deaths
+############################################################
 
-death_model_last_30_df <- death_model_df[ (nrow(death_model_df)-30) : nrow(death_model_df),]
-
-
-
-ggplot(data = death_model_last_30_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
+ggplot() + theme_light() + 
+  theme( 
+    panel.background = element_rect(fill = "lavenderblush"), 
+    legend.position = c(.3,.85), 
+    legend.direction = "vertical") +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  geom_line(color='black'  ,data = death_model_last_30_df,      aes(y=daily_total_confirmed, x=testing_death_predict),size=1) +
-  geom_line(color='red'  ,data = death_model_last_30_df,      aes(y=daily_total_confirmed, x=confirm_death_predict),size=1) +
-  geom_line(color='orange'  ,data = death_model_last_30_df,      aes(y=daily_total_confirmed, x=hospital_death_predict),size=1) +
-  geom_line(color='steelblue'  ,data = death_model_last_30_df,      aes(y=daily_total_confirmed, x=icu_death_prediction),size=1) +
+  geom_point(data = death_model_last_30_df, size=1.5,aes(y = daily_total_confirmed,   x = daily_total_deaths),color='blue') +
   
-  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California (last 30 days)",subtitle="Red: Confirmed predicts deaths\nPurple: Testing predicts deaths\nBlack: Confirmed Statewide, summed counties")  
+  geom_line(data = death_model_last_30_df, size=.5, aes(y = daily_total_confirmed,    x = hospital_death_predict, color="Hospital Predict Death" ),  ) +
+  geom_line(data = death_model_last_30_df, size=.5, aes(y = daily_total_confirmed,    x = icu_death_prediction, color="ICU Predict Death" ) ) +
+  geom_line(data = death_model_last_30_df , size=1, aes(y = daily_total_confirmed,  x = confirm_death_predict, color="Death Prediction Based on Confirmed Cases") ) +
+  geom_line(data = death_model_last_30_df, size=1,   aes(y = daily_total_confirmed,   x = testing_death_predict, color="Testing Predict Death" )) +
+  scale_color_manual(values = c(
+    "Death Prediction Based on Confirmed Cases" = "darkred",
+    "Testing Predict Death" = "#E17876",
+    "Hospital Predict Death" = "#2D6A4D",
+    "ICU Predict Death" = "#59411A"
+  ),name=NULL) +
+  labs( title="California Confirmed Cases vs Deaths", 
+        subtitle="Varous Regression Models (Last 30 Days)",
+        y="Total California Confirmed Cases",
+        x="Total California Covid Deaths" 
+  )  
+
+?scale_color_manual
+############################################################
+### Last 30 Days
+### Confirmed Predicting Deaths vs actual Confirmed/Deaths
+############################################################
+ggplot() + theme_light() + 
+  theme( 
+    panel.background = element_rect(fill = "lavenderblush"), 
+    legend.position = c(.3,.95), 
+    legend.direction = "horizontal") +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(data = death_model_last_30_df , size=1, aes(y = daily_total_confirmed, x = confirm_death_predict, color="Death Prediction Based on Confirmed Cases") ) +
+  geom_point(data = death_model_last_30_df, size=1.5,aes(y = daily_total_confirmed, x = daily_total_deaths),color='blue') +
+  scale_color_manual(values = c(
+    "Death Prediction Based on Confirmed Cases" = "darkred"
+  ),name="") +
+  labs( title="California Confirmed Cases vs Deaths", 
+        subtitle="With Regression Prediction (Last 30 Days)",
+        y="Total California Confirmed Cases",
+        x="Total California Covid Deaths" 
+  )  
+
+
+
+### Model Error Rate Comparison
+ggplot() + theme_light() + theme(panel.background = element_rect(fill = "lavenderblush")) +
+  geom_point(data = death_model_post_may_df, size=1.5 ,aes(y = hospitalized_covid_patients, x = date), color="blue" ) +
+  geom_point(data = death_model_post_may_df, size=1.5 ,aes(y = icu_combined, x = date), color="steelblue" ) +
+  geom_line(data = death_model_post_may_df, size=1,   aes(y = confirm_hospital_predict, x = date, color="Confirmed Cases Predicting Hospitalization" )) +
+  geom_line(data = death_model_post_may_df, size=1,   aes(y = confirm_icu_predict, x = date, color="Confirmed Cases Predicting Hospitalization" )) +
+  scale_color_manual(values = c(
+    "Confirmed Predict Death" = "darkred",
+    "Testing Predict Death" = "#E17876"
+#    "Hospital Predict Death" = "#2D6A4D",
+#    "ICU Predict Death" = "#59411A"
+  ),name=NULL) +
+  labs( x="Date", y="Hospitalizations", name="Models:", title="Confirmed Predicting Hospitalizations", subtitle=""  )  
+
+death_model_df$confirm_hospital_predict
+death_model_df$hospitalized_covid_patients
+death_model_df$icu_combined
+
+death_model_df$date
+
+
+
 
 
 ggplot() +
@@ -1860,567 +1972,11 @@ ggplot(data = death_model_df, aes(y = daily_total_deaths, x = date)) + geom_poin
 #labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California (last 30 days)",subtitle="Red: Confirmed predicts deaths\nPurple: Testing predicts deaths\nBlack: Confirmed Statewide, summed counties")  
 scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) 
 
-death_model_df$date <- as.Date(death_model_df$date,"%Y-%m-%d")
 
 
-class(death_model_df$date)
-############################################################################
-#### Model Error rates as a function of California testing effectiveness
-###########################################################################
-ggplot() + 
-  geom_line(data = death_model_df, aes(y = testing_death_mse, x = date), color='darkred') +
-  geom_line(data = death_model_df, aes(y = confirm_death_mse, x = date), color='red') +
-  geom_line(data = death_model_df, aes(y = hospital_death_mse, x = date), color='blue') +
-  geom_line(data = death_model_df, aes(y = icu_death_mse, x = date), color='blue') +
-  labs( x="Date", y="Model Error (MSE)", title="Statewide Model/Testing error rates", subtitle="Lower is Better")  
 
 
-ggplot(data = death_model_df, aes(y = confirm_death_mse, x = date)) + geom_line(color='blue') +
-  labs( x="Date", y="Model Error (MSE)", title="Statewide Model - Rolling 7 day Correlation/Testing error rates", subtitle="Lower is Better")  
 
-ggplot(data = death_model_df, aes(y = hospital_death_predict, x = date)) + geom_line(color='blue') +
-  labs( x="Date", y="Model Error (MSE)", title="Error: Hospitalization Predict Deaths ", subtitle="Lower is Better")  
 
-ggplot(data = death_model_df, aes(y = icu_death_mse, x = date)) + geom_line(color='blue') +
-  labs( x="Date", y="Model Error (MSE)", title="Error: Hospitalization Predict Deaths ", subtitle="Lower is Better")  
 
-
-
-##############################################
-### Plot Death Model over entire Data set
-##############################################
-ggplot(data = death_model_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue', size=1.5) +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  geom_line(color='red'   ,data = death_model_df, aes(y=daily_total_confirmed, x=confirm_predict), size=.75) +
-  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California",subtitle="Red: Confirmed Cases predicting deaths")  
-
-
-### 30 day death model based on daily covid with last offset from the model
-rowCount <- nrow(daily_covid_df)
-startIndex <- rowCount - 30
-
-last_confirmed_offset_index <- death_model_df$confirmed_offset[rowCount]
-
-
-### get offset column
-offset_name <- paste0("offset_",as.character(last_confirmed_offset_index))
-offset_name
-
-#### Get the index value of the offset
-offset_index <- match(offset_name,colnames(offset_daily_df))
-
-### Get last 30 days from daily_covid_df
-last_30_confirmed <- daily_covid_df[startIndex:rowCount,]
-
-### Assign last 30 days of offset values from last entry in death_model
-last_30_confirmed$offset_confirmed <- offset_daily_df[,offset_index][startIndex:rowCount]
-last_30_confirmed$confirm_predict <- death_model_df$confirm_predict[startIndex:rowCount]
-
-last_30_confirmed
-
-#### Correlated Model. Will keep this for reference testing.
-#### This is our preview Model.
-#cor_model_statewide
-#last_30_cor_statewide <- cor_model_statewide[startIndex:rowCount,]
-#last_30_cor_statewide$daily_total_confirmed <- last_30_confirmed$daily_total_confirmed
-#last_30_cor_statewide
-
-ggplot(data = last_30_confirmed, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue', size=2) +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  geom_line(color='red'   ,data = last_30_confirmed, aes(y=daily_total_confirmed, x=confirm_predict), size=.75) +
-  #geom_line(color='green'   ,data = last_30_cor_statewide, aes(y=daily_total_confirmed, x=confirm_deaths), size=.75) +
-  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California (last 30 days)",subtitle=paste0("Red: Confirmed Cases predicting deaths\nCorrelated with cases ",last_confirmed_offset_index," day prior"))
-
-
-
-
-### Build Linear model get the coefficients (hopefully)
-last_30_confirmed_lm <-  lm(daily_total_deaths ~ offset_confirmed, data=last_30_confirmed)
-
-
-### Get the offset length of the dataset
-startIndex<- nrow(last_30_confirmed) - last_confirmed_offset_index
-endIndex <- nrow(last_30_confirmed)
-
-confirmed_futurecast_df <- data.frame(
-    date=as.Date(last_30_confirmed$date) + last_confirmed_offset_index,
-    future_deaths=last_30_confirmed_lm$coefficients[1] + (last_30_confirmed$daily_total_confirmed * last_30_confirmed_lm$coefficients[2])
-)[startIndex:endIndex,]
-
-confirmed_futurecast_df
-
-
-last_confirmed_offset_index
-
-c(1:last_confirmed_offset_index)
-
-confirmed_futurecast_df$days_ahead <- c(1:(last_confirmed_offset_index + 1))
-confirmed_futurecast_df
-
-ggplot(data = confirmed_futurecast_df, aes(y = future_deaths, x = days_ahead)) + geom_point(color='blue') +
-  #scale_x_continuous(data = confirmed_futurecast_df, labels = days_ahead) +
-  #geom_line(color='red'   ,data = last_30_confirmed, aes(y=daily_total_confirmed, x=confirm_predict)) +
-  labs( 
-    y="California Predicted Covid Deaths", 
-    x="Days Ahead", 
-    title=paste0("Modeling deaths Future Deaths in California (next ",last_confirmed_offset_index," days)"),
-    subtitle=paste0(confirmed_futurecast_df$date[1], ":  ", round(confirmed_futurecast_df$future_deaths[1],0)," to\n",confirmed_futurecast_df$date[last_confirmed_offset_index+1],": ",round(confirmed_futurecast_df$future_deaths[last_confirmed_offset_index+1],0))  
-    ) 
-
-ggplot(data = death_model_df, aes(y = confirm_mse, x = date)) + geom_line(color='blue') +
-  #scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) 
-  #geom_line(color='red'   ,data = death_model_df, aes(y=daily_total_confirmed, x=confirm_predict)) +
-  labs( x="Date", y="Model Error", title="Measuring Testing effectiveness by modeling error",subtitle="Lower the error, the more effective testing")  
-
-
-
-############################################################
-### Build model for last 30 days
-############################################################
-### Get the offset for the last date
-### Rolling 30 day Model
-############################################################
-last_offset <- offset_df$offset[nrow(offset_df)]
-tested_last_offset <-offset_lm_15_df$offset[nrow(offset_lm_15_df)]
-
-
-#### Determine the last 30 days index
-rowCount <- nrow(offset_daily_df)
-startIndex <- rowCount - 30
-
-### get last 30 days of of offset_daily_ statewide
-temp_df <- offset_daily_df[startIndex:rowCount,]
-tested_temp_df <- offset_testing_df[startIndex:rowCount,]
-
-last_month_df <- data.frame( date = temp_df$date,  
-                             daily_total_confirmed = temp_df$daily_total_confirmed,
-                             daily_total_deaths = temp_df$daily_total_deaths,
-                             tested = tested_temp_df$tested,
-                             "tested_offset" = temp_df[tested_last_offset],
-                             "offset" = temp_df[last_offset])
-
-colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","tested","tested_offset","offset")
-
-
-confirmed_last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
-
-tested_last_month_lm <-  lm(daily_total_deaths ~ tested_offset, data=last_month_df)
-
-last_month_predict_df <- data.frame( 
-                                      date=last_month_df$date,
-                                     actual_deaths=last_month_df$daily_total_deaths,
-                                     daily_total_deaths = predict(confirmed_last_month_lm, newdata=last_month_df), 
-                                     tested_predict_deaths = predict(tested_last_month_lm, newdata=last_month_df), 
-                                     daily_total_confirmed=last_month_df$daily_total_confirmed,
-                                     cor_model_confirm_deaths=cor_model_statewide_by_county_30_df$confirm_deaths[startIndex:rowCount],
-                                     lm_model_confirm_deaths=lm_model_statewide_by_county_15_df$confirm_deaths[startIndex:rowCount],
-                                     offset=last_month_df$offset
-                                    )
-
-
-ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  #  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  #geom_line(color='black'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  #geom_line(color='purple'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=tested_predict_deaths)) +
-  #geom_line(color='purple'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=cor_model_confirm_deaths)) +
-  geom_line(color='red'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=lm_model_confirm_deaths)) +
-    labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California (last 30 days)",subtitle="Red: Confirmed predicts deaths\nPurple: Testing predicts deaths\nBlack: Confirmed Statewide, summed counties")  
-
-last_month_predict_df$tested_predict_deaths
-############################################################
-### Rolling 7 day Model
-############################################################
-last_offset <- offset_lm_5_df$offset[nrow(offset_lm_7_df)]
-
-#### Determine the last 30 days index
-rowCount <- nrow(offset_daily_df)
-startIndex <- rowCount - 30
-
-### get last 30 days of of offset_daily_ statewide
-temp_df <- offset_daily_df[startIndex:rowCount,]
-
-last_month_df <- data.frame( date = temp_df$date,  
-                             daily_total_confirmed = temp_df$daily_total_confirmed,
-                             daily_total_deaths = temp_df$daily_total_deaths,
-                             "offset" = temp_df[last_offset])
-
-colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
-
-
-last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
-
-
-
-last_month_predict_df <- data.frame( 
-  date=last_month_df$date,
-  actual_deaths=last_month_df$daily_total_deaths,
-  daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
-  daily_total_confirmed=last_month_df$daily_total_confirmed,
-  offset=last_month_df$offset
-)
-
-ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  #  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  geom_line(color='red'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Statewide (last 30 days)",subtitle=paste0("Rolling 7 day model - Correlation Confirmed: ",last_offset," days") ) 
-
-############################################################
-### Rolling 15 day Model
-############################################################
-last_offset <- offset_lm_15_df$offset[nrow(offset_lm_15_df)]
-last_offset
-
-offset_lm_15_df
-
-
-#### Determine the last 30 days index
-rowCount <- nrow(offset_daily_df)
-startIndex <- rowCount - 30
-
-### get last 30 days of of offset_daily_ statewide
-temp_df <- offset_daily_df[startIndex:rowCount,]
-
-last_month_df <- data.frame( date = temp_df$date,  
-                             daily_total_confirmed = temp_df$daily_total_confirmed,
-                             daily_total_deaths = temp_df$daily_total_deaths,
-                             "offset" = temp_df[last_offset])
-
-colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
-
-
-last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
-
-
-
-last_month_predict_df <- data.frame( 
-  date=last_month_df$date,
-  actual_deaths=last_month_df$daily_total_deaths,
-  daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
-  daily_total_confirmed=last_month_df$daily_total_confirmed,
-  offset=last_month_df$offset
-)
-
-ggplot(data = last_month_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  #  geom_line(color='blue'  ,data = june_CD_base_predict_df,      aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  geom_line(color='red'   ,data = last_month_predict_df, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Statewide (last 30 days)",subtitle=paste0("Rolling 15 day model - Correlation Confirmed: ",last_offset," days") ) 
-
-intercept <- last_month_lm$coefficients[1]
-coefficients <- last_month_lm$coefficients[2]
-intercept
-coefficients
-
-last_month_predict_df
-
-#let's look at errors
-last_month_residuals <- (sum(last_month_predict_df$actual_deaths)^2) - (sum(last_month_predict_df$daily_total_deaths^2))
-
-error_rate <- 1- last_month_residuals / sum(last_month_predict_df$actual_deaths)^2
-error_rate
-
-last_row <- offset_daily_df[nrow(offset_daily_df),]
-
-
-### Project ahead by offset
-
-### Validate offset model
-
-validate_offset_df <- offset_df
-
-offset_daily_df <- cbind(validate_offset_df, daily_covid_df$daily_total_deaths)
-offset_daily_df
-
-
-last_row
-last_offset
-
-
-#########################################
-### Get last offset worth of records
-### For Future predictions
-######################################
-
-### Take offset value an conver to int
-last_offset_index <- as.numeric(gsub("offset_","",last_offset))
-
-
-startIndex <- nrow(daily_covid_df) - last_offset_index
-
-futurecast_df <- daily_covid_df[startIndex:nrow(daily_covid_df),]
-
-futurecast_df
-
-last_month_predict_df
-
-summary(last_month_lm)[4]
-
-str(last_month_lm)
-last_month_lm$offset
-
-offset_df
-
-#intercept <- last_month_lm$coefficients[1]
-#coefficients <- last_month_lm$coefficients[2]
-#intercept
-#coefficients
-
-#last_month_lm$coefficients
-
-#last_offset_index
-
-
-predict_col = (last_month_predict_df$daily_total_confirmed *coefficients) + intercept
-
-predict_low = predict_col - (predict_col * (error_rate / 2))
-predict_high = predict_col + (predict_col * (error_rate / 2))
-
-data.frame(date=last_month_predict_df$date,
-           death=last_month_predict_df$actual_deaths, 
-           confirmed=last_month_predict_df$daily_total_confirmed,
-           offset=last_month_predict_df$offset,
-           future_date=as.Date(last_month_predict_df$date) + last_offset_index,
-           predict_low=predict_low,
-           predict= predict_col,
-           predict_high=predict_high)
-
-
-print(paste0("Confirmed Correlates"))
-
-
-
-
-
-sum(lm_model_statewide_by_county_15_df$confirm_mse)
-sum(cor_model_statewide_by_county_30_df$confirm_mse)
-
-
-offset_lm_30_df
-sum(offset_lm_30_df$mse)
-sum(offset_df$mse)
-
-max(offset_df$offset_index)
-  
-scale_value_7 <- max(offset_lm_7_df$offset_index)/max(offset_lm_7_df$mse)
-scale_value_15 <- max(offset_lm_15_df$offset_index)/max(offset_lm_15_df$mse)
-scale_value_30 <- max(offset_lm_30_df$offset_index)/max(offset_lm_30_df$mse)
-
-ggplot(data = offset_lm_7_df, aes(y = offset_index, x = date)) + geom_line(color='blue') +
-  geom_line(color='blue', aes(y= mse*scale_value_7, x=date)) +
-  geom_line(color='red', data=offset_lm_15_df, aes(y = offset_index, x = date)) +
-  geom_line(color='red', data=offset_lm_15_df, aes(y= mse*scale_value_15, x=date)) +
-  geom_line(color='green', data=offset_lm_30_df, aes(y = offset_index, x = date)) +
-  geom_line(color='green', data=offset_lm_30_df, aes(y= mse*scale_value_30, x=date)) +
-  labs( x="Date", y="Days prior", title="Correlating confirmed cases with deaths", subtitle="Deaths correlated confirmed days prior")  
-  
-
-geom_line(color='red', aes(data=offset_lm_15_df, y= mse*scale_value_15, x=date)) +
-  geom_line(color='red', aes(y= mse*scale_value_15, x=date)) +
-  geom_line(color='purple', aes(y= mse*scale_value_30, x=date)) +
-
-cor(offset_lm_7_df$offset_index,offset_lm_7_df$mse)  
-
-length(offset_lm_7_df$offset_index)
-length(offset_lm_7_df$mse)
-
-cor(offset_lm_7_df$offset_index,offset_lm_7_df$mse)
-cor(offset_lm_15_df$offset_index,offset_lm_15_df$mse)
-cor(offset_lm_30_df$offset_index,offset_lm_30_df$mse)
-
-
-ca_total_population / 100000
-
-daily_covid_df$daily_total_deaths / (ca_total_population / 100000)
-kern_population <- ca_population_df$population[which(ca_population_df$county=="kern")]
-
-############################################################
-### County Level Work
-############################################################
-kern_hospital_df <- ca_hospital_df[which(ca_hospital_df$county=="kern"),]
-kern_confirmed_df <- ca_covid_df[which(ca_covid_df$county=="kern"),]
-kern_confirmed_df$totalcountdeaths / county_pop_100k("kern")
-
-#Min Beds
-min(kern_hospital_df$all_hospital_beds[which(kern_hospital_df$all_hospital_beds > 0)] / county_pop_100k("kern"))
-
-#Max Beds
-max(kern_hospital_df$all_hospital_beds[which(kern_hospital_df$all_hospital_beds > 0)] / county_pop_100k("kern"))
-
-
-kern_hospital_df
-
-
-
-
-
-
-############################################################
-### build Alameda confirmed offset columns - 
-############################################################
-#alameda_df <- buildCounties_df(ca_covid_df,c("alameda"))
-#alameda_offset_daily_df <- build_offset_columns(alameda_df,"daily_total_confirmed",8:30)
-
-#alameda_offset_daily_df
-
-#alameda_last_30_df <- build_last_30_df(alameda_offset_daily_df)
-
-#alameda_predict_df <- build_model_last_30days(alameda_last_30_df)
-#alameda_predict_df
-#df_for_plot <- alameda_last_30_df
-#predict_df_for_plot <- alameda_predict_df
-
-#ggplot(data = df_for_plot, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue') +
-#  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-#  geom_line(color='red'   ,data = predict_df_for_plot, aes(y=daily_total_confirmed, x=daily_total_deaths)) +
-#  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Alameda (last 30 days)")  
-
-
-### Split counties into separate groups counties > 2% and less than
-#counties_by_size_index <- order(ca_population_df$population,decreasing = TRUE)
-#counties_biggest_index <- counties_by_size_index[1:12] 
-#counties_smallest_index <-counties_by_size_index[13:length(counties_by_size_index)] 
-
-### Get Names of Biggest counties by population
-#counties_biggest_names <- sapply(counties_biggest_index, function(x){
-#  return(ca_population_df$county[x])
-#},simplify = "array")
-#counties_biggest_names
-
-### Get Names of Smallest counties by population
-#counties_smallest_names <- sapply(counties_smallest_index, function(x){
-#  return(ca_population_df$county[x])
-#},simplify = "array")
-#counties_smallest_names
-
-##########################################
-### These functions May be obsolete
-##########################################
-
-### Build Counties likely replaced with expensive models
-buildCounties_df <- function(input_df,input_names){
-  #### Build a data frame of counties listed in input_names. Multiple counties will be summed
-  date <- unique(input_df$date)
-  
-  daily_total_confirmed <- sapply(date,function(x){
-    ### Build data frame for each date
-    this_df <- (input_df [which(input_df$date == x),])
-    
-    temp_array <- sapply(input_names, function(x){
-      
-      return(this_df[which(this_df$county ==x), ]$totalcountconfirmed)
-    },simplify="array")
-    
-    ### Sum confirmed for daily total
-    return(sum(temp_array))
-  },simplify="array")
-  
-  daily_total_deaths <- sapply(date,function(x){
-    ### Build data frame for each date
-    this_df <- (input_df [which(input_df$date == x),])
-    
-    temp_array <- sapply(input_names, function(x){
-      
-      return(this_df[which(this_df$county ==x), ]$totalcountdeaths)
-    },simplify="array")
-    
-    ### Sum confirmed for daily total
-    return(sum(temp_array))
-  },simplify="array")
-  
-  
-  return(data.frame(date,daily_total_confirmed,daily_total_deaths))
-  
-}### END buildCounties
-build_last_30_df <- function(input_df){
-  ### Return the last 30 day of a DF
-  #### Determine the last 30 days index
-  rowCount <- nrow(input_df)
-  startIndex <- rowCount - 30
-  
-  ### get last 30 days of of offset_daily_ statewide
-  return(input_df[startIndex:rowCount,])
-  
-  
-}#///END build_last_30_df
-build_model_last_30days <- function(input_df) {
-  ############################################################
-  ### Build model for last 30 days
-  ############################################################
-  
-  #### Determine the last 30 days index
-  rowCount <- nrow(input_df)
-  startIndex <- rowCount - 30
-  
-  ### get last 30 days of of offset_daily_ statewide
-  temp_df <- input_df[startIndex:rowCount,]
-  
-  last_month_df <- data.frame( date = temp_df$date,  
-                               daily_total_confirmed = temp_df$daily_total_confirmed,
-                               daily_total_deaths = temp_df$daily_total_deaths,
-                               "offset" = temp_df[last_offset])
-  
-  colnames(last_month_df) <- c("date","daily_total_confirmed","daily_total_deaths","offset")
-  
-  
-  last_month_lm <-  lm(daily_total_deaths ~ offset, data=last_month_df)
-  
-  
-  last_month_predict_df <- data.frame( 
-    date=last_month_df$date,
-    actual_deaths=last_month_df$daily_total_deaths,
-    daily_total_deaths = predict(last_month_lm, newdata=last_month_df), 
-    daily_total_confirmed=last_month_df$daily_total_confirmed,
-    offset=last_month_df$offset
-  )
-  
-  
-  return(last_month_predict_df)
-  
-}#//END build_model_last_30days
-
-### Plotting combined graphs with tidyverse
-#https://www.datanovia.com/en/blog/how-to-create-a-ggplot-with-multiple-lines/
-#plot_df <- death_model_df %>%
-#  select(date, daily_total_confirmed, daily_total_deaths, 
-#         confirm_death_predict, 
-#        testing_death_predict,
-#         hospital_death_predict,
-#         icu_death_prediction
-#         ) %>%
-#  gather(key = "variable", value = "value", c(
-#    confirm_death_predict, 
-#    testing_death_predict,
-#    hospital_death_predict,
-#    icu_death_prediction,
-#    -date, -daily_total_deaths, -daily_total_confirmed,
-#  ) )
-
-#plot_df_last_30 <- death_model_last_30 %>%
-#  select(date, daily_total_confirmed, daily_total_deaths, 
-#         confirm_death_predict, 
-#         testing_death_predict,
-#         hospital_death_predict,
-#         icu_death_prediction
-#  ) %>%
-#  gather(key = "variable", value = "value", c(
-#    confirm_death_predict, 
-#    testing_death_predict,
-#    hospital_death_predict,
-#    icu_death_prediction,
-#    -date, -daily_total_deaths, -daily_total_confirmed,
-#  ) )
-
-#ggplot(data = plot_df, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue', size=1) +
-#  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-#  geom_line(data = plot_df, aes(color = variable, linetype = variable),size=.75) + 
-#  scale_color_manual(values = c("darkred", "steelblue","purple","darkgreen")) +
-#  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California ",subtitle=paste0("Red: Confirmed Cases predicting deaths"))
-
-#ggplot(data = plot_df_last_30, aes(y = daily_total_confirmed, x = daily_total_deaths)) + geom_point(color='blue', size=1) +
-#  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-#  geom_line(data = plot_df_last_30, aes(color = variable, linetype = variable),size=.75) + 
-#  scale_color_manual(values = c("darkred", "steelblue","purple","darkgreen")) +
-#  labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California ",subtitle=paste0("Red: Confirmed Cases predicting deaths"))
 
