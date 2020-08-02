@@ -1323,7 +1323,36 @@ rescale_mse <- function(mse,offset){
   
   offset_testing_df <- build_offset_columns(ca_testing_df,"tested",2:30)
 
-    ##############################
+##########################################################################################################
+#### Build Expensive Models to the county level.                                                       ###
+#### Write data to folders                                                                             ###
+#### So only to do this once per data set                                                              ###
+##########################################################################################################
+#### The data for this report has already been processed. I'm keeping these functions here for         ###
+#### Completeness. This is a current an ongoing data set, it is updated daily.                         ###
+##########################################################################################################
+#### Function Input Variables:                                                                         ###
+#### Data Frame: The Data frame containing all the values to model                                     ###
+#### String: folder name to contain the models                                                         ###
+#### String: Dependent Variable Column Name                                                            ###
+#### String: Independent Variable Name                                                                 ###
+#### Integer: Number of prior days to model the dependent variables affect on the independent variable ###
+##########################################################################################################
+  
+  #build_county_models_to_file(ca_combined_df,"confirm_~_deaths","daily_total_confirmed","daily_total_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"confirm_~_hospital","daily_total_confirmed","hospitalized_covid_patients",15)
+  #build_county_models_to_file(ca_combined_df,"confirm_~_icu","daily_total_confirmed","icu_combined",15)
+  #build_county_models_to_file(ca_combined_df,"confirm_~_newdeaths","daily_total_confirmed","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"newconfirm_~_newdeaths","new_confirmed","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"newconfirm_~_hospital","new_confirmed","hospitalized_covid_patients",15)
+  #build_county_models_to_file(ca_combined_df,"newconfirm_~_icu","new_confirmed","icu_combined",15)
+  #build_county_models_to_file(ca_combined_df,"hospital_~_newdeaths","hospitalized_covid_patients","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"icu_~_newdeaths","icu_combined","new_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"hospital_~_icu","hospitalized_covid_patients","icu_combined",15)
+  #build_county_models_to_file(ca_combined_df,"hospital_~_deaths","hospitalized_covid_patients","daily_total_deaths",15)
+  #build_county_models_to_file(ca_combined_df,"icu_~_deaths","icu_combined","daily_total_deaths",15)
+
+  ##############################
   ### Build Statewide Models ###
   #############################################################################
   ### Aggregates expensive county models into statewide California numbers. ###
@@ -1345,8 +1374,6 @@ rescale_mse <- function(mse,offset){
   #### ICU predict death
   icu_predict_deaths_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\icu_~_deaths"))
 
-    ### Correlate offset with MSE. I wonder what else correlates with MSE
-  cor(confirm_predict_death_model_df$predict_offset,confirm_predict_death_model_df$predict_mse)  
   
   ### Confirm Predicting New Deaths is a shit model. Error only increases
   #confirm_predict_newdeaths_model_df   <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_newdeaths"))
@@ -1409,11 +1436,13 @@ rescale_mse <- function(mse,offset){
   ))
 
   
-  #######################################
-  ### Death Model: Add Confirmed ~ Deaths
-  #######################################
+  ###########################################
+  ### Death Model: Add Confirmed ~ Deaths ###
+  #################################################################################################################################
+  ### Coefficients and Intercepts are commented out since i'm not accurately reassembling the values frome the county models.
+  ### This is high on my priority list and is essential to calculating estimated Case Fatatlity, Hospitalization and ICU rates,
+  #################################################################################################################################
   death_model_df$confirm_death_mse         <- confirm_predict_death_model_df$predict_mse
-  death_model_df$confirm_death_mse_rescale <- rescale_mse(confirm_predict_death_model_df$predict_mse,confirm_predict_death_model_df$predict_offset)
   death_model_df$confirm_death_predict     <- confirm_predict_death_model_df$prediction
   death_model_df$confirm_death_offset      <- confirm_predict_death_model_df$predict_offset
   
