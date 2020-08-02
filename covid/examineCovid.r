@@ -976,10 +976,10 @@ build_statewide_model_from_counties <- function(input_folder){
     #######################################################
     loop_county_df[is.na(loop_county_df)] = 0
     
-    print("------------------------")
-    print(county_name)
-    print("------------------------")
-    print(tail(loop_county_df))
+    #print("------------------------")
+    #print(county_name)
+    #print("------------------------")
+    #print(tail(loop_county_df))
     
     
     
@@ -1136,7 +1136,7 @@ build_statewide_model_from_counties <- function(input_folder){
     loop_offset_weight[is.na(loop_offset_weight)] = 0
     
     
-    print(loop_county_df)
+    #print(loop_county_df)
     
     loop_intercept_weight <- loop_county_df$predict_intercept/total_intercept
     loop_intercept_weight[is.na(loop_intercept_weight)] = 0
@@ -1508,17 +1508,6 @@ setwd(workingDir)
   testing_predict_deaths_df <- build_rolling_lm_offset(offset_testing_df,"daily_total_deaths",15)
 
   
-  #########################################################
-  ### Trim up testing to same Data length as other models
-  #########################################################
-  ### Yes, it's ugly but it runs with one command.
-  ### Basically, it's start at the row difference to the nrows in data frame
-  ###############################################################################
-  
-  testing_predict_deaths_df <- testing_predict_deaths_df[
-    (nrow(testing_predict_deaths_df) - nrow(confirm_predict_death_model_df) + 1):
-      nrow(testing_predict_deaths_df),]
-  
   ######################################################################
   ######################################################################
   ######################################################################
@@ -1544,13 +1533,15 @@ setwd(workingDir)
   #######################################
   ### Move Testing into spearate data frame to merge with death model. Testing has a different number of row.
   ### merge() will correct this magically. The Date column is important, it is a reference column to knit the frames together
-  
-  death_model_df <- merge(death_model_df, data.frame(
+  temp_testing_model <- data.frame(
     date=ca_testing_df$date,
     testing_death_mse=testing_predict_deaths_df$mse,
     testing_death_predict=testing_predict_deaths_df$predicted_deaths,
     testing_death_offset=testing_predict_deaths_df$offset_index
-  ))
+  )
+  
+  
+  death_model_df <- merge(death_model_df, temp_testing_model)
 
   
   #######################################
@@ -1635,36 +1626,18 @@ setwd(workingDir)
   death_model_df$icu_newdeaths_offset     <- icu_predict_newdeaths_model_df$predict_offset
   
   
-  ##########################################################################################################
-  ### These are for paper only. These results can be tossed if/when we can properly
-  ### resassemble the offsets and coeefficients from the county model
-  ##########################################################################################################
-  confirm_predict_deaths_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
-  confirm_predict_hospital_df <- build_rolling_lm_offset(offset_daily_df,"hospitalized_covid_patients",15)
-  confirm_predict_icu_df <- build_rolling_lm_offset(offset_daily_df,"icu_combined",15)
-  
-  death_model_state_aggregate_df <- data.frame(
-    date=confirm_predict_deaths_df$date,
-    daily_total_confirmed = offset_daily_df$daily_total_confirmed,
-    actual_deaths = offset_daily_df$daily_total_deaths,
-    confirm_death_predict=confirm_predict_deaths_df$predicted_deaths,
-    confirm_death_mse=confirm_predict_deaths_df$mse,
-    confirm_death_mse_rescale = rescale_mse(confirm_predict_deaths_df$mse,confirm_predict_deaths_df$offset_index),
-    confirm_death_offset=confirm_predict_deaths_df$offset_index,
-    confirm_hospital_predict=confirm_predict_hospital_df$predicted_deaths,
-    confirm_hospital_mse = confirm_predict_hospital_df$mse,
-    confirm_hospital_offset = confirm_predict_hospital_df$offset_index,
-    confirm_icu_predict = confirm_predict_icu_df$predicted_deaths,
-    confirm_icu_mse = confirm_predict_icu_df$mse,
-    confirm_icu_offset = confirm_predict_icu_df$offset_index
-  )
 
   #### Build a separate Death Model Comprising the last 30 days
   death_model_last_30_df <- death_model_df[ (nrow(death_model_df)-30) : nrow(death_model_df),]
   
   #### Build Post May Death Model
   death_model_post_may_df <- death_model_df[ 36 : nrow(death_model_df),]
-  
+
+  #### Write Data Frames to File.
+  #### The Project is to cumbersome to include in an RMD
+  saveRDS(death_model_df, "model_death_model_df.dat")
+  saveRDS(death_model_last_30_df, "model_death_model_last_30_df")
+  saveRDS(death_model_post_may_df, "model_death_model_post_may_df")
   
   
   print("DONE: Code Chunk#2")
@@ -2020,3 +1993,26 @@ scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
 
 
 
+##########################################################################################################
+### These are for paper only. These results can be tossed if/when we can properly
+### resassemble the offsets and coeefficients from the county model
+##########################################################################################################
+#  confirm_predict_deaths_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
+#  confirm_predict_hospital_df <- build_rolling_lm_offset(offset_daily_df,"hospitalized_covid_patients",15)
+#  confirm_predict_icu_df <- build_rolling_lm_offset(offset_daily_df,"icu_combined",15)
+
+#  death_model_state_aggregate_df <- data.frame(
+#    date=confirm_predict_deaths_df$date,
+#    daily_total_confirmed = offset_daily_df$daily_total_confirmed,
+#    actual_deaths = offset_daily_df$daily_total_deaths,
+#    confirm_death_predict=confirm_predict_deaths_df$predicted_deaths,
+#    confirm_death_mse=confirm_predict_deaths_df$mse,
+#    confirm_death_mse_rescale = rescale_mse(confirm_predict_deaths_df$mse,confirm_predict_deaths_df$offset_index),
+#    confirm_death_offset=confirm_predict_deaths_df$offset_index,
+#    confirm_hospital_predict=confirm_predict_hospital_df$predicted_deaths,
+#    confirm_hospital_mse = confirm_predict_hospital_df$mse,
+#    confirm_hospital_offset = confirm_predict_hospital_df$offset_index,
+#    confirm_icu_predict = confirm_predict_icu_df$predicted_deaths,
+#    confirm_icu_mse = confirm_predict_icu_df$mse,
+#    confirm_icu_offset = confirm_predict_icu_df$offset_index
+#  )
