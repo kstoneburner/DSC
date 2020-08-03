@@ -1625,8 +1625,34 @@ setwd(workingDir)
   death_model_df$icu_newdeaths_prediction <- icu_predict_newdeaths_model_df$prediction
   death_model_df$icu_newdeaths_offset     <- icu_predict_newdeaths_model_df$predict_offset
   
-  
 
+  ### Build rolling 7 day average of confirmed Death offset.
+  ### This is to reduce some of the variance in the graph
+  
+#  loop_counter <- 0
+  
+#  death_model_df$confirm_death_offset_7day <- vapply(death_model_df$confirm_death_offset, function(x){
+#    loop_counter <<- loop_counter + 1
+    
+#    if (loop_counter < 8) { return(0)}
+    
+#    temp_vector <- death_model_df$confirm_death_offset[(loop_counter - 7):loop_counter]
+    
+#    return(mean(temp_vector))
+#  },numeric(1))
+  
+#  loop_counter <- 0
+#  death_model_df$hospital_death_offset_7day <- vapply(death_model_df$hospital_death_offset, function(x){
+#    loop_counter <<- loop_counter + 1
+    
+#    if (loop_counter < 8) { return(0)}
+    
+#    temp_vector <- death_model_df$hospital_death_offset[(loop_counter - 7):loop_counter]
+    
+#    return(mean(temp_vector))
+#  },numeric(1))
+
+  
   #### Build a separate Death Model Comprising the last 30 days
   death_model_last_30_df <- death_model_df[ (nrow(death_model_df)-30) : nrow(death_model_df),]
   
@@ -1862,24 +1888,6 @@ ca_covid_df[which(ca_covid_df$county=="los angeles"),]
 #E17876,#6C7A9D,#2D6A4D,#59411A
 ## backgorund= lavenderblush, aliceblue
 
-### Model Error Rate Comparison
-ggplot() + theme_light() + theme(panel.background = element_rect(fill = "lavenderblush")) +
-  geom_line(data = death_model_df, size=1.5 ,aes(y = confirm_death_mse, x = date, color="Confirmed Predict Death") ) +
-  geom_line(data = death_model_df, size=1,   aes(y = testing_death_mse, x = date, color="Testing Predict Death" )) +
-  geom_line(data = death_model_df, size=.5, aes(y = hospital_death_mse, x = date, color="Hospital Predict Death" ),  ) +
-  geom_line(data = death_model_df, size=.5, aes(y = icu_death_mse,      x = date, color="ICU Predict Death" ) ) +
-  scale_color_manual(values = c(
-  "Confirmed Predict Death" = "darkred",
-  "Testing Predict Death" = "#E17876",
-  "Hospital Predict Death" = "#2D6A4D",
-  "ICU Predict Death" = "#59411A"
-  ),name="models") +
-  labs( x="Date", 
-        y="Relative Model Error (MSE)", 
-        name="Models:", 
-        title="Relative Model Error Rates", 
-        subtitle="Combined County Models (Lower is Better)"  )  
-
 ########################################
 ### MSE
 ### Confirmed Predicting Deaths 
@@ -1898,7 +1906,43 @@ ggplot() + theme_light() +
 
 
 
+### Model Error Rate Comparison
+ggplot() + theme_light() + theme(panel.background = element_rect(fill = "lavenderblush")) +
+  geom_line(data = death_model_df, size=1.5 ,aes(y = confirm_death_mse, x = date, color="Confirmed Predict Death") ) +
+  geom_line(data = death_model_df, size=1,   aes(y = testing_death_mse, x = date, color="Testing Predict Death" )) +
+  geom_line(data = death_model_df, size=.5, aes(y = hospital_death_mse, x = date, color="Hospital Predict Death" ),  ) +
+  geom_line(data = death_model_df, size=.5, aes(y = icu_death_mse,      x = date, color="ICU Predict Death" ) ) +
+  scale_color_manual(values = c(
+  "Confirmed Predict Death" = "darkred",
+  "Testing Predict Death" = "#E17876",
+  "Hospital Predict Death" = "#2D6A4D",
+  "ICU Predict Death" = "#59411A"
+  ),name="models") +
+  labs( x="Date", 
+        y="Relative Model Error (MSE)", 
+        name="Models:", 
+        title="Relative Model Error Rates", 
+        subtitle="Combined County Models (Lower is Better)"  )  
 
+
+
+
+ggplot() + theme_light() + 
+  theme( 
+    panel.background = element_rect(fill = "lavenderblush"), 
+    legend.position = c(.3,.95), 
+    legend.direction = "horizontal") +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(data = death_model_df[16:nrow(death_model_df),] , size=1, aes(y = daily_total_confirmed, x = confirm_death_predict, color="Death Prediction Based on Confirmed Cases") ) +
+  geom_point(data = death_model_df[16:nrow(death_model_df),], size=1.5,aes(y = daily_total_confirmed, x = daily_total_deaths),color='blue') +
+  scale_color_manual(values = c(
+    "Death Prediction Based on Confirmed Cases" = "darkred"
+  ),name="") +
+  labs( title="California Confirmed Cases vs Deaths", 
+        subtitle="With Regression Prediction (April 18 - August 1)",
+        y="Total California Confirmed Cases",
+        x="Total California Covid Deaths" 
+  )  
 
 ############################################################
 ### Last 30 Days
@@ -1920,6 +1964,7 @@ ggplot() + theme_light() +
         y="Total California Confirmed Cases",
         x="Total California Covid Deaths" 
   )  
+
 
 
 
@@ -1968,29 +2013,24 @@ ggplot() + theme_light() +
         x=NULL 
   ) 
 
+mean(death_model_last_30_df$tested)
 
 
 
-ggplot() +
-  geom_line(color='blue'       ,data = death_model_df, aes(y = new_deaths,   x = date))+
-  geom_line(color='red'        ,data = death_model_df, aes(y = icu_combined, x = date),size=1) +
-  geom_line(color='steelblue'  ,data = death_model_df, aes(y = hospitalized_covid_patients, x=date),size=1) +
-  geom_line(color='black'  ,data = death_model_df, aes(y = daily_total_deaths, x=date),size=1) +
-  labs( x="Case Count", y="Cases", title="Actual Cases in California",subtitle="Grey: Hospitalization\nRed: ICU\nBlue: new deaths\nBlack Total Deaths")  +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) 
-  
-ggplot(data = death_model_df, aes(y = daily_total_deaths, x = date)) + geom_point(color='blue') +
-  geom_point(color='red'  ,      data = death_model_df,  aes(y=icu_combined, x=date),size=1) +
-  geom_point(color='steelblue'  ,data = death_model_df,  aes(y=hospitalized_covid_patients, x=date),size=1) +
-#labs( x="Total Covid Deaths", y="Total Confirmed Cases", title="Modeling deaths in California (last 30 days)",subtitle="Red: Confirmed predicts deaths\nPurple: Testing predicts deaths\nBlack: Confirmed Statewide, summed counties")  
-scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) 
+### Last Day test positivity rate
+death_model_df[nrow(death_model_df),]$daily_total_confirmed / death_model_df[nrow(death_model_df),]$tested
 
+death_model_df[nrow(death_model_df),]$daily_total_confirmed
+death_model_df[nrow(death_model_df),]$tested
 
+### Total tests last 30 days
+(death_model_last_30_df$tested[nrow(death_model_last_30_df)] - death_model_last_30_df$tested[1])
 
+### monthly Testing as a total percentage of Californians 
+( (death_model_last_30_df$tested[nrow(death_model_last_30_df)] - death_model_last_30_df$tested[1])/nrow(death_model_last_30_df) / ca_pop) * 12
 
-
-
-
+last_day_tested <- format(death_model_df[nrow(death_model_df),]$tested,scientific = FALSE)
+last_day_tested
 
 
 ##########################################################################################################

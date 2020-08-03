@@ -27,7 +27,7 @@ death_model_post_may_df <- readRDS("model_death_model_post_may_df")
 #### Might as well keep it and clean it
 ####################################################################
 ca_risk_factors_df <- read.csv("final_CA_county_population.csv")
-ca_risk_factors_df <- removeCols(ca_risk_factors_df,c('X'))
+
 
 
 #### Build County Population numbers
@@ -46,6 +46,7 @@ last_day_date <- death_model_df[nrow(death_model_df),]$date
 last_day_tested <- death_model_df[nrow(death_model_df),]$tested
 last_day_confirmed_total <- death_model_df[nrow(death_model_df),]$daily_total_confirmed
 last_day_positivity_rate <- round( (last_day_confirmed_total/last_day_tested),4 ) * 100
+data_set_size <- nrow(death_model_df)
 
 
 #    Overall, write a coherent narrative that tells a story with the data as you complete this section.
@@ -68,7 +69,11 @@ There is a general lack of information relating to COVID infection rates. With l
 
 In order to measure effectiveness, we have to measure testing results to the outcomes of Hospitalization, ICU and Death. These outcomes should be reflected in the number of confirmed cases on some earlier day. We expect to see some portion of the population reflected in the outcomes. The outcome percentage varies greatly, just like the disease. It can be measured by generating a linear model where deaths are predicted from the confirmed cases from 2 - 30 days prior. This is accomplished by creating a data frame that contains the actual data on a date (deaths, hospitalization, ICU, and testing), then adding 29 columns which points has the confirmed totals for each prior day. This generates a row that has each confirmed count from the previous 30 days. Each date (with 28 dependent variables) is modeled against the previous 15 days. This period was chosen after extensive trial-and-error and displayed the least variance in error. The linear models have tend to have some difficulty with datasets where the variables are less than 30 particularly as many of the values approach zero. This typifies the data from many of the smaller counties. Models from these low population counties tend to be more error prone, but they have low overall impact on the total model since their percentage of the whole is low, and the algorithm is selecting the best linear model for any given day. 
 
-This methodology works very well at capturing the daily variances since it generates a different model for each day based on the previous 15 days. However, there is alot of variance in the data especially at the State level. California has a population of `r ca_pop` spread across 58 counties very unevenly. For example, 24% of California's population resides in Los Angeles County. Most counties have less than 1% of the total population. There is significant social, economic, and political diversity throughout the state. The COVID-19 response is generally  XXXXXX
+This methodology works very well at capturing the daily variances since it generates a different model for each day based on the previous 15 days. However, there is alot of variance in the data especially at the State level. California has a population of `r ca_pop` spread across 58 counties very unevenly. For example, 24% of California's population resides in Los Angeles County. Most counties have less than 1% of the total population. There is significant social, economic, and political diversity throughout the state. The COVID-19 response is generally handled by county level public health officials. The diversity of these counties is reflected in individual county responses to COVID-19. Which is to say, COVID-19 public health response varies greatly by county. 
+
+The best model results involve modeling each county individually then summing the results for a total statewide picture. From a modeling perspective this gets to be very expensive and generates a lot of models.
+
+`r data_set_size` days to model * 28 previous Confirmed days * 58 counties = `r format(data_set_size * 58 * 28, scientific=FALSE)` total models! That's for each set of variables: Confirmed predict death, confirmed predict hospitalization, confirmed predict icu, plus a variety of other combinations. It turned out to be alot of models.
 
 ### Model Error Rates
 The mean standard error in the models varied greatly. The model predicting deaths from prior confirmed cases was very accurate and generated a very low total error. Testing was slightly worse. Surprisingly, confirmed cases were not very good at predicting hospitalization and ICU. 
