@@ -1293,6 +1293,7 @@ setwd(workingDir)
                                  pop_100k = round(ca_risk_factors_df$population/100000,2)
                                  )
   
+  saveRDS(ca_population_df,"ca_population.dat")
   ########################################################
   ### Statewide population
   ########################################################
@@ -1897,13 +1898,33 @@ ggplot() + theme_light() +
         title="Relative California COVID Testing effectiveness", subtitle="Model error as a proxy for effectiveness\n(Lower is Better)"  )  
 
 
+############################################################
+### Regression: Whole data Set
+### Confirmed Predicting Deaths vs actual Confirmed/Deaths
+############################################################
 
-
+ggplot() + theme_light() + 
+  theme( 
+    panel.background = element_rect(fill = "lavenderblush"), 
+    legend.position = c(.3,.95), 
+    legend.direction = "horizontal") +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  geom_line(data = death_model_df[16:nrow(death_model_df),] , size=1, aes(y = daily_total_confirmed, x = confirm_death_predict, color="Death Prediction Based on Confirmed Cases") ) +
+  geom_point(data = death_model_df[16:nrow(death_model_df),], size=1.5,aes(y = daily_total_confirmed, x = daily_total_deaths),color='blue') +
+  scale_color_manual(values = c(
+    "Death Prediction Based on Confirmed Cases" = "darkred"
+  ),name="") +
+  labs( title="California Confirmed Cases vs Deaths", 
+        subtitle="With Regression Prediction (entire pandemic)",
+        y="Total California Confirmed Cases",
+        x="Total California Covid Deaths" 
+  )  
 
 ############################################################
 ### Last 30 Days
 ### Confirmed Predicting Deaths vs actual Confirmed/Deaths
 ############################################################
+
 ggplot() + theme_light() + 
   theme( 
     panel.background = element_rect(fill = "lavenderblush"), 
