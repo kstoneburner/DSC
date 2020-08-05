@@ -1907,7 +1907,12 @@ ggplot() + theme_light() +
 
 
 ### Model Error Rate Comparison
-ggplot() + theme_light() + theme(panel.background = element_rect(fill = "lavenderblush")) +
+ggplot() + theme_light() + 
+  theme(
+    panel.background = element_rect(fill = "lavenderblush"),
+    legend.position = c(.865,.925), 
+    legend.direction = "vertical") +
+  
   geom_line(data = death_model_df, size=1.5 ,aes(y = confirm_death_mse, x = date, color="Confirmed Predict Death") ) +
   geom_line(data = death_model_df, size=1,   aes(y = testing_death_mse, x = date, color="Testing Predict Death" )) +
   geom_line(data = death_model_df, size=.5, aes(y = hospital_death_mse, x = date, color="Hospital Predict Death" ),  ) +
