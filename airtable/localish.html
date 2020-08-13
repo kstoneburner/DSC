@@ -571,6 +571,12 @@ function buildShowTR(input_time){
 	return newTR
 }
 
+function theBigRowCopy(){
+
+	//*** Copies select rows to other rows.
+
+}//*** END theBigRowCopy
+
 
 function buildPage(){
 
@@ -677,13 +683,114 @@ function buildPage(){
 
 	document.body.appendChild(mainTable);
 
-	var copyPopulateButton = document.createElement("button");
-	copyPopulateButton.innerHTML = "Copy Populate: 11am to 2:30am"
-	copyPopulateButton
-	document.body.appendChild(copyPopulateButton);
+	var copyPopulateButton11am = document.createElement("button");
+	copyPopulateButton11am.innerHTML = "Populate: 11am"
+	copyPopulateButton11am.addEventListener('mouseover',function(event){
 
+		styleRows({targetIDs : ["11:00a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   })
+
+		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+			       attribute : "background",
+			       value : "green"
+			   })
+
+		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   })
+
+			    //targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"],
+
+	})
+	copyPopulateButton11am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["11:00a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+			       attribute : "background",
+			       value : ""
+			   })
+
+		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+
+	})
+	
+
+	var copyPopulateButton1130am = document.createElement("button");
+	copyPopulateButton1130am.innerHTML = "Populate: 11:30am"
+	copyPopulateButton1130am.addEventListener('mouseover',function(event){
+
+		styleRows({targetIDs : ["11:30a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   })
+
+		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+			       attribute : "background",
+			       value : "green"
+			   })
+
+		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   })
+
+			    //targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"],
+
+	})
+	copyPopulateButton1130am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["11:30a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+			       attribute : "background",
+			       value : ""
+			   })
+
+		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+
+	})
+	
+
+	document.body.appendChild(copyPopulateButton11am);
+	document.body.appendChild(copyPopulateButton1130am);
+
+/*
+11am -> 6am -> 9am -> 12pm -> 2pm -> 7pm -> 3am
+11:30  -> 630 -> 930 1230p -> 230 730 330a
+12am -> 7am, 10am 1pm, 3pm 6pm, 8pm, 10p
+1230 -> 730a 1030a 130p 330p 630 1030
+1:00am -> 8am 4pm 9pm 
+1:30am -> 830am 1130 430 
+2:00am -> 5am 5pm
+2:30am -> 530am 530pm 
+*/
 
 }//*** END Build Page
+
+function styleRows(inputOBJ){
+	targetIDs = inputOBJ.targetIDs;
+
+	for (var x in targetIDs){
+
+		targetElem = getElem(targetIDs[x])
+
+		targetElem.style[inputOBJ.attribute] = inputOBJ.value
+
+	}//*** END each elem
+
+}
 
 function update_mainTable_row(inputIndex,inputValues){
 
@@ -855,7 +962,7 @@ function convert_table_to_OBJ(){
 	}//*** END each child Node
 
 
-return JSON.stringify(mainTable_export);
+	return JSON.stringify(mainTable_export);
 
 
 
