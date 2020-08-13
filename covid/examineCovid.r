@@ -946,7 +946,7 @@ build_statewide_model_from_counties <- function(input_folder){
   ### Get the Index File
   ### Because we make it easy!
   #######################################
-  file_index <- readRDS(paste0(input_folder,"\\1_index.dat"))
+  file_index <- readRDS(paste0(workingDir,input_folder,"\\1_index.dat"))
   
   
   colnames(file_index) <- c("county","filenames")
@@ -958,7 +958,7 @@ build_statewide_model_from_counties <- function(input_folder){
   #### Turns out the folder paths only on the machine that 
   #### did the modeling....Ooops.
   ############################################################
-  filenames <- paste0(input_folder,"\\",file_index$county,".dat")
+  filenames <- paste0(workingDir,input_folder,"\\",file_index$county,".dat")
   
   for (county_filename_counter in 1:length(filenames)){
     
@@ -1200,6 +1200,90 @@ build_statewide_model_from_counties <- function(input_folder){
   
   
 }#//END build_statewide_model_from_counties
+
+
+
+get_county_models <- function(input_folder){
+
+  #######################################
+  ### Get the Index File
+  ### Because we make it easy!
+  #######################################
+  file_index <- readRDS(paste0(workingDir,input_folder,"\\1_index.dat"))
+  
+  
+  colnames(file_index) <- c("county","filenames")
+  
+  output_list <- list()
+  
+  ############################################################
+  #### Build filenames from the county names in file_index
+  #### Turns out the folder paths only on the machine that 
+  #### did the modeling....Ooops.
+  ############################################################
+  filenames <- paste0(workingDir,input_folder,"\\",file_index$county,".dat")
+  
+  for (county_filename_counter in 1:length(filenames)){
+    
+    
+    
+    county_filename <- filenames[ county_filename_counter]
+    county_name <- file_index$county[ county_filename_counter]
+    
+    loop_county_df <- readRDS(county_filename)  
+    
+    loop_county_df[is.na(loop_county_df)] = 0
+    
+    loop_list_countyname <- file_index$county[county_filename_counter]
+    
+    output_list[[loop_list_countyname]] <- loop_county_df
+    
+  } #//*** END Each County For Loop
+  
+  return(output_list)
+  
+  
+}#//*** END get_county_models
+
+get_county_models_last_30 <- function(input_folder){
+  
+  #######################################
+  ### Get the Index File
+  ### Because we make it easy!
+  #######################################
+  file_index <- readRDS(paste0(workingDir,input_folder,"\\1_index.dat"))
+  
+  
+  colnames(file_index) <- c("county","filenames")
+  
+  output_list <- list()
+  
+  ############################################################
+  #### Build filenames from the county names in file_index
+  #### Turns out the folder paths only on the machine that 
+  #### did the modeling....Ooops.
+  ############################################################
+  filenames <- paste0(workingDir,input_folder,"\\",file_index$county,".dat")
+  
+  for (county_filename_counter in 1:length(filenames)){
+    
+    county_filename <- filenames[ county_filename_counter]
+    county_name <- file_index$county[ county_filename_counter]
+    
+    loop_county_df <- readRDS(county_filename)  
+    loop_county_df[is.na(loop_county_df)] = 0
+    loop_list_countyname <- file_index$county[county_filename_counter]
+    
+    output_list[[loop_list_countyname]] <- loop_county_df[(nrow(loop_county_df)-30):nrow(loop_county_df),]
+    
+  } #//*** END Each County For Loop
+  
+  return(output_list)
+  
+  
+}#//*** END get_county_models
+
+
 rescale_mse <- function(mse,offset){
   
   ### Scales the MSE to the offset values
@@ -1666,7 +1750,7 @@ setwd(workingDir)
   saveRDS(death_model_post_may_df, "model_death_model_post_may_df")
   
   
-  print("DONE: Code Chunk#2")
+  print("DONE: Code Chunk#3")
 }#//END Code Chunk #3: Build State Models and Death_frame
 
 
@@ -1677,6 +1761,8 @@ setwd(workingDir)
 ####################################################################################
 ####################################################################################
 ####################################################################################
+
+
 
 
 {
@@ -1696,72 +1782,58 @@ setwd(workingDir)
 #                                      round(death_model_last_row$confirm_death_offset,2)," days +/- < 1%" )
 #print(death_statement_confirmed_1)
 #print(death_statement_confirmed_2)
-### Build state level models to see if less granularity helps
-offset_daily_df
 
-#offset_lm_15_df <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
-confirm_predict_death_model_lm_df  <- build_rolling_lm_offset(offset_daily_df,"daily_total_deaths",15)
+confirm_predict_death_county_list <- get_county_models_last_30("\\models\\confirm_~_deaths")
 
-confirm_predict_hospital_model_lm_df <- build_rolling_lm_offset(offset_daily_df,"hospitalized_covid_patients",15)
+str(confirm_predict_death_county_list)
 
-data.frame(
+county_names <- names(confirm_predict_death_county_list)
+
+
+
+for (loop_counter in 1:length(county_names)){
   
-  actual=daily_combined_df$hospitalized_covid_patients,
-  predict=confirm_predict_hospital_model_lm_df$predicted_deaths
-)
+  if (loop_counter == 1) {
+    total_error_v <- c()
+    min_error_v <- c()
+    max_error_v <-c()
+    new_cases <- c()
+    total_cases <- c()
+  }
+  
+  
+  loop_county_name <- county_names[loop_counter]
+  total_error_v <- append(total_error_v,sum(confirm_predict_death_county_list[[loop_county_name]]$predict_mse))
+  min_error_v <- append(min_error_v,min(confirm_predict_death_county_list[[loop_county_name]]$predict_mse))
+  max_error_v <- append(max_error_v,max(confirm_predict_death_county_list[[loop_county_name]]$predict_mse))
+  new_cases <- append(new_cases, confirm_predict_death_county_list[[loop_county_name]]$dependent[30] - confirm_predict_death_county_list[[loop_county_name]]$dependent[1] )
+  total_cases<- append(total_cases, confirm_predict_death_county_list[[loop_county_name]]$dependent[30] )
+  if (loop_counter == length(county_names)) {
+    
 
-1- sum(confirm_predict_hospital_model_lm_df$predicted_deaths) / sum(daily_combined_df$hospitalized_covid_patients)
+    
+    total_error_by_county_last_30 = data.frame(
+      county = county_names,
+      new_cases = new_cases,
+      percent_new_cases = round( (new_cases / total_cases) * 100,2),
+      range_error = max_error_v - min_error_v,
+      total_error = total_error_v
+    )    
+  }#//*** END last loop element
+  
+}#//*** END build county error Loop
+
+total_error_by_county_last_30
+mean_percent_new <- mean(total_error_by_county_last_30$percent_new_cases)
+sorted_total_error_by_county_last_30 <- total_error_by_county_last_30[which(percent_new_cases > mean_percent_new),]
+sorted_total_error_by_county_last_30 <- sorted_total_error_by_county_last_30[with(sorted_total_error_by_county_last_30, order(percent_new_cases ,decreasing = TRUE)), ]
+sorted_total_error_by_county_last_30
 
 
-data.frame(
-  actual_hospital=death_model_df$hospitalized_covid_patients, 
-  predict_hospital=newconfirm_predict_hospital_model_df$prediction)
-
-### New Confirmed Cases Predicting Hospitalization has 21% error
-1 / sum( ( (death_model_df$hospitalized_covid_patients - newconfirm_predict_hospital_model_df$prediction)^2 /  (death_model_df$hospitalized_covid_patients^2)) [-1:-23])
-
-newconfirm_predict_icu_model_df
-
-data.frame( new_confirmed=death_model_df$new_confimed, actual_icu=death_model_df$icu_combined,newconfirm_predict_icu=newconfirm_predict_icu_model_df$prediction,newconfirm_predict_icu_model_df$predict_offset,newconfirm_predict_icu_model_df$predict_coefficient )
-
-
-1 / sum( ( (death_model_df$icu_combined - newconfirm_predict_icu_model_df$prediction)^2 /  (death_model_df$icu_combined^2)) [-1:-23])
-
-tail( 
-  data.frame(confirm=death_model_df$daily_total_confirmed, 
-           deaths=death_model_df$daily_total_deaths,
-           p_death=death_model_df$confirm_death_predict,
-           o_death=death_model_df$confirm_death_offset,
-           tested=death_model_df$tested,
-           o_tested=death_model_df$testing_death_offset
-           )
-)
-sum(newconfirm_predict_hospital_model_df$predict_mse)
-
-sum(icu_predict_newdeaths_model_df$predict_mse)
-
-sum(confirm_predict_newdeaths_model_df$predict_mse)
-
-sum(death_model_df$icu_death_mse)
-sum(death_model_df$icu_newdeaths_mse)
-
-data.frame(
-  tot_deaths=death_model_df$daily_total_deaths,
-  #new_deaths=death_model_df$new_deaths,
-  testing=death_model_df$testing_death_predict,
-  confirm=death_model_df$confirm_death_predict,
-  hospital=death_model_df$hospital_death_predict,
-  icu=death_model_df$icu_death_prediction
-)
-
-data.frame(
-  #tot_deaths=death_model_df$daily_total_deaths,
-  #new_deaths=death_model_df$new_confimed,
-  testing=death_model_df$testing_death_mse,
-  confirm=death_model_df$confirm_death_mse,
-  hospital=death_model_df$hospital_death_mse,
-  icu=death_model_df$icu_death_mse
-)
+kern_df <- confirm_predict_death_county_list[["kern"]]
+kern_df
+mean( kern_df$predict_coefficient )
+mean(kern_df$predict_intercept )
 
 #### The best predictor of death is the total number of confirmed
 #### testing has 3x more error, and is still fairly applicable
@@ -1888,23 +1960,6 @@ ca_covid_df[which(ca_covid_df$county=="los angeles"),]
 #E17876,#6C7A9D,#2D6A4D,#59411A
 ## backgorund= lavenderblush, aliceblue
 
-########################################
-### MSE
-### Confirmed Predicting Deaths 
-########################################
-ggplot() + theme_light() + 
-  theme(
-    panel.background = element_rect(fill = "lavenderblush"),
-    legend.position = c(.79,.94), 
-    legend.direction = "vertical") +
-  geom_line(data = death_model_df ,aes(y = confirm_death_mse, x = date, color="Confirmed Cases Predicting Death") ) +
-  scale_color_manual(values = c(
-    "Confirmed Cases Predicting Death" = "darkred"
-  ),name="Model") +
-  labs( x="Date", y="Model Error (MSE)", name="", 
-        title="Relative California COVID Testing effectiveness", subtitle="Model error as a proxy for effectiveness\n(Lower is Better)"  )  
-
-
 
 ### Model Error Rate Comparison
 ggplot() + theme_light() + 
@@ -1939,7 +1994,7 @@ ggplot() + theme_light() +
     legend.direction = "horizontal") +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
   geom_line(data = death_model_df[16:nrow(death_model_df),] , size=1, aes(y = daily_total_confirmed, x = confirm_death_predict, color="Death Prediction Based on Confirmed Cases") ) +
-  geom_point(data = death_model_df[16:nrow(death_model_df),], size=1.5,aes(y = daily_total_confirmed, x = daily_total_deaths),color='blue') +
+  geom_point(data = death_model_df[16:nrow(death_model_df),], size=1,aes(y = daily_total_confirmed, x = daily_total_deaths),color='blue') +
   scale_color_manual(values = c(
     "Death Prediction Based on Confirmed Cases" = "darkred"
   ),name="") +
@@ -1998,8 +2053,6 @@ ggplot() + theme_light() +
   )  
 
 
-mean(death_model_post_may_df$confirm_death_offset)
-mean(death_model_post_may_df$confirm_hospital_offset)
 
 ggplot() + theme_light() + 
   theme( 
@@ -2018,7 +2071,42 @@ ggplot() + theme_light() +
         x=NULL 
   ) 
 
+
+ggplot() + theme_light() + 
+  theme( 
+    panel.background = element_rect(fill = "lavenderblush"),
+    legend.position = c(.15,.15), 
+    legend.direction = "vertical") +
+  geom_line(data = death_model_last_30_df, size=.5,aes(y = confirm_death_offset,   x = date,color='Days: Confirmed to Death')) +
+  geom_point(data = death_model_last_30_df, size=1,aes(y = confirm_death_offset,   x = date,color='Days: Confirmed to Death')) +
+  #geom_line(data = death_model_post_may_df, size=.5,aes(y = confirm_hospital_offset,   x = date,color='Days: Confirmed to Hospitalization')) +
+  scale_color_manual(values = c(
+    "Days: Confirmed to Death" = "darkred",
+    "Days: Confirmed to Hospitalization" = "#2D6A4D"
+  ),name=NULL) +
+  labs( title="Correlated Days between Confirmed Cases and Death", 
+        subtitle=NULL,
+        y="Correlated Days with outcome",
+        x=NULL 
+  ) 
+
 mean(death_model_last_30_df$tested)
+
+########################################
+### MSE
+### Confirmed Predicting Deaths 
+########################################
+ggplot() + theme_light() + 
+  theme(
+    panel.background = element_rect(fill = "lavenderblush"),
+    legend.position = c(.79,.94), 
+    legend.direction = "vertical") +
+  geom_line(data = death_model_df ,aes(y = confirm_death_mse, x = date, color="Confirmed Cases Predicting Death") ) +
+  scale_color_manual(values = c(
+    "Confirmed Cases Predicting Death" = "darkred"
+  ),name="Model") +
+  labs( x="Date", y="Model Error (MSE)", name="", 
+        title="Relative California COVID Testing effectiveness", subtitle="Model error as a proxy for effectiveness\n(Lower is Better)"  )  
 
 
 
