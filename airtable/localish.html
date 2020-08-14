@@ -103,6 +103,7 @@ function readText(){
 	cl("Let's get JSON LOADED ")
 	var input = document.createElement('input');
 	input.type = 'file';
+	
 
 	input.onchange = e => { 
 	   // getting a hold of the file reference
@@ -257,9 +258,11 @@ function buildShowTD(){
 
 	series.className = firstKey;
 	
+
 	var episodes = document.createElement("select");
 	episodes.id="episodes";
 	episodes.className = firstKey;
+	
 	
 	var thisSeries = m.series[firstKey]
 		
@@ -338,16 +341,17 @@ function autobuild_mf_row(inputOBJ){
 
 	
 	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
-	for (x=0;x<mainTable.children.length - 1;x++){
+	//for (x=0;x<mainTable.children.length - 1;x++){
 
-		if (parent == mainTable.children[x]) {
+		//if (parent == mainTable.children[x]) {
 			//*** Parent Found, x is RowIndex.
 			//*** Let's Update!!!
-			update_mainTable_row(x,thisRowList)
-			break;		
-		}
 
-	}//*** END maintable Row Loop
+			update_mainTable_row(parent.id,thisRowList)
+			//break;		
+		//}
+
+	//}//*** END maintable Row Loop
 
 
 
@@ -438,16 +442,16 @@ function autobuild_tu_thu_row(inputOBJ){
 
 	
 	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
-	for (x=0;x<mainTable.children.length - 1;x++){
+	//for (x=0;x<mainTable.children.length - 1;x++){
 
-		if (parent == mainTable.children[x]) {
+	//	if (parent == mainTable.children[x]) {
 			//*** Parent Found, x is RowIndex.
 			//*** Let's Update!!!
-			update_mainTable_row(x,thisRowList)
-			break;		
-		}
+			update_mainTable_row(parent.id,thisRowList)
+		//	break;		
+	//	}
 
-	}//*** END maintable Row Loop
+	//}//*** END maintable Row Loop
 
 	return
 
@@ -571,14 +575,60 @@ function buildShowTR(input_time){
 	return newTR
 }
 
-function theBigRowCopy(){
+function copyRows(inputOBJ){
+
+	//*** Build Row based on start series
+	var thisRowList = [];
+
 
 	//*** Copies select rows to other rows.
+	sourceRow = getElem(inputOBJ["source"]);
+
+	targets = inputOBJ["targets"];
+
+	//*** Loop through Source Row and build RowList of Values
+	for (sourceCounter in sourceRow.children) {
+
+
+		if (sourceCounter > 0  && sourceCounter < 8) {
+			var sourceSeries = sourceRow.children[sourceCounter].children[0].value;
+			var sourceEpisode = sourceRow.children[sourceCounter].children[1].value;
+
+			cl(sourceSeries + ":" + sourceEpisode);
+			var showOBJ = {
+				series : sourceSeries,
+				episode : sourceEpisode
+			}
+			thisRowList.push(showOBJ);
+	
+		}//*** End Build each Show
+
+	}//*** End Build rowList
+
+	//*** Update the Targets with the row values
+	//*** Need to find the children index value of the parent node.
+	parent = sourceRow.parentNode;
+
+	for (targetCounter in targets){
+
+				update_mainTable_row(targets[targetCounter],thisRowList);
+
+	}//*** END each target elem loop
+
+
+
 
 }//*** END theBigRowCopy
 
 
 function buildPage(){
+
+	//*** Show/Hide Main Buttons
+	getElem('import_layout').style.display = 'inline'
+	getElem('export_layout').style.display = 'inline'
+	getElem('readText').style.display = 'none'
+
+
 
 	//************************************
 	//*** Create Scheduling Main Table
@@ -672,8 +722,8 @@ function buildPage(){
 	mainTable.appendChild(buildShowTR("10:30p"));
 	mainTable.appendChild(buildShowTR("11:00p"));
 	mainTable.appendChild(buildShowTR("11:30p"));
-	mainTable.appendChild(buildShowTR("12:00p"));
-	mainTable.appendChild(buildShowTR("12:30p"));
+	mainTable.appendChild(buildShowTR("12:00a"));
+	mainTable.appendChild(buildShowTR("12:30a"));
 	mainTable.appendChild(buildShowTR("1:00a"));
 	mainTable.appendChild(buildShowTR("1:30a"));
 	mainTable.appendChild(buildShowTR("2:00a"));
@@ -685,6 +735,9 @@ function buildPage(){
 
 	var copyPopulateButton11am = document.createElement("button");
 	copyPopulateButton11am.innerHTML = "Populate: 11am"
+	copyPopulateButton11am.addEventListener('click',function(event){ 
+		copyRows({"source":"11:00a","targets":["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"]})
+	});
 	copyPopulateButton11am.addEventListener('mouseover',function(event){
 
 		styleRows({targetIDs : ["11:00a"], 
@@ -725,6 +778,9 @@ function buildPage(){
 
 	var copyPopulateButton1130am = document.createElement("button");
 	copyPopulateButton1130am.innerHTML = "Populate: 11:30am"
+	copyPopulateButton1130am.addEventListener('click',function(event){ 
+		copyRows({"source":"11:30a","targets":["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"]})
+	});
 	copyPopulateButton1130am.addEventListener('mouseover',function(event){
 
 		styleRows({targetIDs : ["11:30a"], 
@@ -761,20 +817,283 @@ function buildPage(){
 			   })
 
 	})
+
+	//12am -> 7am, 10am 1pm, 3pm 6pm, 8pm, 10p
+	var copyPopulateButton12am = document.createElement("button");
+	copyPopulateButton12am.innerHTML = "Populate: 12am"
+	copyPopulateButton12am.addEventListener('click',function(event){ 
+		copyRows({"source":"12:00a","targets":["7:00a","10:00a","1:00p", "3:00p", "6:00p", "8:00p","10:00p"]})
+	});
+	copyPopulateButton12am.addEventListener('mouseover',function(event){
+
+		styleRows({targetIDs : ["12:00a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   })
+
+		styleRows({targetIDs : ["7:00a","10:00a","1:00p", "3:00p", "6:00p", "8:00p","10:00p"], 
+			       attribute : "background",
+			       value : "green"
+			   })
+
+		styleRows({targetIDs : ["7:00a","10:00a","1:00p", "3:00p", "6:00p", "8:00p","10:00p"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   })
+
+
+	})
+	copyPopulateButton12am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["12:00a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+		styleRows({targetIDs : ["7:00a","10:00a","1:00p", "3:00p", "6:00p", "8:00p","10:00p"], 
+			       attribute : "background",
+			       value : ""
+			   })
+
+		styleRows({targetIDs : ["7:00a","10:00a","1:00p", "3:00p", "6:00p", "8:00p","10:00p"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+
+	})
+
+	var copyPopulateButton1230am = document.createElement("button");
+	copyPopulateButton1230am.innerHTML = "Populate: 12:30am"
+	copyPopulateButton1230am.addEventListener('click',function(event){ 
+		copyRows({"source":"12:30a","targets":["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"]})
+	});
+	copyPopulateButton1230am.addEventListener('mouseover',function(event){
+
+		styleRows({targetIDs : ["12:30a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   })
+
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+			       attribute : "background",
+			       value : "green"
+			   })
+
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   })
+
+			    //targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"],
+
+	})
+	copyPopulateButton1230am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["12:30a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+			       attribute : "background",
+			       value : ""
+			   })
+
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+
+	})
+	
+	var copyPopulateButton1am = document.createElement("button");
+	copyPopulateButton1am.innerHTML = "Populate: 1am"
+	copyPopulateButton1am.addEventListener('click',function(event){ 
+		copyRows({"source":"1:00a","targets":["8:00a","4:00p", "9:00p"]})
+	});
+	copyPopulateButton1am.addEventListener('mouseover',function(event){
+
+		styleRows({targetIDs : ["1:00a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   })
+
+		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+			       attribute : "background",
+			       value : "green"
+			   })
+
+		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   })
+
+			    //targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"],
+
+	})
+	copyPopulateButton1am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["1:00a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+			       attribute : "background",
+			       value : ""
+			   })
+
+		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+
+	})
+
+	var copyPopulateButton130am = document.createElement("button");
+	copyPopulateButton130am.innerHTML = "Populate: 1:30am";
+	copyPopulateButton130am.addEventListener('click',function(event){ 
+		copyRows({"source":"1:30a","targets":["8:30a","11:30a","4:30p"]})
+	});
+	copyPopulateButton130am.addEventListener('mouseover',function(event){
+
+		styleRows({targetIDs : ["1:30a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   })
+
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+			       attribute : "background",
+			       value : "green"
+			   })
+
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   })
+
+	});
+	copyPopulateButton130am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["1:30a"], 
+			       attribute : "outline",
+			       value : ""
+			   });
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+			       attribute : "background",
+			       value : ""
+			   });
+
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+			       attribute : "outline",
+			       value : ""
+			   });
+
+	});
+	
+	var copyPopulateButton2am = document.createElement("button");
+	copyPopulateButton2am.innerHTML = "Populate: 2am"
+	copyPopulateButton2am.addEventListener('click',function(event){ 
+		copyRows({"source":"2:00a","targets":["5:00a","5:00p"]})
+	});
+	copyPopulateButton2am.addEventListener('mouseover',function(event){
+
+		styleRows({targetIDs : ["2:00a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   });
+
+		styleRows({targetIDs : ["5:00a","5:00p"], 
+			       attribute : "background",
+			       value : "green"
+			   });
+
+		styleRows({targetIDs : ["5:00a","5:00p"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   });
+
+			    //targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"],
+
+	});
+	copyPopulateButton2am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["2:00a"], 
+			       attribute : "outline",
+			       value : ""
+			   });
+		styleRows({targetIDs : ["5:00a","5:00p"], 
+			       attribute : "background",
+			       value : ""
+			   });
+
+		styleRows({targetIDs : ["5:00a","5:00p"], 
+			       attribute : "outline",
+			       value : ""
+			   });
+
+	});
+
+	var copyPopulateButton230am = document.createElement("button");
+	copyPopulateButton230am.innerHTML = "Populate: 2:30am"
+	copyPopulateButton230am.addEventListener('click',function(event){ 
+		copyRows({"source":"2:30a","targets":["5:30a","5:30p"]})
+	});
+	copyPopulateButton230am.addEventListener('mouseover',function(event){
+
+		styleRows({targetIDs : ["2:30a"], 
+			       attribute : "outline",
+			       value : "5px solid red"
+			   })
+
+		styleRows({targetIDs : ["5:30a","5:30p"], 
+			       attribute : "background",
+			       value : "green"
+			   })
+
+		styleRows({targetIDs : ["5:30a","5:30p"], 
+			       attribute : "outline",
+			       value : "2px solid green"
+			   })
+
+			    //targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"],
+
+	})
+	copyPopulateButton230am.addEventListener('mouseout',function(event){
+		styleRows({targetIDs : ["2:30a"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+		styleRows({targetIDs : ["5:30a","5:30p"], 
+			       attribute : "background",
+			       value : ""
+			   })
+
+		styleRows({targetIDs : ["5:30a","5:30p"], 
+			       attribute : "outline",
+			       value : ""
+			   })
+
+	})
 	
 
 	document.body.appendChild(copyPopulateButton11am);
 	document.body.appendChild(copyPopulateButton1130am);
+	document.body.appendChild(copyPopulateButton12am);
+	document.body.appendChild(copyPopulateButton1230am);
+	document.body.appendChild(copyPopulateButton1am);
+	document.body.appendChild(copyPopulateButton130am);
+	document.body.appendChild(copyPopulateButton2am);
+	document.body.appendChild(copyPopulateButton230am);
+	
+
+	styleRows({targetIDs : ["4:00a","4:30p",], 
+		       attribute : "outline",
+		       value : "2px solid black"
+		   })
+
 
 /*
+2:00am -> 5am 5pm
+2:30am -> 530am 530pm 
 11am -> 6am -> 9am -> 12pm -> 2pm -> 7pm -> 3am
 11:30  -> 630 -> 930 1230p -> 230 730 330a
 12am -> 7am, 10am 1pm, 3pm 6pm, 8pm, 10p
-1230 -> 730a 1030a 130p 330p 630 1030
+1230 -> 730a 1030a 130p 330p 630, 830p 1030
 1:00am -> 8am 4pm 9pm 
 1:30am -> 830am 1130 430 
-2:00am -> 5am 5pm
-2:30am -> 530am 530pm 
 */
 
 }//*** END Build Page
@@ -792,24 +1111,23 @@ function styleRows(inputOBJ){
 
 }
 
-function update_mainTable_row(inputIndex,inputValues){
+function update_mainTable_row(inputElem,inputValues){
 
 
-
-    var thisRow = getElem("mainTable").children[inputIndex].children;
-	
-
+    //var thisRow = getElem("mainTable").children[inputIndex].children;
+	var thisRow = getElem(inputElem).children;
 	//for (x=0; x<thisRow.children.length; x++){
 	//	cl(thisRow.children[x+1])
 	//}
 
 
-	cl("Row: " + inputIndex);
+
+	//cl("Row: " + inputIndex);
     //*** input values are in order
     for (x=0; x < (inputValues.length );x++ ) {
     	//*** TD element is thisRow + 1
     	var thisTD = thisRow[ (x + 1) ];
-    	cl(x + ":" + " ThisTD: " + thisTD);
+    	//cl(x + ":" + " ThisTD: " + thisTD);
     	
     	
     	//*** Series is thisTD children [0]
@@ -831,21 +1149,21 @@ function update_mainTable_row(inputIndex,inputValues){
 		while (episodeNode.children.length > 0) {
 			episodeNode.removeChild(episodeNode.children[0])
 		}
-		cl("Deleted: " + (x + 1) + ":" + inputIndex)
+		//cl("Deleted: " + (x + 1) + ":" + inputIndex)
 
 		//thisEpisode = document.createElement('select');
 		//thisEpisode.className = newSeriesKey
 		
 		//*** Add New Episodes
 		var thisSeries = m.series[newSeriesKey]
-		cl(thisSeries)
+		//cl(thisSeries)
 			
 		for (xx in thisSeries){
 			var opt1 = document.createElement('option');
 			opt1.text = thisSeries[xx];
 			opt1.value = thisSeries[xx];
 			episodeNode.add(opt1);
-			cl("adding: " + x + ":" + thisSeries[xx])
+			//cl("adding: " + x + ":" + thisSeries[xx])
 		}
 		episodeNode.className = newSeriesKey;
 		
@@ -905,7 +1223,7 @@ function import_layout(){
 							//*** Update the row with the corresponding imputOBJ value.
 							//*** The rowOffset is -8
 							getElem("topline").innerHTML = "Loading...Row - " + (rowCount-8)
-							update_mainTable_row(rowCount,importOBJ[rowCount-8])
+							update_mainTable_row(mainTable.children[rowCount].id,importOBJ[rowCount-8])
 						}
 					}//*** END Each element in mainTable
 
@@ -919,6 +1237,13 @@ function import_layout(){
 			input.click();
 
 }//*** END import_layout
+
+function init(){
+
+getElem('import_layout').style.display = 'none'
+getElem('export_layout').style.display = 'none'
+
+}//*** END init
 
 function convert_table_to_OBJ(){
 	var mainTable = getElem("mainTable")
@@ -1023,11 +1348,11 @@ function export_layout(){
 
 
 </script>
-<body>
+<body onload='init()'>
 <h1 id="topline">Hey there!</h1>
 <p>Let's schedule some localish</p>
-<button onclick='readText()'>Load JSON Data File</button>
-<button onclick='import_layout()'>Import Layout</button>
-<button onclick='export_layout()'>Export Layout</button>
+<button id ='readText' onclick='readText()'>Load JSON Data File</button>
+<button id='import_layout' onclick='import_layout()'>Import Layout</button>
+<button id='export_layout' onclick='export_layout()'>Export Layout</button>
 </body>
 </html>
