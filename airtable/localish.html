@@ -558,9 +558,19 @@ function incrementAllEpisodes(incrementValue){
 				}//*** END Child has Children
 				
 			}//**** END Child is an object
+			styleRows({targetIDs : [rowID], 
+			       attribute : "outline",
+			       value : "5px solid red"
+		   })
+
 			update_mainTable_row(rowID,thisRowList)
+
+			styleRows({targetIDs : [rowID], 
+			       attribute : "outline",
+			       value : ""
+		   })
 		}//*** END Each loopRow Element
-		break;
+
 	}//*** END each row
 
 }//*** END 
@@ -1210,7 +1220,6 @@ function buildPage(){
 		incrementAllEpisodes(1);
 	});
 	
-
 	document.body.appendChild(copyPopulateButton11am);
 	document.body.appendChild(copyPopulateButton1130am);
 	document.body.appendChild(copyPopulateButton12am);
