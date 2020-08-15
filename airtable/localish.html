@@ -103,7 +103,8 @@ function readText(){
 	cl("Let's get JSON LOADED ")
 	var input = document.createElement('input');
 	input.type = 'file';
-	
+	input.accept = ".json";
+	input.defaultValue = "network_flow_tab";
 
 	input.onchange = e => { 
 	   // getting a hold of the file reference
@@ -511,6 +512,141 @@ function autobuild_tu_thu_row(inputOBJ){
 
 }//*** END autobuild_tu_thu_row
 
+function incrementAllEpisodes(incrementValue){
+
+	var allRows = document.getElementsByClassName("mainRow");
+	
+	for (var rowCounter=0; rowCounter < allRows.length;rowCounter++){
+
+		var loopRow = allRows.item(rowCounter);
+		var rowID = loopRow.id;
+		var thisRowList = [];
+
+		//parent = loopRow.parentNode
+
+		//*** Loop through the row looking for TD.
+
+		for (elemCounter in loopRow.children){
+			var loopChild = loopRow.children[elemCounter]
+
+			if (typeof loopChild == 'object') {
+				if (loopChild.children.length > 0){
+
+					//*** Increment episode
+					var thisSeries = loopChild.children[0].value;
+					//*** Get Episode Index
+					var episodeIndex = parseInt(loopChild.children[1].selectedIndex) + parseInt(incrementValue) ;
+					
+
+					//*** Check if Index is over
+					if ( episodeIndex > (m.series[thisSeries].length - 1) ) {
+
+						//*** Subtract index from the length. This resets over the top
+						episodeIndex = parseInt(episodeIndex) - parseInt(m.series[thisSeries].length)
+
+					}//*** END Reset Counter
+
+					//*** Update the Row List with the newValues
+					thisRowList.push({
+						series : thisSeries,
+						episode : m.series[thisSeries][episodeIndex]
+					});
+					
+					//cl(	thisSeries + ":"+ m.series[thisSeries][episodeIndex] )
+					
+
+				}//*** END Child has Children
+				
+			}//**** END Child is an object
+			update_mainTable_row(rowID,thisRowList)
+		}//*** END Each loopRow Element
+		break;
+	}//*** END each row
+
+}//*** END 
+/*
+function incrementRowEpisodes(){
+	function autobuild_tu_thu_row(inputOBJ){
+	var parent = inputOBJ.srcElement.parentNode;
+	cl(parent);
+	var firstTD = parent.children[1];
+
+	cl("Series: " + firstTD.children[0].value);
+	cl("Episode: " + firstTD.children[1].value);
+
+	var startSeries = firstTD.children[0].value;
+	var startEpisode = firstTD.children[1].value;
+
+	//*** Build Row based on start series
+	var thisRowList = [];
+
+	var thuSeries = ""
+	var thuEpisode = ""
+
+	//*** Get all selections in row
+	//*** Build the value for the row. Increment Thursday based on Tuesday
+	for (x=1;x<8;x++){
+
+
+		var showOBJ = {
+			series : parent.children[x].children[0].value,
+			episode : parent.children[x].children[1].value
+		}
+
+		switch(x){
+
+			case 2:
+				//*** Tuesday's show. Build Thursday's show
+				//*** Assign series, that was easy
+				thuSeries = showOBJ.series
+
+				cl(showOBJ.series + ":" + showOBJ.episode)
+
+				//***Increment Episode, this is lil more work ;)
+				var theseEpisodes = m.series[showOBJ.series];
+
+				var episodeIndex = -1;
+
+				for (xx=0;xx<theseEpisodes.length;xx++){
+
+					if ( theseEpisodes[xx] == showOBJ.episode){
+
+						episodeIndex = xx;
+
+					}//*** END get find index
+
+				}//*** END find Episode Index
+
+				//*** Increment found Index
+				episodeIndex++;
+
+				if (episodeIndex == theseEpisodes.length){
+
+					episodeIndex = 0;
+
+				}//*** END Reset episodeIndex to Beginning
+
+				thuEpisode = theseEpisodes[episodeIndex];
+
+				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
+				break
+			case 4:
+				showOBJ = {
+					series : thuSeries,
+					episode : thuEpisode
+				}
+				break
+
+		}//*** END Switch Handle Tuesday Thursday
+
+		cl(showOBJ)
+
+		thisRowList.push(showOBJ)
+	
+
+	}//*** Each TD
+}
+*/
 function buildAutoPopulate(inputOBJ){
 
 	thisAction = inputOBJ.action;
@@ -1067,6 +1203,12 @@ function buildPage(){
 			   })
 
 	})
+
+	var incrementAllShowsByOne = document.createElement("button");
+	incrementAllShowsByOne.innerHTML = "All Shows +1 Episode"
+	incrementAllShowsByOne.addEventListener('click',function(event){ 
+		incrementAllEpisodes(1);
+	});
 	
 
 	document.body.appendChild(copyPopulateButton11am);
@@ -1077,12 +1219,10 @@ function buildPage(){
 	document.body.appendChild(copyPopulateButton130am);
 	document.body.appendChild(copyPopulateButton2am);
 	document.body.appendChild(copyPopulateButton230am);
-	
 
-	styleRows({targetIDs : ["4:00a","4:30p",], 
-		       attribute : "outline",
-		       value : "2px solid black"
-		   })
+	document.body.appendChild(document.createElement("br"));
+	
+	document.body.appendChild(incrementAllShowsByOne);
 
 
 /*
@@ -1240,8 +1380,8 @@ function import_layout(){
 
 function init(){
 
-getElem('import_layout').style.display = 'none'
-getElem('export_layout').style.display = 'none'
+	getElem('import_layout').style.display = 'none'
+	getElem('export_layout').style.display = 'none'
 
 }//*** END init
 
@@ -1351,7 +1491,7 @@ function export_layout(){
 <body onload='init()'>
 <h1 id="topline">Hey there!</h1>
 <p>Let's schedule some localish</p>
-<button id ='readText' onclick='readText()'>Load JSON Data File</button>
+<button id ='readText' onclick='readText()'>Load: Network_flow_tab.json</button>
 <button id='import_layout' onclick='import_layout()'>Import Layout</button>
 <button id='export_layout' onclick='export_layout()'>Export Layout</button>
 </body>
