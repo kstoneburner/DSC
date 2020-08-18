@@ -1,4 +1,5 @@
 <html>
+<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
 <style>
 .BSZ{
 	background : #CFDFFF;
@@ -88,6 +89,9 @@
 }
 .BABY{
 	background :#72DDC3;
+}
+.button_autobuild{
+	display : none;
 }
 </style>
 
@@ -454,61 +458,7 @@ function autobuild_tu_thu_row(inputOBJ){
 
 	//}//*** END maintable Row Loop
 
-	return
-
-
-	//*** get start episode index
-	var theseEpisodes = m.series[startSeries];
-
-	var episodeIndex = -1;
-
-	for (x=0;x<theseEpisodes.length;x++){
-
-		if ( theseEpisodes[x] == startEpisode){
-
-			episodeIndex = x;
-
-		}//*** END get find index
-
-	}//*** END find Episode Index
-
-	thisRowList.push(showOBJ)
-
-	for (x=1;x<7;x++){
-
-		//*** Increment episode Index, Starting from found Value
-		episodeIndex++;
-
-		//*** Reset Index to 0 if out of bounds
-		if (episodeIndex > theseEpisodes.length -1 ){ episodeIndex = 0 }
-
-		//*** Build Suggestions and add to list
-		thisRowList.push({
-			series : startSeries,
-			episode : theseEpisodes[episodeIndex]
-		});
-
-	}//*** END build suggested shows
-
-	cl("ThisRow List: " + thisRowList)
-	
-	//*** Find Index of current Row
-	var mainTable = parent.parentNode;
-
-	
-	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
-	for (x=0;x<mainTable.children.length - 1;x++){
-
-		if (parent == mainTable.children[x]) {
-			//*** Parent Found, x is RowIndex.
-			//*** Let's Update!!!
-			//update_mainTable_row(x,thisRowList)
-			break;		
-		}
-
-	}//*** END maintable Row Loop
-
-
+	return;
 
 }//*** END autobuild_tu_thu_row
 
@@ -558,105 +508,16 @@ function incrementAllEpisodes(incrementValue){
 				}//*** END Child has Children
 				
 			}//**** END Child is an object
-			styleRows({targetIDs : [rowID], 
-			       attribute : "outline",
-			       value : "5px solid red"
-		   })
 
 			update_mainTable_row(rowID,thisRowList)
 
-			styleRows({targetIDs : [rowID], 
-			       attribute : "outline",
-			       value : ""
-		   })
+
 		}//*** END Each loopRow Element
 
 	}//*** END each row
 
 }//*** END 
-/*
-function incrementRowEpisodes(){
-	function autobuild_tu_thu_row(inputOBJ){
-	var parent = inputOBJ.srcElement.parentNode;
-	cl(parent);
-	var firstTD = parent.children[1];
 
-	cl("Series: " + firstTD.children[0].value);
-	cl("Episode: " + firstTD.children[1].value);
-
-	var startSeries = firstTD.children[0].value;
-	var startEpisode = firstTD.children[1].value;
-
-	//*** Build Row based on start series
-	var thisRowList = [];
-
-	var thuSeries = ""
-	var thuEpisode = ""
-
-	//*** Get all selections in row
-	//*** Build the value for the row. Increment Thursday based on Tuesday
-	for (x=1;x<8;x++){
-
-
-		var showOBJ = {
-			series : parent.children[x].children[0].value,
-			episode : parent.children[x].children[1].value
-		}
-
-		switch(x){
-
-			case 2:
-				//*** Tuesday's show. Build Thursday's show
-				//*** Assign series, that was easy
-				thuSeries = showOBJ.series
-
-				cl(showOBJ.series + ":" + showOBJ.episode)
-
-				//***Increment Episode, this is lil more work ;)
-				var theseEpisodes = m.series[showOBJ.series];
-
-				var episodeIndex = -1;
-
-				for (xx=0;xx<theseEpisodes.length;xx++){
-
-					if ( theseEpisodes[xx] == showOBJ.episode){
-
-						episodeIndex = xx;
-
-					}//*** END get find index
-
-				}//*** END find Episode Index
-
-				//*** Increment found Index
-				episodeIndex++;
-
-				if (episodeIndex == theseEpisodes.length){
-
-					episodeIndex = 0;
-
-				}//*** END Reset episodeIndex to Beginning
-
-				thuEpisode = theseEpisodes[episodeIndex];
-
-				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
-				break
-			case 4:
-				showOBJ = {
-					series : thuSeries,
-					episode : thuEpisode
-				}
-				break
-
-		}//*** END Switch Handle Tuesday Thursday
-
-		cl(showOBJ)
-
-		thisRowList.push(showOBJ)
-	
-
-	}//*** Each TD
-}
-*/
 function buildAutoPopulate(inputOBJ){
 
 	thisAction = inputOBJ.action;
@@ -674,6 +535,7 @@ function buildAutoPopulate(inputOBJ){
 			button.innerHTML = "Autobuild - M-F"
 
 			button.addEventListener("click",function(e){autobuild_mf_row(e)});
+			button.className = "button_autobuild";
 
 			return button;
 
@@ -686,6 +548,7 @@ function buildAutoPopulate(inputOBJ){
 			button.innerHTML = "Autobuild - Tu-Thu"
 
 			button.addEventListener("click",function(e){autobuild_tu_thu_row(e)});
+			button.className = "button_autobuild";
 
 			return button;
 
@@ -772,6 +635,7 @@ function buildPage(){
 	//*** Show/Hide Main Buttons
 	getElem('import_layout').style.display = 'inline'
 	getElem('export_layout').style.display = 'inline'
+	getElem('export_to_excel').style.display = 'inline'
 	getElem('readText').style.display = 'none'
 
 
@@ -793,6 +657,8 @@ function buildPage(){
 	var headFriday = document.createElement("th");
 	var headSaturday = document.createElement("th");
 	var headSunday = document.createElement("th");
+
+
 
 	//************************************
 	//*** Create Table header
@@ -824,6 +690,14 @@ function buildPage(){
 	mainTable.appendChild(headSaturday);
 	mainTable.appendChild(headSunday);
 
+
+	var headShowHideAutoBuild = document.createElement("button");
+	headShowHideAutoBuild.innerHTML="Show Autobuild Buttons"
+	headShowHideAutoBuild.id ="showhideautobuild";
+	headShowHideAutoBuild.style.display = "inline";
+	headShowHideAutoBuild.addEventListener('click',function(event){ toggleAutoBuild() });
+	mainTable.appendChild(headShowHideAutoBuild);
+	
 
 	//************************************
 	//*** Build Table Row
@@ -1260,6 +1134,49 @@ function styleRows(inputOBJ){
 
 }
 
+function toggleAutoBuild(){
+
+	//*** Toggle display of autobuild buttons. Hidden by default to reduce clutter
+
+	thisElem = getElem("showhideautobuild");
+
+
+	var showElem = true;
+	if (thisElem.innerHTML == "Show Autobuild Buttons") {
+		
+		//*** Display Elements
+		thisElem.innerHTML = "Hide Autobuild Buttons";
+
+
+
+
+	} else {
+
+		//*** Hide Elements
+		thisElem.innerHTML = "Show Autobuild Buttons"
+		showElem=false;
+
+	}
+
+	button_elements = document.getElementsByClassName("button_autobuild")
+
+	for (var elemCounter=0; elemCounter < button_elements.length;elemCounter++){
+
+		var loopElem = button_elements.item(elemCounter);
+
+		if (showElem) {
+			loopElem.style.display = "inline";
+		}
+		else{
+			loopElem.style.display = "none";
+		}
+		
+
+	}//*** END Loop each element
+
+
+}//*** END Toggle Display Autobuild buttons
+
 function update_mainTable_row(inputElem,inputValues){
 
 
@@ -1391,6 +1308,7 @@ function init(){
 
 	getElem('import_layout').style.display = 'none'
 	getElem('export_layout').style.display = 'none'
+	getElem('export_to_excel').style.display = 'none'
 
 }//*** END init
 
@@ -1494,7 +1412,54 @@ function export_layout(){
 }//*** END export_layout
 
 
+function export_to_excel(){
+	//*** prepare table for export to Excel via clipboard
+	
+	var out = "";
 
+	out += "<table>";
+	out += "<thead>";
+	out += "<tr>";
+
+	
+
+	out += "</tr>";
+	out += "</thead>";
+	out += "<tr>";
+	out += "<td>1<td>"
+	out += "<td>2<td>"
+	out += "<td>3<td>"
+	out += "</tr>";
+	out += "</table>";
+	
+	
+	var downloadurl;
+    var dataFileType = 'application/vnd.ms-excel';
+    var tableSelect = document.getElementById("mainTable");
+    var tableHTMLData = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = 'export_excel_data.xls';
+    
+    // Create download link element
+    downloadurl = document.createElement("a");
+    
+    document.body.appendChild(downloadurl);
+    
+    // Create a link to the file
+    downloadurl.href = 'data:' + dataFileType + ', ' + out;
+
+    // Setting the file name
+    downloadurl.download = filename;
+    
+    //triggering the function
+    downloadurl.click();
+ 
+
+
+
+
+}//*** END Export to excel
 
 </script>
 <body onload='init()'>
@@ -1503,5 +1468,6 @@ function export_layout(){
 <button id ='readText' onclick='readText()'>Load: Network_flow_tab.json</button>
 <button id='import_layout' onclick='import_layout()'>Import Layout</button>
 <button id='export_layout' onclick='export_layout()'>Export Layout</button>
+<button id='export_to_excel' onclick='export_to_excel()'>Export to Excel</button>
 </body>
 </html>
