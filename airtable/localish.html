@@ -93,6 +93,10 @@
 .button_autobuild{
 	display : none;
 }
+#rootTitan td {
+	outline : 1px solid black;
+} 
+
 </style>
 
 <script>
@@ -101,191 +105,6 @@ var m = {
 	series : {},
 	fields : {}
 }
-
-function readText(){
-
-	cl("Let's get JSON LOADED ")
-	var input = document.createElement('input');
-	input.type = 'file';
-	input.accept = ".json";
-	input.defaultValue = "network_flow_tab";
-
-	input.onchange = e => { 
-	   // getting a hold of the file reference
-	   var file = e.target.files[0]; 
-
-	   // setting up the reader
-	   var reader = new FileReader();
-	   reader.readAsText(file,'UTF-8');
-
-	   // here we tell the reader what to do when it's done reading...
-	   reader.onload = readerEvent => {
-	      var importOBJ = readerEvent.target.result; // this is the content!
-	      
-	      try
-	      {
-	      	importOBJ = JSON.parse(importOBJ);
-  	
-	      }//*** END import Parse Try
-	      catch(e)
-	      {
-	      	alert("Unable to parse file: " + file.name + "\nPlease select a valid Hotkey JSON File");
-	      	return;
-	      }//**** END Main Import 
-	      
-		  //cl(importOBJ)
-		 	for (topIndex in importOBJ.records) {
-			
-			   	var rawFields = importOBJ.records[topIndex].fields
-					
-					//**** Build key names from fields
-					if (m.fieldKeys.length == 0){
-						for (x in rawFields){
-							m.fieldKeys.push(x);
-						}
-						
-						//cl(m.fieldKeys);
-					}
-				
-				var thisOBJ = {};
-				//**** Get the housenumber located at first index of field Keys
-				var thisHousenumber = rawFields[m.fieldKeys[0]];
-				
-				//**** Build each episode object
-				for ( x in m.fieldKeys){
-					
-					var thisKey = m.fieldKeys[x];
-					
-					//cl(thisHousenumber + ":" + thisKey + ":" + rawFields[thisKey]);
-					
-					var thisValue = rawFields[thisKey];
-					
-					if (typeof(thisValue) == 'undefined'){ thisValue = "_" };
-					
-					thisOBJ[thisKey] = thisValue;
-				}
-				
-				//*** Add episode to m.fields
-				m.fields[thisHousenumber] = thisOBJ;
-				
-				//**** Build Show Titles
-				m.series[thisOBJ["Series"]] = thisOBJ["Series"];
-			
-			}//*** END each record
-				
-			//*** Get all episodes for each series
-			for (scount in m.series){
-				var thisSeries = m.series[scount];
-				
-				var thisEpisodeList = [];
-				
-				for (x in m.fields){
-					
-					if (thisSeries == m.fields[x].Series) {
-						thisEpisodeList.push(x)
-					}
-				
-				}//*** For each masterObject
-				
-				//**** Assign sorted episodes to the series				
-				m.series[scount] = thisEpisodeList.sort();
-				
-			}//*** END each Series
-			
-				buildPage();
-			
-		}//*** Handle Input OnChange
-	
-	}//** END input.onchange
-	//*** Is this Close or open? Not Sure
-	input.click();
-			
-}//*** END readText
-
-function cl(input){
-	console.log(input)
-}
-
-function getElem(elem){
-	return(document.getElementById(elem))
-}
-
-function tdChange(e){
-	
-	//***Series Changed, draw new Episode List
-	var newSeriesKey = e.target.value
-		
-	//*** Delete existing episodes
-	while (e.target.nextSibling.childNodes.length > 0) {
-		e.target.nextSibling.removeChild(e.target.nextSibling.childNodes[0])
-	}
-
-	e.target.className = newSeriesKey;
-	
-	//*** Add New Episodes
-	var thisSeries = m.series[newSeriesKey]
-		
-	for (x in thisSeries){
-		var opt1 = document.createElement('option');
-		opt1.text = thisSeries[x];
-		opt1.value = thisSeries[x];
-		e.target.nextSibling.add(opt1);
-	}
-	e.target.nextSibling.className = newSeriesKey;
-}//*** END tdChange
-
-
-
-function buildShowTD(){
-	//******************************
-	//**** Build One TD Element
-	//******************************
-
-	var td = document.createElement("td");
-
-	//**** Build Series Drop Down
-	var series = document.createElement("select");
-
-	series.id="series";
-	firstKey = ""
-	
-	for (x in m.series){
-		var opt1 = document.createElement('option');
-		if (firstKey == "") {
-			firstKey = x;
-		}
-		opt1.text = x;
-		opt1.value = x;
-		opt1.className = x;
-		series.add(opt1);
-		td.appendChild(series);
-	}//*** END each Series
-
-	series.className = firstKey;
-	
-
-	var episodes = document.createElement("select");
-	episodes.id="episodes";
-	episodes.className = firstKey;
-	
-	
-	var thisSeries = m.series[firstKey]
-		
-	for (x in thisSeries){
-		var opt1 = document.createElement('option');
-		opt1.text = thisSeries[x];
-		opt1.value = thisSeries[x];
-		episodes.add(opt1);
-		td.appendChild(episodes);
-	}
-	
-	series.addEventListener("change",function(e){tdChange(e)});
-	
-	
-	
-	return td;
-	
-}//*** END Build ShowTD
 
 function autobuild_mf_row(inputOBJ){
 	var parent = inputOBJ.srcElement.parentNode;
@@ -339,7 +158,7 @@ function autobuild_mf_row(inputOBJ){
 
 	}//*** END build suggested shows
 
-	cl("ThisRow List: " + thisRowList)
+	cl("thisRow List: " + thisRowList)
 	
 	//*** Find Index of current Row
 	var mainTable = parent.parentNode;
@@ -462,62 +281,6 @@ function autobuild_tu_thu_row(inputOBJ){
 
 }//*** END autobuild_tu_thu_row
 
-function incrementAllEpisodes(incrementValue){
-
-	var allRows = document.getElementsByClassName("mainRow");
-	
-	for (var rowCounter=0; rowCounter < allRows.length;rowCounter++){
-
-		var loopRow = allRows.item(rowCounter);
-		var rowID = loopRow.id;
-		var thisRowList = [];
-
-		//parent = loopRow.parentNode
-
-		//*** Loop through the row looking for TD.
-
-		for (elemCounter in loopRow.children){
-			var loopChild = loopRow.children[elemCounter]
-
-			if (typeof loopChild == 'object') {
-				if (loopChild.children.length > 0){
-
-					//*** Increment episode
-					var thisSeries = loopChild.children[0].value;
-					//*** Get Episode Index
-					var episodeIndex = parseInt(loopChild.children[1].selectedIndex) + parseInt(incrementValue) ;
-					
-
-					//*** Check if Index is over
-					if ( episodeIndex > (m.series[thisSeries].length - 1) ) {
-
-						//*** Subtract index from the length. This resets over the top
-						episodeIndex = parseInt(episodeIndex) - parseInt(m.series[thisSeries].length)
-
-					}//*** END Reset Counter
-
-					//*** Update the Row List with the newValues
-					thisRowList.push({
-						series : thisSeries,
-						episode : m.series[thisSeries][episodeIndex]
-					});
-					
-					//cl(	thisSeries + ":"+ m.series[thisSeries][episodeIndex] )
-					
-
-				}//*** END Child has Children
-				
-			}//**** END Child is an object
-
-			update_mainTable_row(rowID,thisRowList)
-
-
-		}//*** END Each loopRow Element
-
-	}//*** END each row
-
-}//*** END 
-
 function buildAutoPopulate(inputOBJ){
 
 	thisAction = inputOBJ.action;
@@ -557,85 +320,12 @@ function buildAutoPopulate(inputOBJ){
 
 }//*** END Build autopoplate TD
 
-function buildShowTR(input_time){
-
-	newTR = document.createElement("tr");
-	newTR.className = "mainRow"
-	newTR.id = input_time
-	
-	newTD = document.createElement("td");
-	newTD.className = "rowheader";
-	newTD.innerHTML = input_time;
-	
-	newTR.appendChild(newTD);
-	
-	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildShowTD())
-	newTR.appendChild(buildAutoPopulate({action : "autobuild_mf", column : 1}))
-	newTR.appendChild(buildAutoPopulate({action : "autobuild_tu_thu", column : 1}))
-	
-	//buildAutoPopulate({action : "autobuild", column : 1})
-	
-	return newTR
-}
-
-function copyRows(inputOBJ){
-
-	//*** Build Row based on start series
-	var thisRowList = [];
-
-
-	//*** Copies select rows to other rows.
-	sourceRow = getElem(inputOBJ["source"]);
-
-	targets = inputOBJ["targets"];
-
-	//*** Loop through Source Row and build RowList of Values
-	for (sourceCounter in sourceRow.children) {
-
-
-		if (sourceCounter > 0  && sourceCounter < 8) {
-			var sourceSeries = sourceRow.children[sourceCounter].children[0].value;
-			var sourceEpisode = sourceRow.children[sourceCounter].children[1].value;
-
-			cl(sourceSeries + ":" + sourceEpisode);
-			var showOBJ = {
-				series : sourceSeries,
-				episode : sourceEpisode
-			}
-			thisRowList.push(showOBJ);
-	
-		}//*** End Build each Show
-
-	}//*** End Build rowList
-
-	//*** Update the Targets with the row values
-	//*** Need to find the children index value of the parent node.
-	parent = sourceRow.parentNode;
-
-	for (targetCounter in targets){
-
-				update_mainTable_row(targets[targetCounter],thisRowList);
-
-	}//*** END each target elem loop
-
-
-
-
-}//*** END theBigRowCopy
-
-
 function buildPage(){
 
 	//*** Show/Hide Main Buttons
 	getElem('import_layout').style.display = 'inline'
 	getElem('export_layout').style.display = 'inline'
-	getElem('export_to_excel').style.display = 'inline'
+	
 	getElem('readText').style.display = 'none'
 
 
@@ -1107,6 +797,24 @@ function buildPage(){
 	
 	document.body.appendChild(incrementAllShowsByOne);
 
+	document.body.appendChild(document.createElement("br"));
+	
+	var buttonExportExcel = document.createElement("button");
+	buttonExportExcel.innerHTML = "export_to_excel";
+	buttonExportExcel.id='Export to Excel';
+	buttonExportExcel.addEventListener('click',function(event){ 
+		export_to_excel();
+	});
+	document.body.appendChild(buttonExportExcel);
+
+	var button_titantv = document.createElement("button");
+	button_titantv.innerHTML = "Titan TV";
+	button_titantv.id='titanTV';
+	button_titantv.addEventListener('click',function(event){ 
+		titanTV(this);
+	});
+	document.body.appendChild(button_titantv);
+
 
 /*
 2:00am -> 5am 5pm
@@ -1121,196 +829,408 @@ function buildPage(){
 
 }//*** END Build Page
 
-function styleRows(inputOBJ){
-	targetIDs = inputOBJ.targetIDs;
+function titanTV(){
 
-	for (var x in targetIDs){
-
-		targetElem = getElem(targetIDs[x])
-
-		targetElem.style[inputOBJ.attribute] = inputOBJ.value
-
-	}//*** END each elem
-
-}
-
-function toggleAutoBuild(){
-
-	//*** Toggle display of autobuild buttons. Hidden by default to reduce clutter
-
-	thisElem = getElem("showhideautobuild");
-
-
-	var showElem = true;
-	if (thisElem.innerHTML == "Show Autobuild Buttons") {
-		
-		//*** Display Elements
-		thisElem.innerHTML = "Hide Autobuild Buttons";
-
-
-
-
-	} else {
-
-		//*** Hide Elements
-		thisElem.innerHTML = "Show Autobuild Buttons"
-		showElem=false;
-
+	if (getElem("rootTitan") != null) {
+		document.body.removeChild(getElem("rootTitan"))
 	}
 
-	button_elements = document.getElementsByClassName("button_autobuild")
+	var rootTitan = document.createElement("table");
+	rootTitan.id = "rootTitan";
 
-	for (var elemCounter=0; elemCounter < button_elements.length;elemCounter++){
+	//*** Let's build a dataframe with our Data.
 
-		var loopElem = button_elements.item(elemCounter);
+	dataframe = {};
 
-		if (showElem) {
-			loopElem.style.display = "inline";
-		}
-		else{
-			loopElem.style.display = "none";
-		}
+	seriesList = [];
+
+	daysofweek = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
+
+	for (dayCounter in daysofweek) {
+		thisDay = daysofweek[dayCounter];
+
+		var dayRows = document.getElementsByClassName(thisDay);
+
+		for (x=0;x<dayRows.length;x++){
+			thisElem = dayRows.item(x)
+			elemDay = thisElem.className.split(" ")[1];
+			elemTime = thisElem.className.split(" ")[2];
+			elemSeries = thisElem.children[0].value;
+			elemEpisode = thisElem.children[1].value
+			cl(elemDay + ":" + elemTime + ":" + elemSeries + ":" + elemEpisode)
+
+			var dayOBJ = {
+				"day" : elemDay,
+				"time" : elemTime,
+				"series" : elemSeries,
+				"episode" : elemEpisode,
+			}
+
+			//dayList.push(dayOBJ);
+
+			if (seriesList.includes(elemSeries)){
+				
+				//*** Add to Existing List
+				dataframe[elemSeries].push(dayOBJ);
+
+			}//*** END add to existing Series
+			else {
+
+				//*** Add New Series to the series List
+				//*** We use the list to keep elements in Order
+				seriesList.push(elemSeries);
+
+				//*** Build new Series Object
+				dataframe[elemSeries] = [ dayOBJ ];
+
+			}//*** END Add new Series
+	
+
+		}//*** END Each Day Row Element
+
+	}//**** END Each Day of week
+	cl("Series List: " + seriesList);
+
+	var blackRow = document.createElement("tr")
+	blackRow.style.background = 'black';
+	blackRow.innerHTML = "<td>XXXX</td><td>XXXX</td><td>XXXX</td><td>XXXX</td>"
+	rootTitan.appendChild(blackRow);
+
+	var idCounter = 0;
+
+	for (seriesCounter in seriesList){
+
 		
 
-	}//*** END Loop each element
+
+		loopSeries = seriesList[seriesCounter];
+
+		loopSeries_list = dataframe[loopSeries];
+
+		for (x in loopSeries_list) {
+
+			loop_show = loopSeries_list[x];
+
+			var newRow = document.createElement("tr")
+			newRow.id = "titan_row_" + idCounter;
+
+			var tdSeries = document.createElement("td")
+			tdSeries.innerHTML = loop_show.series;
+			tdSeries.className = loop_show.series;
+			tdSeries.style = "border 1px solid black";
+
+			var tdDay = document.createElement("td")
+			tdDay.innerHTML = loop_show.day;
+
+			var tdTime = document.createElement("td")
+			tdTime.innerHTML = loop_show.time;
+
+			var tdEpisode = document.createElement("td")
+			tdEpisode.innerHTML = loop_show.episode;
+			tdEpisode.id = "titan_series_" + idCounter;
+
+			var tdCopy = document.createElement("button")
+			tdCopy.innerHTML = "[ Copy ]";
+			tdCopy.id = idCounter;
+			tdCopy.addEventListener('click',function(event){ 
+				copyTitan(this.id);	
+			});
+
+			newRow.appendChild(tdSeries);
+			newRow.appendChild(tdDay);
+			newRow.appendChild(tdTime);
+			newRow.appendChild(tdEpisode);
+			newRow.appendChild(tdCopy);
+			rootTitan.appendChild(newRow);
+
+			idCounter++;
+		}//*** END Each Show
+
+		var blackRow = document.createElement("tr")
+		blackRow.style.background = 'black';
+		blackRow.innerHTML = "<td>XXXX</td><td>XXXX</td><td>XXXX</td><td>XXXX</td>"
+		rootTitan.appendChild(blackRow);
+
+		
+	}//*** End Each Series
+	
+
+	document.body.appendChild(rootTitan)
 
 
-}//*** END Toggle Display Autobuild buttons
+}//*** END Buid Export titan TV
 
-function update_mainTable_row(inputElem,inputValues){
+function copyTitan(inputIndex) {
 
+	cl("titan_row_" + inputIndex)
 
-    //var thisRow = getElem("mainTable").children[inputIndex].children;
-	var thisRow = getElem(inputElem).children;
-	//for (x=0; x<thisRow.children.length; x++){
-	//	cl(thisRow.children[x+1])
-	//}
+	var thisRow = getElem("titan_row_" + inputIndex);
 
+	var rowStyle = thisRow.style.textDecoration;
 
+	cl(rowStyle)
 
-	//cl("Row: " + inputIndex);
-    //*** input values are in order
-    for (x=0; x < (inputValues.length );x++ ) {
-    	//*** TD element is thisRow + 1
-    	var thisTD = thisRow[ (x + 1) ];
-    	//cl(x + ":" + " ThisTD: " + thisTD);
-    	
-    	
-    	//*** Series is thisTD children [0]
-    	//cl(inputValues[x]);
-    	//cl(thisTD.children[0].value + ":" + thisTD.children[1].value);
-    	//cl(inputValues[x].series + ":" + inputValues[x].episode );
+	if (rowStyle != "line-through" ) {
+		//*** Row Not Styled
 
-    	//**** Assign Series
-    	thisTD.children[0].value = inputValues[x].series;
-		thisTD.children[0].className = inputValues[x].series;
+		rowStyle = "line-through";
+		thisRow.style.backgroundColor = "grey";
 
 
-		//***Draw Episode List based on series
-		var newSeriesKey = inputValues[x].series;
+	}//*** END Row Not styled
+	else {
+
+		rowStyle = "none";
+		thisRow.style.backgroundColor = "white";
+
+	}//*** END Row Styled
+
+	thisRow.style.textDecoration = rowStyle;
+
+
+	//*** Copy Element to clipboard
+   var el = document.createElement('textarea');
+   // Set value (string to be copied)
+   
+   el.value = getElem("titan_series_" + inputIndex).innerHTML;
+   // Set non-editable to avoid focus and move outside of view
+   el.setAttribute('readonly', '');
+   el.style = {position: 'absolute', left: '-9999px'};
+   document.body.appendChild(el);
+   // Select text inside element
+   el.select();
+   // Copy text to clipboard
+   document.execCommand('copy');
+   // Remove temporary element
+   document.body.removeChild(el);
+
+
+}//*** End Copy Titan
+
+function export_to_excel(){
+	//*** prepare table for export to Excel via clipboard
+	
+	var out = "";
+
+	out += "<table>";
+	out += "<thead>";
+	out += "<tr>";
+	out += "<td></td>"
+	out += "<td>Mon</td>"
+	out += "<td>Tue</td>"
+	out += "<td>Wed</td>"
+	out += "<td>Thu</td>"
+	out += "<td>Fri</td>"
+	out += "<td>Sat</td>"
+	out += "<td>Sun</td>"
+	out += "</tr>";
+	out += "</thead>";
+	
+
+	//*** For each Row
+	var mainTable = getElem("mainTable")
+
+	for (rowCount=0; rowCount < mainTable.children.length; rowCount++){
+
+		
+
+		thisRow = mainTable.children[rowCount];
+
+
+		for (elemCounter=0; elemCounter < thisRow.children.length; elemCounter++){
+		//*** Begin Each element in Row
+
+			if (elemCounter == 0) {
+				//*** First Element get Time from ID
+				out+="<tr>";
+				out+="<td>"+thisRow.id+"</td>"
+				continue;
+			}
+		
+			if (elemCounter < 8) {
+
+				var thisElem = thisRow.children[elemCounter];
+
+				//cl(elemCounter + ":" + thisElem.children[1].value);
+				out += "<td>"+ thisElem.children[1].value+ "</td>"
+
+			}
+
+			if (elemCounter == 8){ out+="</tr>"; break;}
+
+
 			
+		}//*** END each Element in row
 
-		var episodeNode = thisTD.children[1]
-		//*** Delete existing episodes
-		while (episodeNode.children.length > 0) {
-			episodeNode.removeChild(episodeNode.children[0])
+		
+
+	}//*** END each row Child
+
+
+	out += "</table>";
+	//cl(out);
+	
+	var downloadurl;
+    var dataFileType = 'application/vnd.ms-excel';
+    //var tableSelect = document.getElementById("mainTable");
+    //var tableHTMLData = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+    // Specify file name
+    filename = 'localish_export.xls';
+    
+    // Create download link element
+    downloadurl = document.createElement("a");
+    
+    document.body.appendChild(downloadurl);
+    
+    // Create a link to the file
+    downloadurl.href = 'data:' + dataFileType + ', ' + out;
+
+
+    // Setting the file name
+    downloadurl.download = filename;
+    
+    //triggering the function
+    downloadurl.click();
+ 
+
+
+
+
+}//*** END Export to excel
+function buildShowTD(inputOBJ){
+	//******************************
+	//**** Build One TD Element
+	//******************************
+
+	var td = document.createElement("td");
+
+	td.className = "form_element " + inputOBJ.day + " " + inputOBJ.time;
+
+	//**** Build Series Drop Down
+	var series = document.createElement("select");
+
+	series.id="series";
+	firstKey = ""
+	
+	for (x in m.series){
+		var opt1 = document.createElement('option');
+		if (firstKey == "") {
+			firstKey = x;
 		}
-		//cl("Deleted: " + (x + 1) + ":" + inputIndex)
+		opt1.text = x;
+		opt1.value = x;
+		opt1.className = x;
+		series.add(opt1);
+		td.appendChild(series);
+	}//*** END each Series
 
-		//thisEpisode = document.createElement('select');
-		//thisEpisode.className = newSeriesKey
+	series.className = firstKey;
+	
+
+	var episodes = document.createElement("select");
+	episodes.id="episodes";
+	episodes.className = firstKey;
+	
+	
+	var thisSeries = m.series[firstKey]
 		
-		//*** Add New Episodes
-		var thisSeries = m.series[newSeriesKey]
-		//cl(thisSeries)
-			
-		for (xx in thisSeries){
-			var opt1 = document.createElement('option');
-			opt1.text = thisSeries[xx];
-			opt1.value = thisSeries[xx];
-			episodeNode.add(opt1);
-			//cl("adding: " + x + ":" + thisSeries[xx])
-		}
-		episodeNode.className = newSeriesKey;
-		
+	for (x in thisSeries){
+		var opt1 = document.createElement('option');
+		opt1.text = thisSeries[x];
+		opt1.value = thisSeries[x];
+		episodes.add(opt1);
+		td.appendChild(episodes);
+	}
+	
+	series.addEventListener("change",function(e){tdChange(e)});
+	
+	
+	
+	return td;
+	
+}//*** END Build ShowTD
 
 
-		
+function buildShowTR(input_time){
 
-    	episodeNode.value = inputValues[x].episode;
-		episodeNode.text = inputValues[x].episode;
+	newTR = document.createElement("tr");
+	newTR.className = "mainRow"
+	newTR.id = input_time
+	
+	newTD = document.createElement("td");
+	newTD.className = "rowheader";
+	newTD.innerHTML = input_time;
+	
+	newTR.appendChild(newTD);
+	
+	newTR.appendChild(buildShowTD({"day" : "monday", "time":input_time}));
+	newTR.appendChild(buildShowTD({"day" : "tuesday", "time":input_time}));
+	newTR.appendChild(buildShowTD({"day" : "wednesday", "time":input_time}))
+	newTR.appendChild(buildShowTD({"day" : "thursday", "time":input_time}))
+	newTR.appendChild(buildShowTD({"day" : "friday", "time":input_time}))
+	newTR.appendChild(buildShowTD({"day" : "saturday", "time":input_time}))
+	newTR.appendChild(buildShowTD({"day" : "sunday", "time":input_time}))
+	newTR.appendChild(buildAutoPopulate({action : "autobuild_mf", column : 1}))
+	newTR.appendChild(buildAutoPopulate({action : "autobuild_tu_thu", column : 1}))
+	
+	//buildAutoPopulate({action : "autobuild", column : 1})
+	
+	return newTR
+}
+
+function copyRows(inputOBJ){
+
+	//*** Build Row based on start series
+	var thisRowList = [];
 
 
-    	//*** Episodes is thisTD children [1]
+	//*** Copies select rows to other rows.
+	sourceRow = getElem(inputOBJ["source"]);
 
-    }
+	targets = inputOBJ["targets"];
+
+	//*** Loop through Source Row and build RowList of Values
+	for (sourceCounter in sourceRow.children) {
 
 
-}//*** END update_mainTable_row
+		if (sourceCounter > 0  && sourceCounter < 8) {
+			var sourceSeries = sourceRow.children[sourceCounter].children[0].value;
+			var sourceEpisode = sourceRow.children[sourceCounter].children[1].value;
 
-function import_layout(){
+			cl(sourceSeries + ":" + sourceEpisode);
+			var showOBJ = {
+				series : sourceSeries,
+				episode : sourceEpisode
+			}
+			thisRowList.push(showOBJ);
+	
+		}//*** End Build each Show
 
-			cl("BEGIN import_layout ")
-			var input = document.createElement('input');
-			input.type = 'file';
+	}//*** End Build rowList
 
-			input.onchange = e => { 
-			   // getting a hold of the file reference
-			   var file = e.target.files[0]; 
+	//*** Update the Targets with the row values
+	//*** Need to find the children index value of the parent node.
+	parent = sourceRow.parentNode;
 
-			   // setting up the reader
-			   var reader = new FileReader();
-			   reader.readAsText(file,'UTF-8');
+	for (targetCounter in targets){
 
-			   // here we tell the reader what to do when it's done reading...
-			   reader.onload = readerEvent => {
-			      var importOBJ = readerEvent.target.result; // this is the content!
-			      
-			      try
-			      {
-			      	importOBJ = JSON.parse(importOBJ);
-	      	
-			      }//*** END import Parse Try
-			      catch(e)
-			      {
-			      	alert("Unable to parse file: " + file.name + "\nPlease select a valid Hotkey JSON File");
-			      	return;
-			      }//**** END Main Import 
+				update_mainTable_row(targets[targetCounter],thisRowList);
 
-			      //*** Loop through content by row
-			      //*** ImportOBJ is a list
+	}//*** END each target elem loop
 
-			      //*** Loop through mainTable
-			      var mainTable = getElem("mainTable")
-					for (rowCount=0; rowCount < mainTable.children.length; rowCount++){
-						cl(mainTable.children[rowCount].className + ":" + mainTable.children[rowCount].id)
 
-						if (mainTable.children[rowCount].className == "mainRow"){
-							//*** Update the row with the corresponding imputOBJ value.
-							//*** The rowOffset is -8
-							getElem("topline").innerHTML = "Loading...Row - " + (rowCount-8)
-							update_mainTable_row(mainTable.children[rowCount].id,importOBJ[rowCount-8])
-						}
-					}//*** END Each element in mainTable
 
-					getElem("topline").innerHTML ="Hey There, episodes loaded"
-			      
-			      
 
-			   }//*** Handle reader Event
-			}//*** Handle Input OnChange
+}//*** END theBigRowCopy
 
-			input.click();
 
-}//*** END import_layout
 
-function init(){
+function cl(input){
+	console.log(input)
+}
 
-	getElem('import_layout').style.display = 'none'
-	getElem('export_layout').style.display = 'none'
-	getElem('export_to_excel').style.display = 'none'
 
-}//*** END init
 
 function convert_table_to_OBJ(){
 	var mainTable = getElem("mainTable")
@@ -1412,54 +1332,393 @@ function export_layout(){
 }//*** END export_layout
 
 
-function export_to_excel(){
-	//*** prepare table for export to Excel via clipboard
+
+function getElem(elem){
+	return(document.getElementById(elem))
+}
+
+
+
+
+
+function import_layout(){
+
+			cl("BEGIN import_layout ")
+			var input = document.createElement('input');
+			input.type = 'file';
+
+			input.onchange = e => { 
+			   // getting a hold of the file reference
+			   var file = e.target.files[0]; 
+
+			   // setting up the reader
+			   var reader = new FileReader();
+			   reader.readAsText(file,'UTF-8');
+
+			   // here we tell the reader what to do when it's done reading...
+			   reader.onload = readerEvent => {
+			      var importOBJ = readerEvent.target.result; // this is the content!
+			      
+			      try
+			      {
+			      	importOBJ = JSON.parse(importOBJ);
+	      	
+			      }//*** END import Parse Try
+			      catch(e)
+			      {
+			      	alert("Unable to parse file: " + file.name + "\nPlease select a valid Hotkey JSON File");
+			      	return;
+			      }//**** END Main Import 
+
+			      //*** Loop through content by row
+			      //*** ImportOBJ is a list
+
+			      //*** Loop through mainTable
+			      var mainTable = getElem("mainTable")
+					for (rowCount=0; rowCount < mainTable.children.length; rowCount++){
+						cl(mainTable.children[rowCount].className + ":" + mainTable.children[rowCount].id)
+
+						if (mainTable.children[rowCount].className == "mainRow"){
+							//*** Update the row with the corresponding imputOBJ value.
+							//*** The rowOffset is -8
+							//cl("Loading...Row - " + (rowCount-8))
+							update_mainTable_row(mainTable.children[rowCount].id,importOBJ[rowCount-9])
+						}
+					}//*** END Each element in mainTable
+
+					getElem("topline").innerHTML ="Hey There, episodes loaded"
+			      
+			      
+
+			   }//*** Handle reader Event
+			}//*** Handle Input OnChange
+
+			input.click();
+
+}//*** END import_layout
+
+function incrementAllEpisodes(incrementValue){
+
+	var allRows = document.getElementsByClassName("mainRow");
 	
-	var out = "";
+	for (var rowCounter=0; rowCounter < allRows.length;rowCounter++){
 
-	out += "<table>";
-	out += "<thead>";
-	out += "<tr>";
+		var loopRow = allRows.item(rowCounter);
+		var rowID = loopRow.id;
+		var thisRowList = [];
 
+		//parent = loopRow.parentNode
+
+		//*** Loop through the row looking for TD.
+
+		for (elemCounter in loopRow.children){
+			var loopChild = loopRow.children[elemCounter]
+
+			if (typeof loopChild == 'object') {
+				if (loopChild.children.length > 0){
+
+					//*** Increment episode
+					var thisSeries = loopChild.children[0].value;
+					//*** Get Episode Index
+					var episodeIndex = parseInt(loopChild.children[1].selectedIndex) + parseInt(incrementValue) ;
+					
+
+					//*** Check if Index is over
+					if ( episodeIndex > (m.series[thisSeries].length - 1) ) {
+
+						//*** Subtract index from the length. This resets over the top
+						episodeIndex = parseInt(episodeIndex) - parseInt(m.series[thisSeries].length)
+
+					}//*** END Reset Counter
+
+					//*** Update the Row List with the newValues
+					thisRowList.push({
+						series : thisSeries,
+						episode : m.series[thisSeries][episodeIndex]
+					});
+					
+					//cl(	thisSeries + ":"+ m.series[thisSeries][episodeIndex] )
+					
+
+				}//*** END Child has Children
+				
+			}//**** END Child is an object
+
+			update_mainTable_row(rowID,thisRowList)
+
+
+		}//*** END Each loopRow Element
+
+	}//*** END each row
+
+}//*** END 
+
+
+function init(){
+
+	getElem('import_layout').style.display = 'none'
+	getElem('export_layout').style.display = 'none'
 	
 
-	out += "</tr>";
-	out += "</thead>";
-	out += "<tr>";
-	out += "<td>1<td>"
-	out += "<td>2<td>"
-	out += "<td>3<td>"
-	out += "</tr>";
-	out += "</table>";
+}//*** END init
+
+
+
+
+
+function readText(){
+
+	cl("Let's get JSON LOADED ")
+	var input = document.createElement('input');
+	input.type = 'file';
+	input.accept = ".json";
+	input.defaultValue = "network_flow_tab";
+
+	input.onchange = e => { 
+	   // getting a hold of the file reference
+	   var file = e.target.files[0]; 
+
+	   // setting up the reader
+	   var reader = new FileReader();
+	   reader.readAsText(file,'UTF-8');
+
+	   // here we tell the reader what to do when it's done reading...
+	   reader.onload = readerEvent => {
+	      var importOBJ = readerEvent.target.result; // this is the content!
+	      
+	      try
+	      {
+	      	importOBJ = JSON.parse(importOBJ);
+  	
+	      }//*** END import Parse Try
+	      catch(e)
+	      {
+	      	alert("Unable to parse file: " + file.name + "\nPlease select a valid Hotkey JSON File");
+	      	return;
+	      }//**** END Main Import 
+	      
+		  //cl(importOBJ)
+		 	for (topIndex in importOBJ.records) {
+			
+			   	var rawFields = importOBJ.records[topIndex].fields
+					
+					//**** Build key names from fields
+					if (m.fieldKeys.length == 0){
+						for (x in rawFields){
+							m.fieldKeys.push(x);
+						}
+						
+						//cl(m.fieldKeys);
+					}
+				
+				var thisOBJ = {};
+				//**** Get the housenumber located at first index of field Keys
+				var thisHousenumber = rawFields[m.fieldKeys[0]];
+				
+				//**** Build each episode object
+				for ( x in m.fieldKeys){
+					
+					var thisKey = m.fieldKeys[x];
+					
+					//cl(thisHousenumber + ":" + thisKey + ":" + rawFields[thisKey]);
+					
+					var thisValue = rawFields[thisKey];
+					
+					if (typeof(thisValue) == 'undefined'){ thisValue = "_" };
+					
+					thisOBJ[thisKey] = thisValue;
+				}
+				
+				//*** Add episode to m.fields
+				m.fields[thisHousenumber] = thisOBJ;
+				
+				//**** Build Show Titles
+				m.series[thisOBJ["Series"]] = thisOBJ["Series"];
+			
+			}//*** END each record
+				
+			//*** Get all episodes for each series
+			for (scount in m.series){
+				var thisSeries = m.series[scount];
+				
+				var thisEpisodeList = [];
+				
+				for (x in m.fields){
+					
+					if (thisSeries == m.fields[x].Series) {
+						thisEpisodeList.push(x)
+					}
+				
+				}//*** For each masterObject
+				
+				//**** Assign sorted episodes to the series				
+				m.series[scount] = thisEpisodeList.sort();
+				
+			}//*** END each Series
+			
+				buildPage();
+			
+		}//*** Handle Input OnChange
 	
+	}//** END input.onchange
+	//*** Is this Close or open? Not Sure
+	input.click();
+			
+}//*** END readText
+
+function styleRows(inputOBJ){
+	targetIDs = inputOBJ.targetIDs;
+
+	for (var x in targetIDs){
+
+		targetElem = getElem(targetIDs[x])
+
+		targetElem.style[inputOBJ.attribute] = inputOBJ.value
+
+	}//*** END each elem
+
+}
+
+function tdChange(e){
 	
-	var downloadurl;
-    var dataFileType = 'application/vnd.ms-excel';
-    var tableSelect = document.getElementById("mainTable");
-    var tableHTMLData = tableSelect.outerHTML.replace(/ /g, '%20');
-    
-    // Specify file name
-    filename = 'export_excel_data.xls';
-    
-    // Create download link element
-    downloadurl = document.createElement("a");
-    
-    document.body.appendChild(downloadurl);
-    
-    // Create a link to the file
-    downloadurl.href = 'data:' + dataFileType + ', ' + out;
+	//***Series Changed, draw new Episode List
+	var newSeriesKey = e.target.value
+		
+	//*** Delete existing episodes
+	while (e.target.nextSibling.childNodes.length > 0) {
+		e.target.nextSibling.removeChild(e.target.nextSibling.childNodes[0])
+	}
 
-    // Setting the file name
-    downloadurl.download = filename;
-    
-    //triggering the function
-    downloadurl.click();
- 
-
+	e.target.className = newSeriesKey;
+	
+	//*** Add New Episodes
+	var thisSeries = m.series[newSeriesKey]
+		
+	for (x in thisSeries){
+		var opt1 = document.createElement('option');
+		opt1.text = thisSeries[x];
+		opt1.value = thisSeries[x];
+		e.target.nextSibling.add(opt1);
+	}
+	e.target.nextSibling.className = newSeriesKey;
+}//*** END tdChange
 
 
+function toggleAutoBuild(){
 
-}//*** END Export to excel
+	//*** Toggle display of autobuild buttons. Hidden by default to reduce clutter
+
+	thisElem = getElem("showhideautobuild");
+
+
+	var showElem = true;
+	if (thisElem.innerHTML == "Show Autobuild Buttons") {
+		
+		//*** Display Elements
+		thisElem.innerHTML = "Hide Autobuild Buttons";
+
+
+
+
+	} else {
+
+		//*** Hide Elements
+		thisElem.innerHTML = "Show Autobuild Buttons"
+		showElem=false;
+
+	}
+
+	button_elements = document.getElementsByClassName("button_autobuild")
+
+	for (var elemCounter=0; elemCounter < button_elements.length;elemCounter++){
+
+		var loopElem = button_elements.item(elemCounter);
+
+		if (showElem) {
+			loopElem.style.display = "inline";
+		}
+		else{
+			loopElem.style.display = "none";
+		}
+		
+
+	}//*** END Loop each element
+
+
+}//*** END Toggle Display Autobuild buttons
+
+function update_mainTable_row(inputElem,inputValues){
+
+
+    //var thisRow = getElem("mainTable").children[inputIndex].children;
+	var thisRow = getElem(inputElem).children;
+	//for (x=0; x<thisRow.children.length; x++){
+	//	cl(thisRow.children[x+1])
+	//}
+
+	cl(inputElem + ":" + inputValues)
+	//if (typeof inputValues.length == 'undefined') { return }
+	//cl("Row: " + inputIndex);
+    //*** input values are in order
+    for (x=0; x < (inputValues.length );x++ ) {
+    	//*** TD element is thisRow + 1
+    	var thisTD = thisRow[ (x + 1) ];
+    	//cl(x + ":" + " ThisTD: " + thisTD);
+		    	
+    	
+    	//*** Series is thisTD children [0]
+    	//cl(inputValues[x]);
+    	//cl(thisTD.children[0].value + ":" + thisTD.children[1].value);
+    	//cl(inputValues[x].series + ":" + inputValues[x].episode );
+
+    	//**** Assign Series
+    	thisTD.children[0].value = inputValues[x].series;
+		thisTD.children[0].className = inputValues[x].series;
+
+
+		//***Draw Episode List based on series
+		var newSeriesKey = inputValues[x].series;
+			
+
+		var episodeNode = thisTD.children[1]
+		//*** Delete existing episodes
+		while (episodeNode.children.length > 0) {
+			episodeNode.removeChild(episodeNode.children[0])
+		}
+		//cl("Deleted: " + (x + 1) + ":" + inputIndex)
+
+		//thisEpisode = document.createElement('select');
+		//thisEpisode.className = newSeriesKey
+		
+		//*** Add New Episodes
+		var thisSeries = m.series[newSeriesKey]
+		//cl(thisSeries)
+			
+		for (xx in thisSeries){
+			var opt1 = document.createElement('option');
+			opt1.text = thisSeries[xx];
+			opt1.value = thisSeries[xx];
+			episodeNode.add(opt1);
+			//cl("adding: " + x + ":" + thisSeries[xx])
+		}
+		episodeNode.className = newSeriesKey;
+		
+
+
+		
+
+    	episodeNode.value = inputValues[x].episode;
+		episodeNode.text = inputValues[x].episode;
+
+
+    	//*** Episodes is thisTD children [1]
+
+    }
+
+
+}//*** END update_mainTable_row
+
+
 
 </script>
 <body onload='init()'>
@@ -1468,6 +1727,5 @@ function export_to_excel(){
 <button id ='readText' onclick='readText()'>Load: Network_flow_tab.json</button>
 <button id='import_layout' onclick='import_layout()'>Import Layout</button>
 <button id='export_layout' onclick='export_layout()'>Export Layout</button>
-<button id='export_to_excel' onclick='export_to_excel()'>Export to Excel</button>
 </body>
 </html>
