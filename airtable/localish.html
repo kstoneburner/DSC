@@ -90,6 +90,9 @@
 .BABY{
 	background :#72DDC3;
 }
+.AGD{
+	background : #AFAFAA;
+}
 .button_autobuild{
 	display : none;
 }
@@ -142,7 +145,7 @@ function autobuild_mf_row(inputOBJ){
 
 	thisRowList.push(showOBJ)
 
-	for (x=1;x<7;x++){
+	for (x=1;x<5;x++){
 
 		//*** Increment episode Index, Starting from found Value
 		episodeIndex++;
@@ -180,6 +183,145 @@ function autobuild_mf_row(inputOBJ){
 
 
 }//*** END autobuild_mf_row
+function autobuild_m_w_f_row(inputOBJ){
+	var parent = inputOBJ.srcElement.parentNode;
+	cl(parent);
+	var firstTD = parent.children[1];
+
+	cl("Series: " + firstTD.children[0].value);
+	cl("Episode: " + firstTD.children[1].value);
+
+	var startSeries = firstTD.children[0].value;
+	var startEpisode = firstTD.children[1].value;
+
+	//*** Build Row based on start series
+	var thisRowList = [];
+
+	var thuSeries = ""
+	var thuEpisode = ""
+
+	//*** Get all selections in row
+	//*** Build the value for the row. Increment Thursday based on Tuesday
+	for (x=1;x<8;x++){
+
+
+		var showOBJ = {
+			series : parent.children[x].children[0].value,
+			episode : parent.children[x].children[1].value
+		}
+
+
+		switch(x){
+
+			case 1:
+				//*** Tuesday's show. Build Thursday's show
+				//*** Assign series, that was easy
+				thuSeries = showOBJ.series
+
+				cl(showOBJ.series + ":" + showOBJ.episode)
+
+				//***Increment Episode, this is lil more work ;)
+				var theseEpisodes = m.series[showOBJ.series];
+
+				var episodeIndex = -1;
+
+				for (xx=0;xx<theseEpisodes.length;xx++){
+
+					if ( theseEpisodes[xx] == showOBJ.episode){
+
+						episodeIndex = xx;
+
+					}//*** END get find index
+
+				}//*** END find Episode Index
+
+				//*** Increment found Index
+				episodeIndex++;
+
+				if (episodeIndex == theseEpisodes.length){
+
+					episodeIndex = 0;
+
+				}//*** END Reset episodeIndex to Beginning
+
+				thuEpisode = theseEpisodes[episodeIndex];
+
+				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
+				break
+			case 3:
+				showOBJ = {
+					series : thuSeries,
+					episode : thuEpisode
+				}
+
+				thuSeries = showOBJ.series
+
+				cl(showOBJ.series + ":" + showOBJ.episode)
+
+				//***Increment Episode, this is lil more work ;)
+				var theseEpisodes = m.series[showOBJ.series];
+
+				var episodeIndex = -1;
+
+				for (xx=0;xx<theseEpisodes.length;xx++){
+
+					if ( theseEpisodes[xx] == showOBJ.episode){
+
+						episodeIndex = xx;
+
+					}//*** END get find index
+
+				}//*** END find Episode Index
+
+				//*** Increment found Index
+				episodeIndex++;
+
+				if (episodeIndex == theseEpisodes.length){
+
+					episodeIndex = 0;
+
+				}//*** END Reset episodeIndex to Beginning
+
+				thuEpisode = theseEpisodes[episodeIndex];
+
+				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
+				break
+
+			case 5:
+				showOBJ = {
+					series : thuSeries,
+					episode : thuEpisode
+				}
+				break
+
+		}//*** END Switch Handle Tuesday Thursday
+
+		cl(showOBJ)
+
+		thisRowList.push(showOBJ)
+	
+
+	}//*** Each TD
+
+	//*** Find Index of current Row
+	var mainTable = parent.parentNode;
+
+	
+	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
+	//for (x=0;x<mainTable.children.length - 1;x++){
+
+	//	if (parent == mainTable.children[x]) {
+			//*** Parent Found, x is RowIndex.
+			//*** Let's Update!!!
+			update_mainTable_row(parent.id,thisRowList)
+		//	break;		
+	//	}
+
+	//}//*** END maintable Row Loop
+
+	return;
+
+}//*** END autobuild_tu_thu_row
 
 function autobuild_tu_thu_row(inputOBJ){
 	var parent = inputOBJ.srcElement.parentNode;
@@ -281,6 +423,246 @@ function autobuild_tu_thu_row(inputOBJ){
 
 }//*** END autobuild_tu_thu_row
 
+function autobuild_tu_thu_sat_row(inputOBJ){
+	var parent = inputOBJ.srcElement.parentNode;
+	cl(parent);
+	var firstTD = parent.children[1];
+
+	cl("Series: " + firstTD.children[0].value);
+	cl("Episode: " + firstTD.children[1].value);
+
+	var startSeries = firstTD.children[0].value;
+	var startEpisode = firstTD.children[1].value;
+
+	//*** Build Row based on start series
+	var thisRowList = [];
+
+	var thuSeries = ""
+	var thuEpisode = ""
+
+	//*** Get all selections in row
+	//*** Build the value for the row. Increment Thursday based on Tuesday
+	for (x=1;x<8;x++){
+
+
+		var showOBJ = {
+			series : parent.children[x].children[0].value,
+			episode : parent.children[x].children[1].value
+		}
+
+
+		switch(x){
+
+			case 2:
+				//*** Tuesday's show. Build Thursday's show
+				//*** Assign series, that was easy
+				thuSeries = showOBJ.series
+
+				cl(showOBJ.series + ":" + showOBJ.episode)
+
+				//***Increment Episode, this is lil more work ;)
+				var theseEpisodes = m.series[showOBJ.series];
+
+				var episodeIndex = -1;
+
+				for (xx=0;xx<theseEpisodes.length;xx++){
+
+					if ( theseEpisodes[xx] == showOBJ.episode){
+
+						episodeIndex = xx;
+
+					}//*** END get find index
+
+				}//*** END find Episode Index
+
+				//*** Increment found Index
+				episodeIndex++;
+
+				if (episodeIndex == theseEpisodes.length){
+
+					episodeIndex = 0;
+
+				}//*** END Reset episodeIndex to Beginning
+
+				thuEpisode = theseEpisodes[episodeIndex];
+
+				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
+				break
+			case 4:
+				showOBJ = {
+					series : thuSeries,
+					episode : thuEpisode
+				}
+
+				thuSeries = showOBJ.series
+
+				cl(showOBJ.series + ":" + showOBJ.episode)
+
+				//***Increment Episode, this is lil more work ;)
+				var theseEpisodes = m.series[showOBJ.series];
+
+				var episodeIndex = -1;
+
+				for (xx=0;xx<theseEpisodes.length;xx++){
+
+					if ( theseEpisodes[xx] == showOBJ.episode){
+
+						episodeIndex = xx;
+
+					}//*** END get find index
+
+				}//*** END find Episode Index
+
+				//*** Increment found Index
+				episodeIndex++;
+
+				if (episodeIndex == theseEpisodes.length){
+
+					episodeIndex = 0;
+
+				}//*** END Reset episodeIndex to Beginning
+
+				thuEpisode = theseEpisodes[episodeIndex];
+
+				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
+				break
+
+			case 6:
+				showOBJ = {
+					series : thuSeries,
+					episode : thuEpisode
+				}
+				break
+
+		}//*** END Switch Handle Tuesday Thursday
+
+		cl(showOBJ)
+
+		thisRowList.push(showOBJ)
+	
+
+	}//*** Each TD
+
+	//*** Find Index of current Row
+	var mainTable = parent.parentNode;
+
+	
+	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
+	//for (x=0;x<mainTable.children.length - 1;x++){
+
+	//	if (parent == mainTable.children[x]) {
+			//*** Parent Found, x is RowIndex.
+			//*** Let's Update!!!
+			update_mainTable_row(parent.id,thisRowList)
+		//	break;		
+	//	}
+
+	//}//*** END maintable Row Loop
+
+	return;
+
+}//*** END autobuild_tu_thu_row
+
+function autobuild_sat_sun_row(inputOBJ){
+	var parent = inputOBJ.srcElement.parentNode;
+	cl(parent);
+	var firstTD = parent.children[1];
+
+	cl("Series: " + firstTD.children[0].value);
+	cl("Episode: " + firstTD.children[1].value);
+
+	var startSeries = firstTD.children[0].value;
+	var startEpisode = firstTD.children[1].value;
+
+	//*** Build Row based on start series
+	var thisRowList = [];
+
+	var thuSeries = ""
+	var thuEpisode = ""
+
+	//*** Get all selections in row
+	//*** Build the value for the row. Increment Thursday based on Tuesday
+	for (x=1;x<8;x++){
+
+
+		var showOBJ = {
+			series : parent.children[x].children[0].value,
+			episode : parent.children[x].children[1].value
+		}
+
+		switch(x){
+
+			case 6:
+				//*** Tuesday's show. Build Thursday's show
+				//*** Assign series, that was easy
+				thuSeries = showOBJ.series
+
+				cl(showOBJ.series + ":" + showOBJ.episode)
+
+				//***Increment Episode, this is lil more work ;)
+				var theseEpisodes = m.series[showOBJ.series];
+
+				var episodeIndex = -1;
+
+				for (xx=0;xx<theseEpisodes.length;xx++){
+
+					if ( theseEpisodes[xx] == showOBJ.episode){
+
+						episodeIndex = xx;
+
+					}//*** END get find index
+
+				}//*** END find Episode Index
+
+				//*** Increment found Index
+				episodeIndex++;
+
+				if (episodeIndex == theseEpisodes.length){
+
+					episodeIndex = 0;
+
+				}//*** END Reset episodeIndex to Beginning
+
+				thuEpisode = theseEpisodes[episodeIndex];
+
+				//cl("Increment: " + showOBJ.series + ":" + showOBJ.episode + ":" + episodeIndex)
+				break
+			case 7:
+				showOBJ = {
+					series : thuSeries,
+					episode : thuEpisode
+				}
+				break
+
+		}//*** END Switch Handle Tuesday Thursday
+
+		cl(showOBJ)
+
+		thisRowList.push(showOBJ)
+	
+
+	}//*** Each TD
+
+	//*** Find Index of current Row
+	var mainTable = parent.parentNode;
+
+	
+	//*** Loop through mainTable to find the parent Row. We need this Index to update the Row Values.
+	//for (x=0;x<mainTable.children.length - 1;x++){
+
+	//	if (parent == mainTable.children[x]) {
+			//*** Parent Found, x is RowIndex.
+			//*** Let's Update!!!
+			update_mainTable_row(parent.id,thisRowList)
+		//	break;		
+	//	}
+
+	//}//*** END maintable Row Loop
+
+	return;
+
+}//*** END autobuild_tu_thu_row
+
 function buildAutoPopulate(inputOBJ){
 
 	thisAction = inputOBJ.action;
@@ -295,7 +677,7 @@ function buildAutoPopulate(inputOBJ){
 
 
 			var button = document.createElement("button");
-			button.innerHTML = "Autobuild - M-F"
+			button.innerHTML = "AB:M-F"
 
 			button.addEventListener("click",function(e){autobuild_mf_row(e)});
 			button.className = "button_autobuild";
@@ -308,12 +690,48 @@ function buildAutoPopulate(inputOBJ){
 			thisColumn = 1
 
 			var button = document.createElement("button");
-			button.innerHTML = "Autobuild - Tu-Thu"
+			button.innerHTML = "AB:Tu-Thu"
 
 			button.addEventListener("click",function(e){autobuild_tu_thu_row(e)});
 			button.className = "button_autobuild";
 
 			return button;
+
+		case "autobuild_tu_thu_sat_row":
+			thisColumn = 1
+
+			var button = document.createElement("button");
+			button.innerHTML = "AB:Tu-Thu-Sat"
+
+			button.addEventListener("click",function(e){autobuild_tu_thu_sat_row(e)});
+			button.className = "button_autobuild";
+
+			return button;
+
+		case "autobuild_m_w_f_row":
+			thisColumn = 1
+
+			var button = document.createElement("button");
+			button.innerHTML = "AB:M-W-F"
+
+			button.addEventListener("click",function(e){autobuild_m_w_f_row(e)});
+			button.className = "button_autobuild";
+
+			return button;
+
+		case "autobuild_sat_sun_row":
+			thisColumn = 1
+
+			var button = document.createElement("button");
+			button.innerHTML = "AB:Sa-Sun"
+
+			button.addEventListener("click",function(e){autobuild_sat_sun_row(e)});
+			button.className = "button_autobuild";
+
+			return button;
+
+
+
 
 	}//*** END switch Action
 
@@ -1163,7 +1581,6 @@ function buildShowTR(input_time){
 	newTD.innerHTML = input_time;
 	
 	newTR.appendChild(newTD);
-	
 	newTR.appendChild(buildShowTD({"day" : "monday", "time":input_time}));
 	newTR.appendChild(buildShowTD({"day" : "tuesday", "time":input_time}));
 	newTR.appendChild(buildShowTD({"day" : "wednesday", "time":input_time}))
@@ -1172,8 +1589,10 @@ function buildShowTR(input_time){
 	newTR.appendChild(buildShowTD({"day" : "saturday", "time":input_time}))
 	newTR.appendChild(buildShowTD({"day" : "sunday", "time":input_time}))
 	newTR.appendChild(buildAutoPopulate({action : "autobuild_mf", column : 1}))
+	newTR.appendChild(buildAutoPopulate({action : "autobuild_m_w_f_row", column : 1}))
 	newTR.appendChild(buildAutoPopulate({action : "autobuild_tu_thu", column : 1}))
-	
+	newTR.appendChild(buildAutoPopulate({action : "autobuild_tu_thu_sat_row", column : 1}))
+	newTR.appendChild(buildAutoPopulate({action : "autobuild_sat_sun_row", column : 1}))
 	//buildAutoPopulate({action : "autobuild", column : 1})
 	
 	return newTR
@@ -1502,6 +1921,11 @@ function readText(){
 			
 			   	var rawFields = importOBJ.records[topIndex].fields
 					
+			   		//*** Ignore Show If any value is in the HOLD Field
+					if ( typeof  rawFields["HOLD"] != 'undefined') {
+						continue
+					}
+
 					//**** Build key names from fields
 					if (m.fieldKeys.length == 0){
 						for (x in rawFields){

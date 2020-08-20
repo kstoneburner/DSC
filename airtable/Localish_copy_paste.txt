@@ -1,3 +1,10 @@
+
+Fix Populate Fields
+Fix Export Excel and Verify all shows are exporting correctly
+Build Kids Programming Button - Saturday 9a & 9:30
+
+
+
 11am -> 6am -> 9am -> 12pm -> 2pm -> 7pm -> 3am
 11:30  -> 630 -> 930 1230p -> 230 730 330a
 12am -> 7am, 10am 1pm, 3pm 6pm, 8pm, 10p
@@ -8,3 +15,12 @@
 2:30am -> 530am 530pm 
 
 Shows Organized for outuput by date and time slot
+
+
+
+
+DONE - IGNORE  Shows in HOLD column
+DONE - Adjust Mon-fri to actually do Monday through Friday
+DONE - Add Tu thu Sat
+DONE - Add Mon-Wed-Fri
+DONE - Add Sat Sun 
