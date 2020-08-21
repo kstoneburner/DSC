@@ -1,0 +1,10 @@
+PyInstall
+Verify PIp is Installed: get-pip.py 
+
+Path for PIP
+path = %path%;C:\Users\stonk013\AppData\Local\Programs\Python\Python38\Scripts
+
+Install Pyinstaller:
+pip install pyinstaller
+
+pyinstaller download_workflow.py --onefile

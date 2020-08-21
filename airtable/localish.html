@@ -109,6 +109,89 @@ var m = {
 	fields : {}
 }
 
+
+function assign_kids_shows(){
+	//*** Assign Kids Shows to Saturday 9a & 930a
+
+		var dayShows = document.getElementsByClassName("saturday");
+
+		for (x=0;x<dayShows.length;x++){
+
+			thisTD = dayShows.item(x);
+			if (thisTD.className.indexOf("9:00a") > -1) { 
+
+				thisTD.children[0].value = "KIDS";
+				thisTD.children[0].className = "KIDS";
+
+
+				cl(thisTD.children[1].innerHTML)
+				cl(thisTD.children[1].children.length)
+				cl(x)
+
+				var xx_max = thisTD.children[1].children.length;
+
+				//*** Delete existing episodes
+				for ( xx=0; xx < xx_max;xx++) {
+					//thisTD.children[1].removeChild(thisTD.children[1].children[0])
+					thisTD.children[1].removeChild(thisTD.children[1].firstChild)
+					cl(xx + ":" + thisTD.children[1].children.length)
+				}
+
+				thisTD.children[1].className = "KIDS";
+				
+				//*** Add New Episodes
+				var thisSeries = m.series["KIDS"];
+				
+				for (item in thisSeries){
+			
+					var opt1 = document.createElement('option');
+					opt1.text = thisSeries[item];
+					opt1.value = thisSeries[item];
+					thisTD.children[1].add(opt1);
+				}
+				
+							
+			}
+			if (thisTD.className.indexOf("9:30a") > -1) { 
+			
+				thisTD.children[0].value = "KIDS";
+				thisTD.children[0].className = "KIDS";
+
+
+				cl(thisTD.children[1].innerHTML)
+				cl(thisTD.children[1].children.length)
+				cl(x)
+
+				var xx_max = thisTD.children[1].children.length;
+
+				//*** Delete existing episodes
+				for ( xx=0; xx < xx_max;xx++) {
+					//thisTD.children[1].removeChild(thisTD.children[1].children[0])
+					thisTD.children[1].removeChild(thisTD.children[1].firstChild)
+					cl(xx + ":" + thisTD.children[1].children.length)
+				}
+
+				thisTD.children[1].className = "KIDS";
+				
+				//*** Add New Episodes
+				var thisSeries = m.series["KIDS"];
+				
+				for (item in thisSeries){
+			
+					var opt1 = document.createElement('option');
+					opt1.text = thisSeries[item];
+					opt1.value = thisSeries[item];
+					thisTD.children[1].add(opt1);
+				}
+				
+				thisTD.children[1].selectedIndex = 1;
+			}
+
+		}//*** END Each saturday Show
+
+
+}//*** Assign Kids Shows
+
 function autobuild_mf_row(inputOBJ){
 	var parent = inputOBJ.srcElement.parentNode;
 	cl(parent);
@@ -1215,6 +1298,14 @@ function buildPage(){
 	
 	document.body.appendChild(incrementAllShowsByOne);
 
+	var buttonKidsShows = document.createElement("button");
+	buttonKidsShows.innerHTML = "Assign Kids Shows";
+	buttonKidsShows.id='button_kids_shows';
+	buttonKidsShows.addEventListener('click',function(event){ 
+		assign_kids_shows();
+	});
+	document.body.appendChild(buttonKidsShows);
+
 	document.body.appendChild(document.createElement("br"));
 	
 	var buttonExportExcel = document.createElement("button");
@@ -1765,6 +1856,7 @@ function import_layout(){
 			cl("BEGIN import_layout ")
 			var input = document.createElement('input');
 			input.type = 'file';
+			input.accept = ".json";
 
 			input.onchange = e => { 
 			   // getting a hold of the file reference
@@ -1890,7 +1982,7 @@ function readText(){
 	cl("Let's get JSON LOADED ")
 	var input = document.createElement('input');
 	input.type = 'file';
-	input.accept = ".json";
+	input.accept = ".airtable";
 	input.defaultValue = "network_flow_tab";
 
 	input.onchange = e => { 
@@ -1930,9 +2022,10 @@ function readText(){
 					if (m.fieldKeys.length == 0){
 						for (x in rawFields){
 							m.fieldKeys.push(x);
+
 						}
 						
-						//cl(m.fieldKeys);
+						cl("Field Keys: " + m.fieldKeys);
 					}
 				
 				var thisOBJ = {};
@@ -1979,7 +2072,9 @@ function readText(){
 				m.series[scount] = thisEpisodeList.sort();
 				
 			}//*** END each Series
-			
+				
+				cl(m.series["BSZ"])
+
 				buildPage();
 			
 		}//*** Handle Input OnChange

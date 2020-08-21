@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['download_workflow.py'],
-             pathex=['C:\\Users\\newcomb\\DSCProjects\\DSC\\airtable'],
+             pathex=['L:\\stonk\\projects\\DSC\\DSC\\airtable'],
              binaries=[],
              datas=[],
              hiddenimports=[],

@@ -22,7 +22,7 @@ response = requests.get(APICall,stream=True)
 
 
 master_data = json.loads(response.text)
-
+thisOffset = master_data["offset"]
 # f = open(getFiles[x]["file"], 'w')
 #f.write(str(response.text.encode('utf-8')))
 #f.write(response.text)
@@ -36,10 +36,10 @@ keys = master_data.keys()
 
 loopLimit = 0
 while "offset" in keys:
-  thisOffset = master_data["offset"]
+  
 
-  print(thisOffset)
-  print(APICall + "&"+thisOffset)
+  #print(thisOffset)
+  print(APICall + "&offset="+thisOffset)
   response = requests.get(APICall + "&offset="+thisOffset,stream=True)
 
   ### Build Temp Object
@@ -48,15 +48,17 @@ while "offset" in keys:
   ### Update keys for main loop
   keys = thisOBJ.keys()
 
-  #print(thisOBJ)
+  print("keys: " + str(keys))
 
+  if ('offset' in keys):
 
+    thisOffset = thisOBJ["offset"]
 
   print(len(thisOBJ["records"]))
 
   for x in thisOBJ["records"]:
     #thisRecord = thisOBJ["records"][x]
-    print(x)
+    #print(x)
 
     master_data["records"].append(x)
     
@@ -64,9 +66,9 @@ while "offset" in keys:
 
   loopLimit = loopLimit + 1
 
-  if loopLimit > 3:
-    print("Reached Loop Limit. Quitting!")
-    break
+  #if loopLimit > 100:
+  #  print("Reached Loop Limit. Quitting!")
+  #  break
 
 
 
@@ -76,7 +78,7 @@ outputString = json.dumps(master_data)
 
 print(outputString)
 
-f = open("network_flow_tab.json", 'w')
+f = open("network_flow_tab.airtable", 'w')
 #f.write(str(outputString.encode('utf-8')))
 f.write(outputString)
 f.close()

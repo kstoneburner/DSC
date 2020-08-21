@@ -1,6 +1,6 @@
-
 Fix Populate Fields
-Fix Export Excel and Verify all shows are exporting correctly
+
+
 Build Kids Programming Button - Saturday 9a & 9:30
 
 
@@ -24,3 +24,5 @@ DONE - Adjust Mon-fri to actually do Monday through Friday
 DONE - Add Tu thu Sat
 DONE - Add Mon-Wed-Fri
 DONE - Add Sat Sun 
+
+DOUBLE CHECK - Fix Export Excel and Verify all shows are exporting correctly
