@@ -1,101 +1,136 @@
 <html>
 <meta http-equiv="content-type" content="text/plain; charset=UTF-8"/>
 <style>
-.BSZ{
-	background : #CFDFFF;
+.AGD{
+	background : #F5DC86;
 }
 
-.PMP {
-	background : #D0F0FD;
+.ALL{
+	background :#CDB0FF;
 }
+
+.BABY{
+	background :#C6E0B4;
+}
+
+.BAY{
+	background :#FFE3B0;
+}
+.BSZ{
+	background :#D1C4D5;
+}
+
+.CHI{
+	background :#CAE1DD;
+}
+
+.CYC{
+	background :#A4C8B1;
+}
+
 
 .GLL{
-	background :#C2F5E9;
+	background :#AFCBEB;
 }
+
+
+.HOL{
+	background :#F99DE2;
+}
+
+.HOU{
+	background :#78D1E5;
+}
+
+.LIFE{
+	background :#F5DC86;
+}
+
+.LOS{
+	background :#A6BECC;
+}
+
+.LSH{
+	background :#9ED7D4;
+}
+
+
+.MUS{
+	background :#BEDDF4;
+}
+
+.MGT{
+	background :#77A9DB;
+}
+
+.MIC{
+	background :#6EBAB7;
+}
+
+.NYC{
+	background :#E0CEAE;
+}
+
 
 .OOO{
 	background :#D1F7C4;
 }
 
-.LSH{
-	background :#FEE2D5;
+.OFO{
+	background :#FBC893;
 }
 
-.MGT{
-	background :#FFDCE5;
+.PET{
+	background :#B6DFEB;
 }
 
-.SAW{
-	background :#FFDAF6;
+.PHI{
+	background :#E0D3E8;
 }
 
-.MIC{
-	background :#EDE2FE;
-}
-
-.WTW{
-	background :#EEEEEE;
-}
-
-.CYC{
-	background :#9CC7FF;
-}
 
 .PTL{
 	background :#77D1F3;
 }
 
-.HOU{
-	background :#F82B60;
+
+.PMP {
+	background : #F9CCC2;
 }
-.LOS{
-	background :#FDD081;
+
+
+.SAW{
+	background :#F35F4F;
 }
-.PET{
-	background :#77D1F3;
-}
-.HOL{
-	background :#F99DE2;
-}
-.ALL{
-	background :#CDB0FF;
-}
-.MUS{
-	background :#2D7FF9;
-}
-.BAY{
-	background :#18BFFF;
-}
-.CHI{
-	background :#20D9D2;
-}
-.PHI{
-	background :#20C933;
-}
-.NYC{
-	background :#FF6F2C;
-}
+
 .SOG{
 	background :#D0F0FD;
 }
-.LIFE{
-	background :#2750AE;
-}
-.VLY{
-	background :#2750AE;
-}
+
 .special{
 	background :#BA1E45;
 }
-.BABY{
-	background :#72DDC3;
+
+.VLY{
+	background :#2750AE;
 }
-.AGD{
-	background : #AFAFAA;
+
+.WTW{
+	background :#F5D6B3;
 }
+
+.Change {
+	background: #000000;
+	color: #FFFFFF;
+}
+
+
 .button_autobuild{
 	display : none;
 }
+
+
+
 #rootTitan td {
 	outline : 1px solid black;
 } 
@@ -947,7 +982,7 @@ function buildPage(){
 	var copyPopulateButton11am = document.createElement("button");
 	copyPopulateButton11am.innerHTML = "Populate: 11am"
 	copyPopulateButton11am.addEventListener('click',function(event){ 
-		copyRows({"source":"11:00a","targets":["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"]})
+		copyRows({"source":"11:00a","targets":["3:00a","6:00a","9:00a","12:00p", "2:00p", "7:00p"]})
 	});
 	copyPopulateButton11am.addEventListener('mouseover',function(event){
 
@@ -956,12 +991,12 @@ function buildPage(){
 			       value : "5px solid red"
 			   })
 
-		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+		styleRows({targetIDs : ["3:00a","6:00a","9:00a","12:00p", "2:00p", "7:00p"], 
 			       attribute : "background",
 			       value : "green"
 			   })
 
-		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+		styleRows({targetIDs : ["3:00a","6:00a","9:00a","12:00p", "2:00p", "7:00p"], 
 			       attribute : "outline",
 			       value : "2px solid green"
 			   })
@@ -974,12 +1009,12 @@ function buildPage(){
 			       attribute : "outline",
 			       value : ""
 			   })
-		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+		styleRows({targetIDs : ["3:00a","6:00a","9:00a","12:00p", "2:00p", "7:00p"], 
 			       attribute : "background",
 			       value : ""
 			   })
 
-		styleRows({targetIDs : ["6:00a","9:00a","12:00p", "2:00p", "7:00p", "3:00a"], 
+		styleRows({targetIDs : ["3:00a","6:00a","9:00a","12:00p", "2:00p", "7:00p"], 
 			       attribute : "outline",
 			       value : ""
 			   })
@@ -990,7 +1025,7 @@ function buildPage(){
 	var copyPopulateButton1130am = document.createElement("button");
 	copyPopulateButton1130am.innerHTML = "Populate: 11:30am"
 	copyPopulateButton1130am.addEventListener('click',function(event){ 
-		copyRows({"source":"11:30a","targets":["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"]})
+		copyRows({"source":"11:30a","targets":["3:30a", "6:30a","9:30a","12:30p", "2:30p", "7:30p"]})
 	});
 	copyPopulateButton1130am.addEventListener('mouseover',function(event){
 
@@ -999,12 +1034,12 @@ function buildPage(){
 			       value : "5px solid red"
 			   })
 
-		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+		styleRows({targetIDs : ["3:30a", "6:30a","9:30a","12:30p", "2:30p", "7:30p"], 
 			       attribute : "background",
 			       value : "green"
 			   })
 
-		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+		styleRows({targetIDs : ["3:30a", "6:30a","9:30a","12:30p", "2:30p", "7:30p"], 
 			       attribute : "outline",
 			       value : "2px solid green"
 			   })
@@ -1017,12 +1052,12 @@ function buildPage(){
 			       attribute : "outline",
 			       value : ""
 			   })
-		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+		styleRows({targetIDs : ["3:30a", "6:30a","9:30a","12:30p", "2:30p", "7:30p"], 
 			       attribute : "background",
 			       value : ""
 			   })
 
-		styleRows({targetIDs : ["6:30a","9:30a","12:30p", "2:30p", "7:30p", "3:30a"], 
+		styleRows({targetIDs :["3:30a", "6:30a","9:30a","12:30p", "2:30p", "7:30p"], 
 			       attribute : "outline",
 			       value : ""
 			   })
@@ -1074,7 +1109,7 @@ function buildPage(){
 	var copyPopulateButton1230am = document.createElement("button");
 	copyPopulateButton1230am.innerHTML = "Populate: 12:30am"
 	copyPopulateButton1230am.addEventListener('click',function(event){ 
-		copyRows({"source":"12:30a","targets":["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"]})
+		copyRows({"source":"12:30a","targets":["7:30a","10:30a","1:30p", "3:30p", "6:30p", "8:30p","10:30p"]})
 	});
 	copyPopulateButton1230am.addEventListener('mouseover',function(event){
 
@@ -1083,12 +1118,12 @@ function buildPage(){
 			       value : "5px solid red"
 			   })
 
-		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "8:30p","10:30p"], 
 			       attribute : "background",
 			       value : "green"
 			   })
 
-		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "8:30p","10:30p"], 
 			       attribute : "outline",
 			       value : "2px solid green"
 			   })
@@ -1101,12 +1136,12 @@ function buildPage(){
 			       attribute : "outline",
 			       value : ""
 			   })
-		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "8:30p","10:30p"], 
 			       attribute : "background",
 			       value : ""
 			   })
 
-		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "10:30p"], 
+		styleRows({targetIDs : ["7:30a","10:30a","1:30p", "3:30p", "6:30p", "8:30p","10:30p"], 
 			       attribute : "outline",
 			       value : ""
 			   })
@@ -1116,7 +1151,7 @@ function buildPage(){
 	var copyPopulateButton1am = document.createElement("button");
 	copyPopulateButton1am.innerHTML = "Populate: 1am"
 	copyPopulateButton1am.addEventListener('click',function(event){ 
-		copyRows({"source":"1:00a","targets":["8:00a","4:00p", "9:00p"]})
+		copyRows({"source":"1:00a","targets":["8:00a", "11:00a", "4:00p", "9:00p"]})
 	});
 	copyPopulateButton1am.addEventListener('mouseover',function(event){
 
@@ -1125,12 +1160,12 @@ function buildPage(){
 			       value : "5px solid red"
 			   })
 
-		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+		styleRows({targetIDs : ["8:00a", "11:00a", "4:00p", "9:00p"], 
 			       attribute : "background",
 			       value : "green"
 			   })
 
-		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+		styleRows({targetIDs : ["8:00a", "11:00a", "4:00p", "9:00p"], 
 			       attribute : "outline",
 			       value : "2px solid green"
 			   })
@@ -1143,12 +1178,12 @@ function buildPage(){
 			       attribute : "outline",
 			       value : ""
 			   })
-		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+		styleRows({targetIDs : ["8:00a", "11:00a", "4:00p", "9:00p"], 
 			       attribute : "background",
 			       value : ""
 			   })
 
-		styleRows({targetIDs : ["8:00a","4:00p", "9:00p"], 
+		styleRows({targetIDs : ["8:00a", "11:00a", "4:00p", "9:00p"], 
 			       attribute : "outline",
 			       value : ""
 			   })
@@ -1158,7 +1193,7 @@ function buildPage(){
 	var copyPopulateButton130am = document.createElement("button");
 	copyPopulateButton130am.innerHTML = "Populate: 1:30am";
 	copyPopulateButton130am.addEventListener('click',function(event){ 
-		copyRows({"source":"1:30a","targets":["8:30a","11:30a","4:30p"]})
+		copyRows({"source":"1:30a","targets":["8:30a","11:30a","4:30p", "9:30p"]})
 	});
 	copyPopulateButton130am.addEventListener('mouseover',function(event){
 
@@ -1167,12 +1202,12 @@ function buildPage(){
 			       value : "5px solid red"
 			   })
 
-		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p", "9:30p"], 
 			       attribute : "background",
 			       value : "green"
 			   })
 
-		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p", "9:30p"], 
 			       attribute : "outline",
 			       value : "2px solid green"
 			   })
@@ -1183,12 +1218,12 @@ function buildPage(){
 			       attribute : "outline",
 			       value : ""
 			   });
-		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p", "9:30p"], 
 			       attribute : "background",
 			       value : ""
 			   });
 
-		styleRows({targetIDs : ["8:30a","11:30a","4:30p"], 
+		styleRows({targetIDs : ["8:30a","11:30a","4:30p", "9:30p"], 
 			       attribute : "outline",
 			       value : ""
 			   });
@@ -2028,6 +2063,7 @@ function readText(){
 						cl("Field Keys: " + m.fieldKeys);
 					}
 				
+				
 				var thisOBJ = {};
 				//**** Get the housenumber located at first index of field Keys
 				var thisHousenumber = rawFields[m.fieldKeys[0]];
@@ -2053,6 +2089,8 @@ function readText(){
 				m.series[thisOBJ["Series"]] = thisOBJ["Series"];
 			
 			}//*** END each record
+
+
 				
 			//*** Get all episodes for each series
 			for (scount in m.series){
@@ -2072,6 +2110,10 @@ function readText(){
 				m.series[scount] = thisEpisodeList.sort();
 				
 			}//*** END each Series
+
+			m.series["Change"] = [];
+
+
 				
 				cl(m.series["BSZ"])
 
