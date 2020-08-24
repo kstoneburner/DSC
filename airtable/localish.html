@@ -980,13 +980,13 @@ function buildPage(){
 	document.body.appendChild(mainTable);
 
 	var copyPopulateButton11am = document.createElement("button");
-	copyPopulateButton11am.innerHTML = "Populate: 11am"
+	copyPopulateButton11am.innerHTML = "Populate: 11pm"
 	copyPopulateButton11am.addEventListener('click',function(event){ 
-		copyRows({"source":"11:00a","targets":["3:00a","6:00a","9:00a","12:00p", "2:00p", "7:00p"]})
+		copyRows({"source":"11:00p","targets":["3:00a","6:00a","9:00a","12:00p", "2:00p", "7:00p"]})
 	});
 	copyPopulateButton11am.addEventListener('mouseover',function(event){
 
-		styleRows({targetIDs : ["11:00a"], 
+		styleRows({targetIDs : ["11:00p"], 
 			       attribute : "outline",
 			       value : "5px solid red"
 			   })
@@ -1005,7 +1005,7 @@ function buildPage(){
 
 	})
 	copyPopulateButton11am.addEventListener('mouseout',function(event){
-		styleRows({targetIDs : ["11:00a"], 
+		styleRows({targetIDs : ["11:00p"], 
 			       attribute : "outline",
 			       value : ""
 			   })
@@ -1025,11 +1025,11 @@ function buildPage(){
 	var copyPopulateButton1130am = document.createElement("button");
 	copyPopulateButton1130am.innerHTML = "Populate: 11:30am"
 	copyPopulateButton1130am.addEventListener('click',function(event){ 
-		copyRows({"source":"11:30a","targets":["3:30a", "6:30a","9:30a","12:30p", "2:30p", "7:30p"]})
+		copyRows({"source":"11:30p","targets":["3:30a", "6:30a","9:30a","12:30p", "2:30p", "7:30p"]})
 	});
 	copyPopulateButton1130am.addEventListener('mouseover',function(event){
 
-		styleRows({targetIDs : ["11:30a"], 
+		styleRows({targetIDs : ["11:30p"], 
 			       attribute : "outline",
 			       value : "5px solid red"
 			   })
@@ -1048,7 +1048,7 @@ function buildPage(){
 
 	})
 	copyPopulateButton1130am.addEventListener('mouseout',function(event){
-		styleRows({targetIDs : ["11:30a"], 
+		styleRows({targetIDs : ["11:30p"], 
 			       attribute : "outline",
 			       value : ""
 			   })
@@ -2044,6 +2044,7 @@ function readText(){
 	      }//**** END Main Import 
 	      
 		  //cl(importOBJ)
+		  var quickList = [];
 		 	for (topIndex in importOBJ.records) {
 			
 			   	var rawFields = importOBJ.records[topIndex].fields
@@ -2065,9 +2066,10 @@ function readText(){
 				
 				
 				var thisOBJ = {};
+				
 				//**** Get the housenumber located at first index of field Keys
 				var thisHousenumber = rawFields[m.fieldKeys[0]];
-				
+				cl("Field Keys: " + m.fieldKeys);
 				//**** Build each episode object
 				for ( x in m.fieldKeys){
 					
@@ -2084,12 +2086,32 @@ function readText(){
 				
 				//*** Add episode to m.fields
 				m.fields[thisHousenumber] = thisOBJ;
+
+			
+				//*** Build an ordered alphabetical list of shows
+				if (quickList.indexOf(thisOBJ["Series"]) == -1){
+					quickList.push(thisOBJ["Series"]);	
+				}
+
 				
 				//**** Build Show Titles
-				m.series[thisOBJ["Series"]] = thisOBJ["Series"];
-			
+				//m.series[thisOBJ["Series"]] = thisOBJ["Series"];
+
+				//cl(thisOBJ["Series"])
+				
 			}//*** END each record
 
+			
+			//*** Build an ordered alphabetical list of shows
+			//*** This is ordering and unordered object.
+			//*** I heart you javascript
+			quickList = quickList.sort();
+
+			for (seriesCounter in quickList) {
+				m.series[quickList[seriesCounter] ] = quickList[seriesCounter];
+			}
+
+			
 
 				
 			//*** Get all episodes for each series
@@ -2111,13 +2133,11 @@ function readText(){
 				
 			}//*** END each Series
 
+
+
 			m.series["Change"] = [];
 
-
-				
-				cl(m.series["BSZ"])
-
-				buildPage();
+			buildPage();
 			
 		}//*** Handle Input OnChange
 	
