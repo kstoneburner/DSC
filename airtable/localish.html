@@ -9,7 +9,7 @@
 	background :#CDB0FF;
 }
 
-.BABY{
+.KIDS{
 	background :#C6E0B4;
 }
 
@@ -42,9 +42,6 @@
 	background :#78D1E5;
 }
 
-.LIFE{
-	background :#F5DC86;
-}
 
 .LOS{
 	background :#A6BECC;
@@ -89,6 +86,10 @@
 }
 
 
+.PLF{
+	background :#F5DC86;
+}
+
 .PTL{
 	background :#83CCAB;
 }
@@ -108,11 +109,18 @@
 }
 
 .special{
-	background :#BA1E45;
+	background :#ff3842;
+	color:#ffffff;
+}
+
+.SPECIALS{
+	background :#ff3842;
+	color:#ffffff;
 }
 
 .VLY{
 	background :#2750AE;
+	color:#ffffff;
 }
 
 .WTW{
@@ -1315,9 +1323,15 @@ function buildPage(){
 	})
 
 	var incrementAllShowsByOne = document.createElement("button");
-	incrementAllShowsByOne.innerHTML = "All Shows +1 Episode"
+	incrementAllShowsByOne.innerHTML = "All Shows: +1 Episode"
 	incrementAllShowsByOne.addEventListener('click',function(event){ 
 		incrementAllEpisodes(1);
+	});
+	
+	var decrementAllShowsByOne = document.createElement("button");
+	decrementAllShowsByOne.innerHTML = "All Shows: -1 Episode"
+	decrementAllShowsByOne.addEventListener('click',function(event){ 
+		incrementAllEpisodes(-1);
 	});
 	
 	document.body.appendChild(copyPopulateButton11am);
@@ -1332,6 +1346,7 @@ function buildPage(){
 	document.body.appendChild(document.createElement("br"));
 	
 	document.body.appendChild(incrementAllShowsByOne);
+	document.body.appendChild(decrementAllShowsByOne);
 
 	var buttonKidsShows = document.createElement("button");
 	buttonKidsShows.innerHTML = "Assign Kids Shows";
@@ -1814,7 +1829,9 @@ function import_layout(){
 
 function incrementAllEpisodes(incrementValue){
 
+
 	var allRows = document.getElementsByClassName("mainRow");
+
 	
 	for (var rowCounter=0; rowCounter < allRows.length;rowCounter++){
 
@@ -1846,6 +1863,12 @@ function incrementAllEpisodes(incrementValue){
 
 					}//*** END Reset Counter
 
+					//*** Check if Index is under
+					if ( episodeIndex < 0 ) {
+						 episodeIndex = parseInt(m.series[thisSeries].length - 1)
+					}
+
+
 					//*** Update the Row List with the newValues
 					thisRowList.push({
 						series : thisSeries,
@@ -1866,6 +1889,8 @@ function incrementAllEpisodes(incrementValue){
 
 	}//*** END each row
 
+	
+
 }//*** END 
 
 
@@ -1884,6 +1909,10 @@ function init(){
 function readText(){
 
 	cl("Let's get JSON LOADED ")
+
+	getElem("top1").innerHTML = "";
+	getElem("top2").innerHTML = "";
+	
 	var input = document.createElement('input');
 	input.type = 'file';
 	input.accept = ".airtable";
@@ -2002,7 +2031,7 @@ function readText(){
 				
 			}//*** END each Series
 
-
+			delete m.series["_"];
 
 			m.series["Change"] = [];
 
@@ -2237,7 +2266,7 @@ function update_mainTable_row(inputElem,inputValues){
 	//	cl(thisRow.children[x+1])
 	//}
 
-	cl(inputElem + ":" + inputValues)
+	//cl(inputElem + ":" + inputValues)
 	//if (typeof inputValues.length == 'undefined') { return }
 	//cl("Row: " + inputIndex);
     //*** input values are in order
@@ -2303,8 +2332,8 @@ function update_mainTable_row(inputElem,inputValues){
 
 </script>
 <body onload='init()'>
-<h1 id="topline">Hey there!</h1>
-<p>Let's schedule some localish</p>
+<h1 id="top1">Hey there!</h1>
+<p id="top2">Let's schedule some localish</p>
 <button id ='readText' onclick='readText()'>Load: Network_flow_tab.json</button>
 <button id='import_layout' onclick='import_layout()'>Import Layout</button>
 <button id='export_layout' onclick='export_layout()'>Export Layout</button>
