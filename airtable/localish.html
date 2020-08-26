@@ -35,7 +35,7 @@
 
 
 .HOL{
-	background :#F99DE2;
+	background :#73BA42;
 }
 
 .HOU{
@@ -90,7 +90,7 @@
 
 
 .PTL{
-	background :#77D1F3;
+	background :#83CCAB;
 }
 
 
@@ -104,7 +104,7 @@
 }
 
 .SOG{
-	background :#D0F0FD;
+	background :#F3877D;
 }
 
 .special{
@@ -1373,137 +1373,6 @@ function buildPage(){
 
 }//*** END Build Page
 
-function titanTV(){
-
-	if (getElem("rootTitan") != null) {
-		document.body.removeChild(getElem("rootTitan"))
-	}
-
-	var rootTitan = document.createElement("table");
-	rootTitan.id = "rootTitan";
-
-	//*** Let's build a dataframe with our Data.
-
-	dataframe = {};
-
-	seriesList = [];
-
-	daysofweek = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
-
-	for (dayCounter in daysofweek) {
-		thisDay = daysofweek[dayCounter];
-
-		var dayRows = document.getElementsByClassName(thisDay);
-
-		for (x=0;x<dayRows.length;x++){
-			thisElem = dayRows.item(x)
-			elemDay = thisElem.className.split(" ")[1];
-			elemTime = thisElem.className.split(" ")[2];
-			elemSeries = thisElem.children[0].value;
-			elemEpisode = thisElem.children[1].value
-			cl(elemDay + ":" + elemTime + ":" + elemSeries + ":" + elemEpisode)
-
-			var dayOBJ = {
-				"day" : elemDay,
-				"time" : elemTime,
-				"series" : elemSeries,
-				"episode" : elemEpisode,
-			}
-
-			//dayList.push(dayOBJ);
-
-			if (seriesList.includes(elemSeries)){
-				
-				//*** Add to Existing List
-				dataframe[elemSeries].push(dayOBJ);
-
-			}//*** END add to existing Series
-			else {
-
-				//*** Add New Series to the series List
-				//*** We use the list to keep elements in Order
-				seriesList.push(elemSeries);
-
-				//*** Build new Series Object
-				dataframe[elemSeries] = [ dayOBJ ];
-
-			}//*** END Add new Series
-	
-
-		}//*** END Each Day Row Element
-
-	}//**** END Each Day of week
-	cl("Series List: " + seriesList);
-
-	var blackRow = document.createElement("tr")
-	blackRow.style.background = 'black';
-	blackRow.innerHTML = "<td>XXXX</td><td>XXXX</td><td>XXXX</td><td>XXXX</td>"
-	rootTitan.appendChild(blackRow);
-
-	var idCounter = 0;
-
-	for (seriesCounter in seriesList){
-
-		
-
-
-		loopSeries = seriesList[seriesCounter];
-
-		loopSeries_list = dataframe[loopSeries];
-
-		for (x in loopSeries_list) {
-
-			loop_show = loopSeries_list[x];
-
-			var newRow = document.createElement("tr")
-			newRow.id = "titan_row_" + idCounter;
-
-			var tdSeries = document.createElement("td")
-			tdSeries.innerHTML = loop_show.series;
-			tdSeries.className = loop_show.series;
-			tdSeries.style = "border 1px solid black";
-
-			var tdDay = document.createElement("td")
-			tdDay.innerHTML = loop_show.day;
-
-			var tdTime = document.createElement("td")
-			tdTime.innerHTML = loop_show.time;
-
-			var tdEpisode = document.createElement("td")
-			tdEpisode.innerHTML = loop_show.episode;
-			tdEpisode.id = "titan_series_" + idCounter;
-
-			var tdCopy = document.createElement("button")
-			tdCopy.innerHTML = "[ Copy ]";
-			tdCopy.id = idCounter;
-			tdCopy.addEventListener('click',function(event){ 
-				copyTitan(this.id);	
-			});
-
-			newRow.appendChild(tdSeries);
-			newRow.appendChild(tdDay);
-			newRow.appendChild(tdTime);
-			newRow.appendChild(tdEpisode);
-			newRow.appendChild(tdCopy);
-			rootTitan.appendChild(newRow);
-
-			idCounter++;
-		}//*** END Each Show
-
-		var blackRow = document.createElement("tr")
-		blackRow.style.background = 'black';
-		blackRow.innerHTML = "<td>XXXX</td><td>XXXX</td><td>XXXX</td><td>XXXX</td>"
-		rootTitan.appendChild(blackRow);
-
-		
-	}//*** End Each Series
-	
-
-	document.body.appendChild(rootTitan)
-
-
-}//*** END Buid Export titan TV
-
 function copyTitan(inputIndex) {
 
 	cl("titan_row_" + inputIndex)
@@ -2163,6 +2032,137 @@ function tdChange(e){
 	}
 	e.target.nextSibling.className = newSeriesKey;
 }//*** END tdChange
+
+function titanTV(){
+
+	if (getElem("rootTitan") != null) {
+		document.body.removeChild(getElem("rootTitan"))
+	}
+
+	var rootTitan = document.createElement("table");
+	rootTitan.id = "rootTitan";
+
+	//*** Let's build a dataframe with our Data.
+
+	dataframe = {};
+
+	seriesList = [];
+
+	daysofweek = ["monday","tuesday","wednesday","thursday","friday","saturday","sunday"];
+
+	for (dayCounter in daysofweek) {
+		thisDay = daysofweek[dayCounter];
+
+		var dayRows = document.getElementsByClassName(thisDay);
+
+		for (x=0;x<dayRows.length;x++){
+			thisElem = dayRows.item(x)
+			elemDay = thisElem.className.split(" ")[1];
+			elemTime = thisElem.className.split(" ")[2];
+			elemSeries = thisElem.children[0].value;
+			elemEpisode = thisElem.children[1].value
+			cl(elemDay + ":" + elemTime + ":" + elemSeries + ":" + elemEpisode)
+
+			var dayOBJ = {
+				"day" : elemDay,
+				"time" : elemTime,
+				"series" : elemSeries,
+				"episode" : elemEpisode,
+			}
+
+			//dayList.push(dayOBJ);
+
+			if (seriesList.includes(elemSeries)){
+				
+				//*** Add to Existing List
+				dataframe[elemSeries].push(dayOBJ);
+
+			}//*** END add to existing Series
+			else {
+
+				//*** Add New Series to the series List
+				//*** We use the list to keep elements in Order
+				seriesList.push(elemSeries);
+
+				//*** Build new Series Object
+				dataframe[elemSeries] = [ dayOBJ ];
+
+			}//*** END Add new Series
+	
+
+		}//*** END Each Day Row Element
+
+	}//**** END Each Day of week
+	cl("Series List: " + seriesList);
+
+	var blackRow = document.createElement("tr")
+	blackRow.style.background = 'black';
+	blackRow.innerHTML = "<td>XXXX</td><td>XXXX</td><td>XXXX</td><td>XXXX</td>"
+	rootTitan.appendChild(blackRow);
+
+	var idCounter = 0;
+
+	for (seriesCounter in seriesList){
+
+		
+
+
+		loopSeries = seriesList[seriesCounter];
+
+		loopSeries_list = dataframe[loopSeries];
+
+		for (x in loopSeries_list) {
+
+			loop_show = loopSeries_list[x];
+
+			var newRow = document.createElement("tr")
+			newRow.id = "titan_row_" + idCounter;
+
+			var tdSeries = document.createElement("td")
+			tdSeries.innerHTML = loop_show.series;
+			tdSeries.className = loop_show.series;
+			tdSeries.style = "border 1px solid black";
+
+			var tdDay = document.createElement("td")
+			tdDay.innerHTML = loop_show.day;
+
+			var tdTime = document.createElement("td")
+			tdTime.innerHTML = loop_show.time;
+
+			var tdEpisode = document.createElement("td")
+			tdEpisode.innerHTML = loop_show.episode;
+			tdEpisode.id = "titan_series_" + idCounter;
+
+			var tdCopy = document.createElement("button")
+			tdCopy.innerHTML = "[ Copy ]";
+			tdCopy.id = idCounter;
+			tdCopy.addEventListener('click',function(event){ 
+				copyTitan(this.id);	
+			});
+
+			newRow.appendChild(tdSeries);
+			newRow.appendChild(tdDay);
+			newRow.appendChild(tdTime);
+			newRow.appendChild(tdEpisode);
+			newRow.appendChild(tdCopy);
+			rootTitan.appendChild(newRow);
+
+			idCounter++;
+		}//*** END Each Show
+
+		var blackRow = document.createElement("tr")
+		blackRow.style.background = 'black';
+		blackRow.innerHTML = "<td>XXXX</td><td>XXXX</td><td>XXXX</td><td>XXXX</td>"
+		rootTitan.appendChild(blackRow);
+
+		
+	}//*** End Each Series
+	
+
+	document.body.appendChild(rootTitan)
+
+
+}//*** END Buid Export titan TV
 
 
 function toggleAutoBuild(){
