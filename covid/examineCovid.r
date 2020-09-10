@@ -942,11 +942,18 @@ build_county_models_to_file <- function(input_df,folder_name,input_test_field, i
 
 build_statewide_model_from_counties <- function(input_folder){
   
+  
+  print(input_folder)
+  
+  print(paste0(input_folder,"/1_index.dat"))
+  
   #######################################
   ### Get the Index File
   ### Because we make it easy!
   #######################################
-  file_index <- readRDS(paste0(workingDir,input_folder,"\\1_index.dat"))
+  file_index <- readRDS(paste0(input_folder,"/1_index.dat"))
+  
+  print(file_index)
   
   
   colnames(file_index) <- c("county","filenames")
@@ -958,7 +965,9 @@ build_statewide_model_from_counties <- function(input_folder){
   #### Turns out the folder paths only on the machine that 
   #### did the modeling....Ooops.
   ############################################################
-  filenames <- paste0(workingDir,input_folder,"\\",file_index$county,".dat")
+  filenames <- paste0(input_folder,"/",file_index$county,".dat")
+  
+  
   
   for (county_filename_counter in 1:length(filenames)){
     
@@ -1201,7 +1210,7 @@ build_statewide_model_from_counties <- function(input_folder){
   
 }#//END build_statewide_model_from_counties
 
-
+#confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"/models/confirm_~_deaths"))
 
 get_county_models <- function(input_folder){
 
@@ -1560,7 +1569,7 @@ setwd(workingDir)
   #confirm_predict_death_30_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths_30"))
   
   ### Confirmed cases predicting outcomes
-  confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_deaths"))
+  confirm_predict_death_model_df <- build_statewide_model_from_counties(paste0(workingDir,"/models/confirm_~_deaths"))
   confirm_predict_newdeath_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_newdeaths"))
     
   confirm_predict_hospital_model_df <- build_statewide_model_from_counties(paste0(workingDir,"\\models\\confirm_~_hospital"))
