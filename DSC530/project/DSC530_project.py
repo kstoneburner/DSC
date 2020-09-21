@@ -4,7 +4,7 @@ import pandas as pd
 import os
 ###
 g = {
-    'remove_cols': ['username', 'payroll_id','fname', 'lname'],
+    'remove_cols': ['username', 'payroll_id', 'fname', 'lname', 'number', 'group','local_day', 'local_start_time', 'local_end_time', 'tz', 'location', 'notes', 'approved_status'],
     'obsfuscate': {},
 }
 curDir = os.getcwd()
