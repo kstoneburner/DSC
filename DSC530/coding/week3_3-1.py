@@ -1,7 +1,8 @@
 import os
 import sys
-sys.path.insert(1, 'C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC530\\ThinkStats2\\code')
-os.chdir("C:\\Users\\newcomb\\DSCProjects\\DSC\\DSC530\\ThinkStats2\\code")
+workingPath = os.getcwd().replace("coding", "ThinkStats2\\code")
+sys.path.insert(1, workingPath)
+os.chdir(workingPath)
 
 import nsfg
 import thinkstats2
@@ -15,7 +16,20 @@ def main():
     import first
     resp = nsfg.ReadFemResp()
 
-    print(resp['numkdhh'])
+    frequency_dict = {}
+
+
+
+    for numkids in resp['numkdhh'].sort_values():
+
+        if numkids not in  frequency_dict.keys():
+            frequency_dict[numkids] = 1
+        else:
+            frequency_dict[numkids] = frequency_dict[numkids] + 1
+
+    print(frequency_dict)
+
+
 
 if __name__ == '__main__':
     main()
