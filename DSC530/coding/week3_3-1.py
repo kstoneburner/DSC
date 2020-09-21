@@ -7,13 +7,12 @@ os.chdir(workingPath)
 import nsfg
 import thinkstats2
 import thinkplot
-
+import first
 
 
 def main():
     print("BEGIN")
 
-    import first
     resp = nsfg.ReadFemResp()
 
     frequency_dict = {}
