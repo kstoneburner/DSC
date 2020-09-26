@@ -7,6 +7,7 @@ import json
 g = {
     'remove_cols': ['username', 'payroll_id', 'fname', 'lname', 'number', 'group','local_day', 'local_start_time', 'local_end_time', 'tz', 'location', 'notes', 'approved_status'],
     'obfuscate': {},
+    'df' : [],
 }
 curDir = os.getcwd()
 
@@ -45,12 +46,7 @@ for fname in fileList:
 
         g['obfuscate'][generic_name] = loop_user_details
 
-#print(g['obfuscate'])
-
-#for x in g['obfuscate']:
-#    print(f"{g['obfuscate'][x]}")
-
-#print(f"Results:{results}")
+        g['df'].append(loop_df)
 
 with open('keys.json', 'w') as outfile:
     outfile.write(json.dumps(g['obfuscate']))

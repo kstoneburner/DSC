@@ -1,477 +1,477 @@
-,local_date,hours,jobcode_1,jobcode_2,activity,billable,class,service item
-0,2019-08-20,3.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-1,2019-08-20,0.5,Lunch Break,,,,,
-2,2019-08-20,3.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-3,2019-08-20,4.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-4,2019-08-20,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-5,2019-08-21,0.5,Lunch Break,,,,,
-6,2019-08-21,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-7,2019-08-21,0.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-8,2019-08-21,3.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-9,2019-08-21,0.25,Rest Break,,,,,
-10,2019-08-21,0.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-11,2019-08-22,0.5,Lunch Break,,,,,
-12,2019-08-22,1.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-13,2019-08-22,4.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-14,2019-08-22,0.25,Rest Break,,,,,
-15,2019-08-22,1.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-16,2019-08-23,0.5,Lunch Break,,,,,
-17,2019-08-23,3.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-18,2019-08-23,0.25,Rest Break,,,,,
-19,2019-08-23,0.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-20,2019-08-23,0.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-21,2019-08-23,1.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-22,2019-08-23,0.25,Rest Break,,,,,
-23,2019-08-23,1.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-24,2019-08-26,2.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-25,2019-08-26,0.25,Rest Break,,,,,
-26,2019-08-26,1.75,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-27,2019-08-26,0.58,Lunch Break,,,,,
-28,2019-08-26,1.42,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-29,2019-08-26,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-30,2019-08-27,0.5,Lunch Break,,,,,
-31,2019-08-27,7.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-32,2019-08-27,0.25,Rest Break,,,,,
-33,2019-08-27,0.25,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-34,2019-08-27,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-35,2019-08-28,3.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-36,2019-08-28,0.25,Rest Break,,,,,
-37,2019-08-28,0.92,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-38,2019-08-28,0.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-39,2019-08-28,0.5,Lunch Break,,,,,
-40,2019-08-28,1.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-41,2019-08-28,0.25,Rest Break,,,,,
-42,2019-08-28,2.25,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-43,2019-08-29,4.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-44,2019-08-29,0.58,Lunch Break,,,,,
-45,2019-08-29,1.08,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-46,2019-08-30,2.75,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-47,2019-08-30,0.25,Rest Break,,,,,
-48,2019-08-30,2.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-49,2019-08-30,0.92,Lunch Break,,,,,
-50,2019-08-30,3.08,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-51,2019-08-31,2.42,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-52,2019-09-02,8.0,Holiday,,,,,
-53,2019-09-03,5.45,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-54,2019-09-03,4.08,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-55,2019-09-03,3.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-56,2019-09-04,2.08,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead
-57,2019-09-04,0.25,Rest Break,,,,,
-58,2019-09-04,0.08,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead
-59,2019-09-04,0.08,Gabel Energy,,Gabel: Misc,No,Nonresidential,Overhead
-60,2019-09-04,1.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-61,2019-09-04,0.67,Lunch Break,,,,,
-62,2019-09-04,2.75,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-63,2019-09-04,0.25,Rest Break,,,,,
-64,2019-09-04,0.92,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-65,2019-09-05,1.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-66,2019-09-05,0.25,Rest Break,,,,,
-67,2019-09-05,3.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-68,2019-09-06,4.08,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-69,2019-09-06,0.83,Lunch Break,,,,,
-70,2019-09-06,1.67,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-71,2019-09-07,1.08,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-72,2019-09-07,1.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-73,2019-09-07,1.08,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead
-74,2019-09-09,2.75,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-75,2019-09-09,0.25,Rest Break,,,,,
-76,2019-09-09,0.58,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-77,2019-09-09,0.25,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work
-78,2019-09-09,0.58,Lunch Break,,,,,
-79,2019-09-09,2.5,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work
-80,2019-09-09,0.25,Rest Break,,,,,
-81,2019-09-09,0.33,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work
-82,2019-09-09,2.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-83,2019-09-10,0.25,Rest Break,,,,,
-84,2019-09-10,0.25,Rest Break,,,,,
-85,2019-09-10,0.5,Lunch Break,,,,,
-86,2019-09-10,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-87,2019-09-10,4.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-88,2019-09-10,4.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-89,2019-09-11,5.25,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-90,2019-09-11,0.25,Rest Break,,,,,
-91,2019-09-11,0.5,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-92,2019-09-12,4.08,MESH Design Build Studio Inc.,19220 1555 Yosemite Ave,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-93,2019-09-12,0.67,Lunch Break,,,,,
-94,2019-09-12,2.17,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-95,2019-09-12,0.25,Rest Break,,,,,
-96,2019-09-12,1.25,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-97,2019-09-13,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-98,2019-09-13,0.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-99,2019-09-13,0.5,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead
-100,2019-09-13,1.0,Lunch Break,,,,,
-101,2019-09-13,3.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-102,2019-09-13,0.25,Rest Break,,,,,
-103,2019-09-13,3.42,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-104,2019-09-16,1.0,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead
-105,2019-09-16,0.58,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead
-106,2019-09-17,0.5,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead
-107,2019-09-17,0.42,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work
-108,2019-09-17,2.42,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead
-109,2019-09-17,1.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-110,2019-09-17,0.92,Lunch Break,,,,,
-111,2019-09-17,0.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-112,2019-09-17,2.42,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-113,2019-09-18,1.83,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-114,2019-09-18,0.67,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-115,2019-09-18,0.25,Rest Break,,,,,
-116,2019-09-18,0.92,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-117,2019-09-18,0.67,Lunch Break,,,,,
-118,2019-09-18,2.17,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-119,2019-09-19,2.75,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-120,2019-09-19,0.25,Rest Break,,,,,
-121,2019-09-19,0.5,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-122,2019-09-19,1.0,Lunch Break,,,,,
-123,2019-09-19,3.17,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-124,2019-09-19,0.25,Rest Break,,,,,
-125,2019-09-19,0.42,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-126,2019-09-20,2.08,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-127,2019-09-20,0.25,Rest Break,,,,,
-128,2019-09-20,2.17,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-129,2019-09-20,0.5,Lunch Break,,,,,
-130,2019-09-20,1.58,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-131,2019-09-23,2.75,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-132,2019-09-23,0.25,Rest Break,,,,,
-133,2019-09-23,0.67,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-134,2019-09-23,1.0,Lunch Break,,,,,
-135,2019-09-23,0.25,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work
-136,2019-09-23,3.08,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-137,2019-09-24,0.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-138,2019-09-24,0.92,WSP,19127 - Palo Alto Public Safety Building,Project Coordination,No,Nonresidential,Energy Code Compliance Work
-139,2019-09-24,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-140,2019-09-24,2.83,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-141,2019-09-24,1.0,Lunch Break,,,,,
-142,2019-09-24,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-143,2019-09-25,2.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-144,2019-09-25,0.25,Rest Break,,,,,
-145,2019-09-25,1.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-146,2019-09-25,0.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-147,2019-09-25,0.58,Lunch Break,,,,,
-148,2019-09-25,2.17,HOMEOWNER,19245 Barirani Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-149,2019-09-25,1.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-150,2019-09-26,1.17,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-151,2019-09-26,0.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-152,2019-09-26,0.83,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-153,2019-09-26,1.33,Lunch Break,,,,,
-154,2019-09-26,0.25,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-155,2019-09-26,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-156,2019-09-26,1.5,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-157,2019-09-26,0.75,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-158,2019-09-27,0.17,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-159,2019-09-27,0.5,Lunch Break,,,,,
-160,2019-09-27,3.17,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-161,2019-09-27,0.25,Rest Break,,,,,
-162,2019-09-28,0.0,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-163,2019-09-28,0.0,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO
-164,2019-09-28,5.08,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-165,2019-09-28,0.25,Rest Break,,,,,
-166,2019-09-28,0.92,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-167,2019-09-28,0.92,Lunch Break,,,,,
-168,2019-09-28,2.92,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-169,2019-09-30,4.58,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-170,2019-09-30,1.25,Lunch Break,,,,,
-171,2019-09-30,2.42,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-172,2019-09-30,0.0,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-173,2019-09-30,0.25,Rest Break,,,,,
-174,2019-09-30,1.08,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-175,2019-10-01,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-176,2019-10-01,1.0,Lunch Break,,,,,
-177,2019-10-01,1.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-178,2019-10-01,0.25,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-179,2019-10-01,0.25,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-180,2019-10-01,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-181,2019-10-01,1.5,HOMEOWNER,19245 Barirani Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-182,2019-10-01,0.25,Rest Break,,,,,
-183,2019-10-01,0.5,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-184,2019-10-01,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-185,2019-10-02,1.0,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-186,2019-10-02,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-187,2019-10-02,3.25,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-188,2019-10-02,1.25,Lunch Break,,,,,
-189,2019-10-02,0.08,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-190,2019-10-03,3.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-191,2019-10-03,1.08,Lunch Break,,,,,
-192,2019-10-03,2.33,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-193,2019-10-03,0.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-194,2019-10-03,0.5,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-195,2019-10-03,0.25,Rest Break,,,,,
-196,2019-10-03,0.67,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-197,2019-10-04,0.58,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-198,2019-10-04,2.08,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-199,2019-10-05,4.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-200,2019-10-05,3.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-201,2019-10-07,3.33,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-202,2019-10-07,0.67,Lunch Break,,,,,
-203,2019-10-07,4.92,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-204,2019-10-07,3.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-205,2019-10-08,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-206,2019-10-08,3.83,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-207,2019-10-08,0.65,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-208,2019-10-08,0.75,Lunch Break,,,,,
-209,2019-10-08,0.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-210,2019-10-08,0.75,Jayson Architecture,19258 Hammer Residence,Project Coordination,No,Residential,Energy Code Compliance Work
-211,2019-10-08,2.42,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-212,2019-10-08,2.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-213,2019-10-08,0.67,Lunch Break,,,,,
-214,2019-10-08,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-215,2019-10-09,4.0,PTO,,,,,
-216,2019-10-11,0.73,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-217,2019-10-11,1.75,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-218,2019-10-11,0.5,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-219,2019-10-11,0.58,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-220,2019-10-11,1.08,Lunch Break,,,,,
-221,2019-10-11,1.82,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-222,2019-10-11,0.25,Jayson Architecture,19258 Hammer Residence,Compliance,No,Residential,Energy Code Compliance Work
-223,2019-10-13,4.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-224,2019-10-13,4.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-225,2019-10-14,3.67,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-226,2019-10-14,0.75,Lunch Break,,,,,
-227,2019-10-14,3.67,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-228,2019-10-14,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-229,2019-10-15,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-230,2019-10-15,2.45,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-231,2019-10-15,1.0,Lunch Break,,,,,
-232,2019-10-15,0.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-233,2019-10-15,0.83,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-234,2019-10-15,0.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-235,2019-10-15,2.33,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-236,2019-10-15,0.55,Gabel Energy,,Gabel: Training/Education,No,Residential,Overhead
-237,2019-10-15,1.58,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-238,2019-10-15,4.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-239,2019-10-16,0.48,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-240,2019-10-16,3.5,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-241,2019-10-16,0.5,Lunch Break,,,,,
-242,2019-10-16,2.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-243,2019-10-17,0.08,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-244,2019-10-17,0.33,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-245,2019-10-17,1.25,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-246,2019-10-17,0.0,Gabel Energy,,Gabel: Office Management,No,Overhead,Overhead
-247,2019-10-17,0.25,Rest Break,,,,,
-248,2019-10-17,1.75,Gabel Energy,,Gabel: Office Management,No,Overhead,Overhead
-249,2019-10-17,1.5,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-250,2019-10-17,3.17,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-251,2019-10-18,0.33,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-252,2019-10-18,2.25,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-253,2019-10-18,1.33,Lunch Break,,,,,
-254,2019-10-18,2.33,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-255,2019-10-21,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-256,2019-10-21,3.5,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-257,2019-10-21,0.58,Lunch Break,,,,,
-258,2019-10-21,4.25,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-259,2019-10-22,2.83,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-260,2019-10-22,0.25,Rest Break,,,,,
-261,2019-10-22,0.42,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-262,2019-10-22,6.17,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-263,2019-10-23,0.25,Rest Break,,,,,
-264,2019-10-23,3.5,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-265,2019-10-24,1.0,Lunch Break,,,,,
-266,2019-10-24,2.0,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-267,2019-10-24,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-268,2019-10-24,2.08,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-269,2019-10-25,0.0,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-270,2019-10-25,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-271,2019-10-25,0.83,Lunch Break,,,,,
-272,2019-10-25,3.92,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-273,2019-10-28,3.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-274,2019-10-28,5.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-275,2019-10-29,1.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-276,2019-10-29,1.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-277,2019-10-29,1.5,BDE Architecture Inc.,18293 899 Alvarado,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-278,2019-10-29,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-279,2019-10-30,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-280,2019-10-31,0.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-281,2019-10-31,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-282,2019-10-31,4.08,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-283,2019-10-31,1.17,Lunch Break,,,,,
-284,2019-10-31,0.83,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-285,2019-10-31,0.83,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-286,2019-11-01,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-287,2019-11-01,3.17,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-288,2019-11-01,2.17,Lunch Break,,,,,
-289,2019-11-01,3.58,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-290,2019-11-04,1.25,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-291,2019-11-04,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-292,2019-11-04,0.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-293,2019-11-04,0.25,Rest Break,,,,,
-294,2019-11-04,0.83,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-295,2019-11-04,5.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-296,2019-11-05,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-297,2019-11-05,2.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-298,2019-11-06,0.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-299,2019-11-06,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-300,2019-11-06,3.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-301,2019-11-06,1.08,Lunch Break,,,,,
-302,2019-11-06,1.58,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-303,2019-11-07,2.67,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-304,2019-11-07,1.17,Lunch Break,,,,,
-305,2019-11-07,3.83,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-306,2019-11-08,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-307,2019-11-08,3.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-308,2019-11-08,0.64,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-309,2019-11-08,0.25,Rest Break,,,,,
-310,2019-11-08,0.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-311,2019-11-11,8.0,PTO,,,,,
-312,2019-11-12,2.42,Gabel Energy,,Gabel: Office Management,No,Overhead,Overhead
-313,2019-11-12,0.83,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-314,2019-11-12,4.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-315,2019-11-13,1.58,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-316,2019-11-13,0.25,Rest Break,,,,,
-317,2019-11-13,1.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-318,2019-11-13,1.67,Lunch Break,,,,,
-319,2019-11-13,3.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-320,2019-11-14,0.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-321,2019-11-14,0.67,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-322,2019-11-14,2.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-323,2019-11-14,1.17,Lunch Break,,,,,
-324,2019-11-14,1.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-325,2019-11-15,2.58,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-326,2019-11-15,0.25,Rest Break,,,,,
-327,2019-11-15,2.83,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-328,2019-11-15,1.67,Lunch Break,,,,,
-329,2019-11-15,0.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-330,2019-11-18,1.75,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-331,2019-11-18,0.25,Rest Break,,,,,
-332,2019-11-18,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-333,2019-11-18,2.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-334,2019-11-18,0.5,Lunch Break,,,,,
-335,2019-11-18,0.08,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-336,2019-11-18,2.75,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-337,2019-11-18,0.25,Rest Break,,,,,
-338,2019-11-18,0.42,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-339,2019-11-19,4.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-340,2019-11-19,0.25,Rest Break,,,,,
-341,2019-11-19,2.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-342,2019-11-19,3.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-343,2019-11-20,0.5,Lunch Break,,,,,
-344,2019-11-20,1.08,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-345,2019-11-20,7.25,Gabel Energy,,Gabel: Misc,No,Residential,Overhead
-346,2019-11-20,0.25,Rest Break,,,,,
-347,2019-11-21,0.83,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-348,2019-11-21,3.92,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-349,2019-11-21,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-350,2019-11-21,0.25,Rest Break,,,,,
-351,2019-11-21,1.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-352,2019-11-21,0.67,Lunch Break,,,,,
-353,2019-11-21,0.75,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-354,2019-11-22,0.33,Gabel Energy,,Gabel: Email,No,Nonresidential,Overhead
-355,2019-11-22,1.0,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-356,2019-11-22,0.75,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-357,2019-11-22,0.75,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead
-358,2019-11-22,1.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-359,2019-11-22,1.08,Lunch Break,,,,,
-360,2019-11-22,0.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-361,2019-11-22,0.67,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-362,2019-11-25,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-363,2019-11-25,1.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-364,2019-11-25,1.83,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-365,2019-11-25,1.25,Lunch Break,,,,,
-366,2019-11-25,0.08,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-367,2019-11-25,1.0,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-368,2019-11-25,1.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-369,2019-11-26,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-370,2019-11-26,0.83,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-371,2019-11-26,1.25,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-372,2019-11-26,0.25,Rest Break,,,,,
-373,2019-11-26,0.0,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-374,2019-11-26,0.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-375,2019-11-26,1.08,Lunch Break,,,,,
-376,2019-11-26,0.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-377,2019-11-27,1.42,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-378,2019-11-27,0.25,Rest Break,,,,,
-379,2019-11-27,0.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-380,2019-11-27,0.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-381,2019-11-27,0.58,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-382,2019-11-27,1.17,Lunch Break,,,,,
-383,2019-11-27,1.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-384,2019-11-28,8.0,Holiday,,,,,
-385,2019-11-29,8.0,Holiday,,,,,
-386,2019-12-02,2.83,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-387,2019-12-02,0.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-388,2019-12-02,1.0,Lunch Break,,,,,
-389,2019-12-02,2.83,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-390,2019-12-02,0.25,Rest Break,,,,,
-391,2019-12-02,1.33,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-392,2019-12-03,3.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-393,2019-12-03,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-394,2019-12-03,4.17,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-395,2019-12-03,1.42,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-396,2019-12-03,0.92,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
-397,2019-12-03,0.92,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
-398,2019-12-04,2.0,Susan L Wootan Architect,19322 West MacArthur Blvd Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-399,2019-12-04,0.33,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-400,2019-12-04,1.42,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-401,2019-12-04,0.25,Rest Break,,,,,
-402,2019-12-04,0.67,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
-403,2019-12-05,1.75,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-404,2019-12-05,0.25,Rest Break,,,,,
-405,2019-12-05,0.08,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-406,2019-12-05,1.17,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-407,2019-12-05,0.67,Lunch Break,,,,,
-408,2019-12-05,1.08,Susan L Wootan Architect,19322 West MacArthur Blvd Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-409,2019-12-05,0.75,"Bay Area Designer Builders, Inc",19256 Shirley Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-410,2019-12-05,4.33,BDE Architecture Inc.,17346-MKC Bay Meadows Res 4,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-411,2019-12-06,1.67,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-412,2019-12-06,0.79,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-413,2019-12-08,3.92,Susan L Wootan Architect,19333 Penny Lane Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-414,2019-12-09,0.67,Susan L Wootan Architect,19333 Penny Lane Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-415,2019-12-09,0.83,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-416,2019-12-09,1.5,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-417,2019-12-09,2.17,Lunch Break,,,,,
-418,2019-12-09,4.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-419,2019-12-10,0.67,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-420,2019-12-10,2.75,Claude Saenz,19342 Tarika Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-421,2019-12-10,0.92,Lunch Break,,,,,
-422,2019-12-10,3.25,Claude Saenz,19342 Tarika Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-423,2019-12-10,0.25,Rest Break,,,,,
-424,2019-12-10,0.33,Claude Saenz,19342 Tarika Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work
-425,2019-12-11,8.0,PTO,,,,,
-426,2019-12-12,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-427,2019-12-12,2.83,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-428,2019-12-12,0.25,Rest Break,,,,,
-429,2019-12-12,1.17,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-430,2019-12-12,0.92,Lunch Break,,,,,
-431,2019-12-12,3.0,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-432,2019-12-13,3.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-433,2019-12-13,0.25,Rest Break,,,,,
-434,2019-12-13,2.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-435,2019-12-15,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-436,2019-12-16,1.0,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement
-437,2019-12-16,1.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-438,2019-12-16,7.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement
-439,2019-12-17,1.0,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement
-440,2019-12-17,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-441,2019-12-17,3.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-442,2019-12-17,7.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement
-443,2019-12-18,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-444,2019-12-18,3.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-445,2019-12-18,0.75,Lunch Break,,,,,
-446,2019-12-18,0.75,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-447,2019-12-18,0.25,Rest Break,,,,,
-448,2019-12-18,3.75,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-449,2019-12-19,3.0,Sinnott & Co,19351 Sacred Heart Schools Aquatic Center Locker Rooms,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-450,2019-12-19,1.25,Lunch Break,,,,,
-451,2019-12-19,1.58,Sinnott & Co,19351 Sacred Heart Schools Aquatic Center Locker Rooms,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-452,2019-12-19,0.5,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-453,2019-12-19,0.25,Rest Break,,,,,
-454,2019-12-19,0.58,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-455,2019-12-20,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-456,2019-12-20,1.5,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-457,2019-12-23,2.75,PTO,,,,,
-458,2019-12-23,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-459,2019-12-23,2.67,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-460,2019-12-23,0.25,Rest Break,,,,,
-461,2019-12-23,0.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-462,2019-12-23,1.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
-463,2019-12-23,3.67,Lunch Break,,,,,
-464,2019-12-24,8.0,Holiday,,,,,
-465,2019-12-25,8.0,Holiday,,,,,
-466,2019-12-26,8.0,PTO,,,,,
-467,2019-12-27,8.0,PTO,,,,,
-468,2019-12-30,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-469,2019-12-30,3.33,PTO,,,,,
-470,2019-12-30,4.42,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-471,2019-12-30,1.5,Lunch Break,,,,,
-472,2019-12-31,0.17,Gabel Energy,,Gabel: Email,No,Overhead,Overhead
-473,2019-12-31,1.92,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
-474,2019-12-31,0.25,Rest Break,,,,,
-475,2019-12-31,3.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
+,local_date,hours,jobcode_1,jobcode_2,activity,billable,class,service item,emp_name,salary
+0,2019-08-20,3.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+1,2019-08-20,0.5,Lunch Break,,,,,,EMP_10,0
+2,2019-08-20,3.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+3,2019-08-20,4.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+4,2019-08-20,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+5,2019-08-21,0.5,Lunch Break,,,,,,EMP_10,0
+6,2019-08-21,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+7,2019-08-21,0.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+8,2019-08-21,3.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+9,2019-08-21,0.25,Rest Break,,,,,,EMP_10,0
+10,2019-08-21,0.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+11,2019-08-22,0.5,Lunch Break,,,,,,EMP_10,0
+12,2019-08-22,1.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+13,2019-08-22,4.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+14,2019-08-22,0.25,Rest Break,,,,,,EMP_10,0
+15,2019-08-22,1.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+16,2019-08-23,0.5,Lunch Break,,,,,,EMP_10,0
+17,2019-08-23,3.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+18,2019-08-23,0.25,Rest Break,,,,,,EMP_10,0
+19,2019-08-23,0.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+20,2019-08-23,0.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+21,2019-08-23,1.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+22,2019-08-23,0.25,Rest Break,,,,,,EMP_10,0
+23,2019-08-23,1.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+24,2019-08-26,2.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+25,2019-08-26,0.25,Rest Break,,,,,,EMP_10,0
+26,2019-08-26,1.75,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+27,2019-08-26,0.58,Lunch Break,,,,,,EMP_10,0
+28,2019-08-26,1.42,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+29,2019-08-26,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+30,2019-08-27,0.5,Lunch Break,,,,,,EMP_10,0
+31,2019-08-27,7.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+32,2019-08-27,0.25,Rest Break,,,,,,EMP_10,0
+33,2019-08-27,0.25,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+34,2019-08-27,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+35,2019-08-28,3.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+36,2019-08-28,0.25,Rest Break,,,,,,EMP_10,0
+37,2019-08-28,0.92,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+38,2019-08-28,0.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+39,2019-08-28,0.5,Lunch Break,,,,,,EMP_10,0
+40,2019-08-28,1.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+41,2019-08-28,0.25,Rest Break,,,,,,EMP_10,0
+42,2019-08-28,2.25,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+43,2019-08-29,4.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+44,2019-08-29,0.58,Lunch Break,,,,,,EMP_10,0
+45,2019-08-29,1.08,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+46,2019-08-30,2.75,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+47,2019-08-30,0.25,Rest Break,,,,,,EMP_10,0
+48,2019-08-30,2.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+49,2019-08-30,0.92,Lunch Break,,,,,,EMP_10,0
+50,2019-08-30,3.08,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+51,2019-08-31,2.42,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+52,2019-09-02,8.0,Holiday,,,,,,EMP_10,0
+53,2019-09-03,5.45,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+54,2019-09-03,4.08,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+55,2019-09-03,3.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+56,2019-09-04,2.08,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead,EMP_10,0
+57,2019-09-04,0.25,Rest Break,,,,,,EMP_10,0
+58,2019-09-04,0.08,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead,EMP_10,0
+59,2019-09-04,0.08,Gabel Energy,,Gabel: Misc,No,Nonresidential,Overhead,EMP_10,0
+60,2019-09-04,1.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+61,2019-09-04,0.67,Lunch Break,,,,,,EMP_10,0
+62,2019-09-04,2.75,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+63,2019-09-04,0.25,Rest Break,,,,,,EMP_10,0
+64,2019-09-04,0.92,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+65,2019-09-05,1.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+66,2019-09-05,0.25,Rest Break,,,,,,EMP_10,0
+67,2019-09-05,3.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+68,2019-09-06,4.08,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+69,2019-09-06,0.83,Lunch Break,,,,,,EMP_10,0
+70,2019-09-06,1.67,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+71,2019-09-07,1.08,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+72,2019-09-07,1.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+73,2019-09-07,1.08,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead,EMP_10,0
+74,2019-09-09,2.75,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+75,2019-09-09,0.25,Rest Break,,,,,,EMP_10,0
+76,2019-09-09,0.58,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+77,2019-09-09,0.25,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+78,2019-09-09,0.58,Lunch Break,,,,,,EMP_10,0
+79,2019-09-09,2.5,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+80,2019-09-09,0.25,Rest Break,,,,,,EMP_10,0
+81,2019-09-09,0.33,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+82,2019-09-09,2.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+83,2019-09-10,0.25,Rest Break,,,,,,EMP_10,0
+84,2019-09-10,0.25,Rest Break,,,,,,EMP_10,0
+85,2019-09-10,0.5,Lunch Break,,,,,,EMP_10,0
+86,2019-09-10,2.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+87,2019-09-10,4.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+88,2019-09-10,4.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+89,2019-09-11,5.25,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+90,2019-09-11,0.25,Rest Break,,,,,,EMP_10,0
+91,2019-09-11,0.5,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+92,2019-09-12,4.08,MESH Design Build Studio Inc.,19220 1555 Yosemite Ave,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+93,2019-09-12,0.67,Lunch Break,,,,,,EMP_10,0
+94,2019-09-12,2.17,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+95,2019-09-12,0.25,Rest Break,,,,,,EMP_10,0
+96,2019-09-12,1.25,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+97,2019-09-13,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+98,2019-09-13,0.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+99,2019-09-13,0.5,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead,EMP_10,0
+100,2019-09-13,1.0,Lunch Break,,,,,,EMP_10,0
+101,2019-09-13,3.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+102,2019-09-13,0.25,Rest Break,,,,,,EMP_10,0
+103,2019-09-13,3.42,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+104,2019-09-16,1.0,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead,EMP_10,0
+105,2019-09-16,0.58,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead,EMP_10,0
+106,2019-09-17,0.5,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead,EMP_10,0
+107,2019-09-17,0.42,Dalkia Energy Solutions (Groom Energy),19221 Vons/Albertson/Safeway LTI,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+108,2019-09-17,2.42,Gabel Energy,,Gabel: Marketing,No,Overhead,Overhead,EMP_10,0
+109,2019-09-17,1.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+110,2019-09-17,0.92,Lunch Break,,,,,,EMP_10,0
+111,2019-09-17,0.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+112,2019-09-17,2.42,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+113,2019-09-18,1.83,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+114,2019-09-18,0.67,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+115,2019-09-18,0.25,Rest Break,,,,,,EMP_10,0
+116,2019-09-18,0.92,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+117,2019-09-18,0.67,Lunch Break,,,,,,EMP_10,0
+118,2019-09-18,2.17,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+119,2019-09-19,2.75,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+120,2019-09-19,0.25,Rest Break,,,,,,EMP_10,0
+121,2019-09-19,0.5,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+122,2019-09-19,1.0,Lunch Break,,,,,,EMP_10,0
+123,2019-09-19,3.17,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+124,2019-09-19,0.25,Rest Break,,,,,,EMP_10,0
+125,2019-09-19,0.42,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+126,2019-09-20,2.08,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+127,2019-09-20,0.25,Rest Break,,,,,,EMP_10,0
+128,2019-09-20,2.17,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+129,2019-09-20,0.5,Lunch Break,,,,,,EMP_10,0
+130,2019-09-20,1.58,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+131,2019-09-23,2.75,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+132,2019-09-23,0.25,Rest Break,,,,,,EMP_10,0
+133,2019-09-23,0.67,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+134,2019-09-23,1.0,Lunch Break,,,,,,EMP_10,0
+135,2019-09-23,0.25,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Develop Report,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+136,2019-09-23,3.08,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+137,2019-09-24,0.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+138,2019-09-24,0.92,WSP,19127 - Palo Alto Public Safety Building,Project Coordination,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+139,2019-09-24,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+140,2019-09-24,2.83,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+141,2019-09-24,1.0,Lunch Break,,,,,,EMP_10,0
+142,2019-09-24,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+143,2019-09-25,2.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+144,2019-09-25,0.25,Rest Break,,,,,,EMP_10,0
+145,2019-09-25,1.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+146,2019-09-25,0.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+147,2019-09-25,0.58,Lunch Break,,,,,,EMP_10,0
+148,2019-09-25,2.17,HOMEOWNER,19245 Barirani Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+149,2019-09-25,1.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+150,2019-09-26,1.17,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+151,2019-09-26,0.5,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+152,2019-09-26,0.83,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+153,2019-09-26,1.33,Lunch Break,,,,,,EMP_10,0
+154,2019-09-26,0.25,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+155,2019-09-26,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+156,2019-09-26,1.5,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+157,2019-09-26,0.75,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+158,2019-09-27,0.17,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+159,2019-09-27,0.5,Lunch Break,,,,,,EMP_10,0
+160,2019-09-27,3.17,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+161,2019-09-27,0.25,Rest Break,,,,,,EMP_10,0
+162,2019-09-28,0.0,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+163,2019-09-28,0.0,NORESCO,19108 SCE 2019 ECA Resources Update,S21902: App Guides,Yes,Utilities:NORESCO,Sub-NORESCO,EMP_10,0
+164,2019-09-28,5.08,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+165,2019-09-28,0.25,Rest Break,,,,,,EMP_10,0
+166,2019-09-28,0.92,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+167,2019-09-28,0.92,Lunch Break,,,,,,EMP_10,0
+168,2019-09-28,2.92,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+169,2019-09-30,4.58,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+170,2019-09-30,1.25,Lunch Break,,,,,,EMP_10,0
+171,2019-09-30,2.42,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+172,2019-09-30,0.0,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+173,2019-09-30,0.25,Rest Break,,,,,,EMP_10,0
+174,2019-09-30,1.08,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+175,2019-10-01,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+176,2019-10-01,1.0,Lunch Break,,,,,,EMP_10,0
+177,2019-10-01,1.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+178,2019-10-01,0.25,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+179,2019-10-01,0.25,WSP,19127 - Palo Alto Public Safety Building,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+180,2019-10-01,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+181,2019-10-01,1.5,HOMEOWNER,19245 Barirani Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+182,2019-10-01,0.25,Rest Break,,,,,,EMP_10,0
+183,2019-10-01,0.5,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+184,2019-10-01,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+185,2019-10-02,1.0,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+186,2019-10-02,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+187,2019-10-02,3.25,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+188,2019-10-02,1.25,Lunch Break,,,,,,EMP_10,0
+189,2019-10-02,0.08,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+190,2019-10-03,3.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+191,2019-10-03,1.08,Lunch Break,,,,,,EMP_10,0
+192,2019-10-03,2.33,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+193,2019-10-03,0.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+194,2019-10-03,0.5,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+195,2019-10-03,0.25,Rest Break,,,,,,EMP_10,0
+196,2019-10-03,0.67,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+197,2019-10-04,0.58,BDE Architecture Inc.,19063 1325 Old County Windy Hill Belmont,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+198,2019-10-04,2.08,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+199,2019-10-05,4.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+200,2019-10-05,3.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+201,2019-10-07,3.33,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+202,2019-10-07,0.67,Lunch Break,,,,,,EMP_10,0
+203,2019-10-07,4.92,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+204,2019-10-07,3.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+205,2019-10-08,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+206,2019-10-08,3.83,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+207,2019-10-08,0.65,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+208,2019-10-08,0.75,Lunch Break,,,,,,EMP_10,0
+209,2019-10-08,0.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+210,2019-10-08,0.75,Jayson Architecture,19258 Hammer Residence,Project Coordination,No,Residential,Energy Code Compliance Work,EMP_10,0
+211,2019-10-08,2.42,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+212,2019-10-08,2.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+213,2019-10-08,0.67,Lunch Break,,,,,,EMP_10,0
+214,2019-10-08,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+215,2019-10-09,4.0,PTO,,,,,,EMP_10,0
+216,2019-10-11,0.73,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+217,2019-10-11,1.75,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+218,2019-10-11,0.5,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+219,2019-10-11,0.58,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+220,2019-10-11,1.08,Lunch Break,,,,,,EMP_10,0
+221,2019-10-11,1.82,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+222,2019-10-11,0.25,Jayson Architecture,19258 Hammer Residence,Compliance,No,Residential,Energy Code Compliance Work,EMP_10,0
+223,2019-10-13,4.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+224,2019-10-13,4.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+225,2019-10-14,3.67,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+226,2019-10-14,0.75,Lunch Break,,,,,,EMP_10,0
+227,2019-10-14,3.67,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+228,2019-10-14,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+229,2019-10-15,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+230,2019-10-15,2.45,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+231,2019-10-15,1.0,Lunch Break,,,,,,EMP_10,0
+232,2019-10-15,0.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+233,2019-10-15,0.83,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+234,2019-10-15,0.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+235,2019-10-15,2.33,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+236,2019-10-15,0.55,Gabel Energy,,Gabel: Training/Education,No,Residential,Overhead,EMP_10,0
+237,2019-10-15,1.58,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+238,2019-10-15,4.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+239,2019-10-16,0.48,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+240,2019-10-16,3.5,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+241,2019-10-16,0.5,Lunch Break,,,,,,EMP_10,0
+242,2019-10-16,2.0,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+243,2019-10-17,0.08,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+244,2019-10-17,0.33,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+245,2019-10-17,1.25,Jayson Architecture,19258 Hammer Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+246,2019-10-17,0.0,Gabel Energy,,Gabel: Office Management,No,Overhead,Overhead,EMP_10,0
+247,2019-10-17,0.25,Rest Break,,,,,,EMP_10,0
+248,2019-10-17,1.75,Gabel Energy,,Gabel: Office Management,No,Overhead,Overhead,EMP_10,0
+249,2019-10-17,1.5,"CA/AG Logan Park Property Owner, LLC","19229 Logan Park Phase I, Berkeley",Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+250,2019-10-17,3.17,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+251,2019-10-18,0.33,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+252,2019-10-18,2.25,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+253,2019-10-18,1.33,Lunch Break,,,,,,EMP_10,0
+254,2019-10-18,2.33,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+255,2019-10-21,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+256,2019-10-21,3.5,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+257,2019-10-21,0.58,Lunch Break,,,,,,EMP_10,0
+258,2019-10-21,4.25,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+259,2019-10-22,2.83,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+260,2019-10-22,0.25,Rest Break,,,,,,EMP_10,0
+261,2019-10-22,0.42,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+262,2019-10-22,6.17,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+263,2019-10-23,0.25,Rest Break,,,,,,EMP_10,0
+264,2019-10-23,3.5,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+265,2019-10-24,1.0,Lunch Break,,,,,,EMP_10,0
+266,2019-10-24,2.0,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+267,2019-10-24,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+268,2019-10-24,2.08,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+269,2019-10-25,0.0,BDE Architecture Inc.,19201 1814 Santana Row,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+270,2019-10-25,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+271,2019-10-25,0.83,Lunch Break,,,,,,EMP_10,0
+272,2019-10-25,3.92,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+273,2019-10-28,3.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+274,2019-10-28,5.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+275,2019-10-29,1.0,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+276,2019-10-29,1.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+277,2019-10-29,1.5,BDE Architecture Inc.,18293 899 Alvarado,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+278,2019-10-29,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+279,2019-10-30,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+280,2019-10-31,0.0,BDE Architecture Inc.,18225 Mountain View Buddhist Temple,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+281,2019-10-31,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+282,2019-10-31,4.08,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+283,2019-10-31,1.17,Lunch Break,,,,,,EMP_10,0
+284,2019-10-31,0.83,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+285,2019-10-31,0.83,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+286,2019-11-01,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+287,2019-11-01,3.17,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+288,2019-11-01,2.17,Lunch Break,,,,,,EMP_10,0
+289,2019-11-01,3.58,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+290,2019-11-04,1.25,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+291,2019-11-04,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+292,2019-11-04,0.67,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+293,2019-11-04,0.25,Rest Break,,,,,,EMP_10,0
+294,2019-11-04,0.83,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+295,2019-11-04,5.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+296,2019-11-05,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+297,2019-11-05,2.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+298,2019-11-06,0.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+299,2019-11-06,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+300,2019-11-06,3.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+301,2019-11-06,1.08,Lunch Break,,,,,,EMP_10,0
+302,2019-11-06,1.58,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+303,2019-11-07,2.67,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+304,2019-11-07,1.17,Lunch Break,,,,,,EMP_10,0
+305,2019-11-07,3.83,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+306,2019-11-08,2.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+307,2019-11-08,3.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+308,2019-11-08,0.64,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+309,2019-11-08,0.25,Rest Break,,,,,,EMP_10,0
+310,2019-11-08,0.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+311,2019-11-11,8.0,PTO,,,,,,EMP_10,0
+312,2019-11-12,2.42,Gabel Energy,,Gabel: Office Management,No,Overhead,Overhead,EMP_10,0
+313,2019-11-12,0.83,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+314,2019-11-12,4.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+315,2019-11-13,1.58,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+316,2019-11-13,0.25,Rest Break,,,,,,EMP_10,0
+317,2019-11-13,1.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+318,2019-11-13,1.67,Lunch Break,,,,,,EMP_10,0
+319,2019-11-13,3.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+320,2019-11-14,0.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+321,2019-11-14,0.67,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+322,2019-11-14,2.75,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+323,2019-11-14,1.17,Lunch Break,,,,,,EMP_10,0
+324,2019-11-14,1.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+325,2019-11-15,2.58,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+326,2019-11-15,0.25,Rest Break,,,,,,EMP_10,0
+327,2019-11-15,2.83,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+328,2019-11-15,1.67,Lunch Break,,,,,,EMP_10,0
+329,2019-11-15,0.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+330,2019-11-18,1.75,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+331,2019-11-18,0.25,Rest Break,,,,,,EMP_10,0
+332,2019-11-18,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+333,2019-11-18,2.0,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+334,2019-11-18,0.5,Lunch Break,,,,,,EMP_10,0
+335,2019-11-18,0.08,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+336,2019-11-18,2.75,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+337,2019-11-18,0.25,Rest Break,,,,,,EMP_10,0
+338,2019-11-18,0.42,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+339,2019-11-19,4.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+340,2019-11-19,0.25,Rest Break,,,,,,EMP_10,0
+341,2019-11-19,2.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+342,2019-11-19,3.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+343,2019-11-20,0.5,Lunch Break,,,,,,EMP_10,0
+344,2019-11-20,1.08,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+345,2019-11-20,7.25,Gabel Energy,,Gabel: Misc,No,Residential,Overhead,EMP_10,0
+346,2019-11-20,0.25,Rest Break,,,,,,EMP_10,0
+347,2019-11-21,0.83,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+348,2019-11-21,3.92,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+349,2019-11-21,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+350,2019-11-21,0.25,Rest Break,,,,,,EMP_10,0
+351,2019-11-21,1.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+352,2019-11-21,0.67,Lunch Break,,,,,,EMP_10,0
+353,2019-11-21,0.75,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+354,2019-11-22,0.33,Gabel Energy,,Gabel: Email,No,Nonresidential,Overhead,EMP_10,0
+355,2019-11-22,1.0,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+356,2019-11-22,0.75,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+357,2019-11-22,0.75,Gabel Energy,,Gabel: Training/Education,No,Nonresidential,Overhead,EMP_10,0
+358,2019-11-22,1.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+359,2019-11-22,1.08,Lunch Break,,,,,,EMP_10,0
+360,2019-11-22,0.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+361,2019-11-22,0.67,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+362,2019-11-25,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+363,2019-11-25,1.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+364,2019-11-25,1.83,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+365,2019-11-25,1.25,Lunch Break,,,,,,EMP_10,0
+366,2019-11-25,0.08,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+367,2019-11-25,1.0,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+368,2019-11-25,1.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+369,2019-11-26,0.42,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+370,2019-11-26,0.83,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+371,2019-11-26,1.25,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+372,2019-11-26,0.25,Rest Break,,,,,,EMP_10,0
+373,2019-11-26,0.0,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+374,2019-11-26,0.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+375,2019-11-26,1.08,Lunch Break,,,,,,EMP_10,0
+376,2019-11-26,0.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+377,2019-11-27,1.42,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+378,2019-11-27,0.25,Rest Break,,,,,,EMP_10,0
+379,2019-11-27,0.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+380,2019-11-27,0.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+381,2019-11-27,0.58,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+382,2019-11-27,1.17,Lunch Break,,,,,,EMP_10,0
+383,2019-11-27,1.17,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+384,2019-11-28,8.0,Holiday,,,,,,EMP_10,0
+385,2019-11-29,8.0,Holiday,,,,,,EMP_10,0
+386,2019-12-02,2.83,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+387,2019-12-02,0.0,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+388,2019-12-02,1.0,Lunch Break,,,,,,EMP_10,0
+389,2019-12-02,2.83,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+390,2019-12-02,0.25,Rest Break,,,,,,EMP_10,0
+391,2019-12-02,1.33,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+392,2019-12-03,3.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+393,2019-12-03,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+394,2019-12-03,4.17,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+395,2019-12-03,1.42,BDE Architecture Inc.,19195 - SyRes Reno,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+396,2019-12-03,0.92,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead,EMP_10,0
+397,2019-12-03,0.92,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead,EMP_10,0
+398,2019-12-04,2.0,Susan L Wootan Architect,19322 West MacArthur Blvd Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+399,2019-12-04,0.33,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+400,2019-12-04,1.42,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+401,2019-12-04,0.25,Rest Break,,,,,,EMP_10,0
+402,2019-12-04,0.67,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead,EMP_10,0
+403,2019-12-05,1.75,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+404,2019-12-05,0.25,Rest Break,,,,,,EMP_10,0
+405,2019-12-05,0.08,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+406,2019-12-05,1.17,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+407,2019-12-05,0.67,Lunch Break,,,,,,EMP_10,0
+408,2019-12-05,1.08,Susan L Wootan Architect,19322 West MacArthur Blvd Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+409,2019-12-05,0.75,"Bay Area Designer Builders, Inc",19256 Shirley Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+410,2019-12-05,4.33,BDE Architecture Inc.,17346-MKC Bay Meadows Res 4,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+411,2019-12-06,1.67,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+412,2019-12-06,0.79,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+413,2019-12-08,3.92,Susan L Wootan Architect,19333 Penny Lane Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+414,2019-12-09,0.67,Susan L Wootan Architect,19333 Penny Lane Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+415,2019-12-09,0.83,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+416,2019-12-09,1.5,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+417,2019-12-09,2.17,Lunch Break,,,,,,EMP_10,0
+418,2019-12-09,4.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+419,2019-12-10,0.67,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+420,2019-12-10,2.75,Claude Saenz,19342 Tarika Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+421,2019-12-10,0.92,Lunch Break,,,,,,EMP_10,0
+422,2019-12-10,3.25,Claude Saenz,19342 Tarika Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+423,2019-12-10,0.25,Rest Break,,,,,,EMP_10,0
+424,2019-12-10,0.33,Claude Saenz,19342 Tarika Residence,Energy Model/Takeoffs,No,Residential,Energy Code Compliance Work,EMP_10,0
+425,2019-12-11,8.0,PTO,,,,,,EMP_10,0
+426,2019-12-12,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+427,2019-12-12,2.83,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+428,2019-12-12,0.25,Rest Break,,,,,,EMP_10,0
+429,2019-12-12,1.17,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+430,2019-12-12,0.92,Lunch Break,,,,,,EMP_10,0
+431,2019-12-12,3.0,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+432,2019-12-13,3.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+433,2019-12-13,0.25,Rest Break,,,,,,EMP_10,0
+434,2019-12-13,2.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+435,2019-12-15,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+436,2019-12-16,1.0,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement,EMP_10,0
+437,2019-12-16,1.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+438,2019-12-16,7.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement,EMP_10,0
+439,2019-12-17,1.0,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement,EMP_10,0
+440,2019-12-17,1.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+441,2019-12-17,3.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+442,2019-12-17,7.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,"T31802: Conference Attendance & Prep (include event, date, details in Notes);",Yes,Utilities,Task 3 - Compliance Improvement,EMP_10,0
+443,2019-12-18,0.58,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+444,2019-12-18,3.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+445,2019-12-18,0.75,Lunch Break,,,,,,EMP_10,0
+446,2019-12-18,0.75,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+447,2019-12-18,0.25,Rest Break,,,,,,EMP_10,0
+448,2019-12-18,3.75,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+449,2019-12-19,3.0,Sinnott & Co,19351 Sacred Heart Schools Aquatic Center Locker Rooms,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+450,2019-12-19,1.25,Lunch Break,,,,,,EMP_10,0
+451,2019-12-19,1.58,Sinnott & Co,19351 Sacred Heart Schools Aquatic Center Locker Rooms,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+452,2019-12-19,0.5,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+453,2019-12-19,0.25,Rest Break,,,,,,EMP_10,0
+454,2019-12-19,0.58,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+455,2019-12-20,0.5,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+456,2019-12-20,1.5,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+457,2019-12-23,2.75,PTO,,,,,,EMP_10,0
+458,2019-12-23,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+459,2019-12-23,2.67,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+460,2019-12-23,0.25,Rest Break,,,,,,EMP_10,0
+461,2019-12-23,0.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+462,2019-12-23,1.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead,EMP_10,0
+463,2019-12-23,3.67,Lunch Break,,,,,,EMP_10,0
+464,2019-12-24,8.0,Holiday,,,,,,EMP_10,0
+465,2019-12-25,8.0,Holiday,,,,,,EMP_10,0
+466,2019-12-26,8.0,PTO,,,,,,EMP_10,0
+467,2019-12-27,8.0,PTO,,,,,,EMP_10,0
+468,2019-12-30,0.25,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+469,2019-12-30,3.33,PTO,,,,,,EMP_10,0
+470,2019-12-30,4.42,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+471,2019-12-30,1.5,Lunch Break,,,,,,EMP_10,0
+472,2019-12-31,0.17,Gabel Energy,,Gabel: Email,No,Overhead,Overhead,EMP_10,0
+473,2019-12-31,1.92,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
+474,2019-12-31,0.25,Rest Break,,,,,,EMP_10,0
+475,2019-12-31,3.25,Mark Cavagnero Associates Architects,19159 - 425 Treasure Island,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work,EMP_10,0
