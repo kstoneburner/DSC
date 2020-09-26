@@ -1,0 +1,504 @@
+,local_date,hours,jobcode_1,jobcode_2,activity,billable,class,service item
+0,2019-03-05,5.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+1,2019-03-06,7.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+2,2019-03-08,7.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+3,2019-03-11,2.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+4,2019-03-11,0.67,Lunch Break,,,,,
+5,2019-03-11,0.5,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1801: Admin Support (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+6,2019-03-11,3.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+7,2019-03-12,3.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+8,2019-03-12,0.75,Lunch Break,,,,,
+9,2019-03-12,3.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+10,2019-03-13,3.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+11,2019-03-13,0.92,Lunch Break,,,,,
+12,2019-03-13,2.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+13,2019-03-15,2.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+14,2019-03-15,0.75,Lunch Break,,,,,
+15,2019-03-15,3.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+16,2019-03-18,3.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+17,2019-03-18,0.33,Lunch Break,,,,,
+18,2019-03-18,2.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+19,2019-03-18,0.5,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1801: Admin Support (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+20,2019-03-20,2.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+21,2019-03-20,0.42,SAN DIEGO GAS & ELECTRIC CO,19002 Codes & Standards Edu,"T31801: ""Other"" General (add Notes):",Yes,Utilities:SDG&E,Task 3 - Compliance Improvement
+22,2019-03-20,0.33,Lunch Break,,,,,
+23,2019-03-20,2.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+24,2019-03-22,2.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+25,2019-03-22,0.25,Lunch Break,,,,,
+26,2019-03-22,1.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+27,2019-03-22,1.92,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+28,2019-03-25,0.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+29,2019-03-25,2.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+30,2019-03-25,0.92,Lunch Break,,,,,
+31,2019-03-25,0.08,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+32,2019-03-25,1.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+33,2019-03-25,0.83,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+34,2019-03-25,1.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+35,2019-03-26,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+36,2019-03-26,0.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+37,2019-03-26,1.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+38,2019-03-26,0.67,Lunch Break,,,,,
+39,2019-03-26,5.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+40,2019-03-29,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+41,2019-03-29,0.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+42,2019-03-29,1.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+43,2019-03-29,0.67,Lunch Break,,,,,
+44,2019-03-29,3.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+45,2019-03-29,1.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+46,2019-04-01,1.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+47,2019-04-01,0.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+48,2019-04-01,0.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+49,2019-04-01,0.83,Lunch Break,,,,,
+50,2019-04-01,4.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+51,2019-04-02,2.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+52,2019-04-02,0.75,Lunch Break,,,,,
+53,2019-04-02,1.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+54,2019-04-03,2.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+55,2019-04-03,0.08,Rest Break,,,,,
+56,2019-04-03,0.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+57,2019-04-03,0.33,Lunch Break,,,,,
+58,2019-04-03,3.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+59,2019-04-05,2.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+60,2019-04-05,0.5,Lunch Break,,,,,
+61,2019-04-05,4.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+62,2019-04-08,1.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+63,2019-04-08,0.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+64,2019-04-08,0.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+65,2019-04-08,3.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+66,2019-04-09,2.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+67,2019-04-09,0.42,Lunch Break,,,,,
+68,2019-04-09,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+69,2019-04-10,2.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+70,2019-04-10,1.67,Lunch Break,,,,,
+71,2019-04-10,3.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+72,2019-04-12,4.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+73,2019-04-12,0.5,Lunch Break,,,,,
+74,2019-04-12,1.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+75,2019-04-15,2.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+76,2019-04-15,0.58,Lunch Break,,,,,
+77,2019-04-15,3.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+78,2019-04-15,0.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+79,2019-04-16,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+80,2019-04-16,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+81,2019-04-16,0.5,Lunch Break,,,,,
+82,2019-04-16,1.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+83,2019-04-17,0.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+84,2019-04-17,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+85,2019-04-17,0.92,Lunch Break,,,,,
+86,2019-04-17,3.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+87,2019-04-18,0.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+88,2019-04-18,0.75,Lunch Break,,,,,
+89,2019-04-18,1.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+90,2019-04-19,0.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+91,2019-04-19,3.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+92,2019-04-19,0.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+93,2019-04-19,0.5,Lunch Break,,,,,
+94,2019-04-19,0.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+95,2019-04-22,0.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+96,2019-04-22,1.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+97,2019-04-22,0.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+98,2019-04-22,1.5,Lunch Break,,,,,
+99,2019-04-22,3.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+100,2019-04-29,2.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+101,2019-04-29,1.25,Lunch Break,,,,,
+102,2019-04-29,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+103,2019-04-29,0.42,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+104,2019-04-29,1.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+105,2019-04-30,0.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+106,2019-04-30,1.42,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+107,2019-04-30,0.5,Lunch Break,,,,,
+108,2019-04-30,1.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+109,2019-05-01,1.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+110,2019-05-01,0.67,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+111,2019-05-01,1.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+112,2019-05-01,0.17,Lunch Break,,,,,
+113,2019-05-01,2.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+114,2019-05-02,2.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+115,2019-05-03,2.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+116,2019-05-03,0.17,Rest Break,,,,,
+117,2019-05-03,1.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+118,2019-05-06,2.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+119,2019-05-06,1.0,Lunch Break,,,,,
+120,2019-05-06,2.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+121,2019-05-08,0.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+122,2019-05-08,0.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+123,2019-05-08,3.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+124,2019-05-08,0.67,Lunch Break,,,,,
+125,2019-05-08,2.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+126,2019-05-09,2.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+127,2019-05-09,0.75,Lunch Break,,,,,
+128,2019-05-09,3.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+129,2019-05-13,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+130,2019-05-13,0.5,Lunch Break,,,,,
+131,2019-05-13,0.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+132,2019-05-13,1.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+133,2019-05-13,3.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+134,2019-05-14,1.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+135,2019-05-14,0.33,Lunch Break,,,,,
+136,2019-05-14,0.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+137,2019-05-15,2.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+138,2019-05-15,0.5,Lunch Break,,,,,
+139,2019-05-15,0.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+140,2019-05-15,3.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+141,2019-05-15,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+142,2019-05-16,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+143,2019-05-16,0.5,Lunch Break,,,,,
+144,2019-05-16,5.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+145,2019-05-17,2.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+146,2019-05-17,0.5,Lunch Break,,,,,
+147,2019-05-17,3.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+148,2019-05-27,6.0,Holiday,,,,,
+149,2019-05-28,3.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+150,2019-05-29,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+151,2019-05-29,0.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+152,2019-05-29,3.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+153,2019-05-29,0.5,Lunch Break,,,,,
+154,2019-05-29,2.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+155,2019-05-30,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+156,2019-05-30,0.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+157,2019-05-30,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+158,2019-05-30,0.75,Lunch Break,,,,,
+159,2019-05-30,0.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+160,2019-05-30,1.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+161,2019-05-30,1.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+162,2019-05-31,2.0,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+163,2019-06-03,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+164,2019-06-05,0.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+165,2019-06-05,0.67,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+166,2019-06-05,1.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+167,2019-06-06,1.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+168,2019-06-07,0.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+169,2019-06-07,1.58,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+170,2019-06-07,2.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+171,2019-06-07,0.75,Lunch Break,,,,,
+172,2019-06-07,2.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+173,2019-06-10,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+174,2019-06-10,0.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 4 - Future Code Work
+175,2019-06-10,0.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+176,2019-06-11,0.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+177,2019-06-11,3.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+178,2019-06-11,0.67,Lunch Break,,,,,
+179,2019-06-11,1.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+180,2019-06-13,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+181,2019-06-17,2.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+182,2019-06-18,3.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+183,2019-06-18,0.75,Lunch Break,,,,,
+184,2019-06-18,1.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+185,2019-06-18,0.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+186,2019-06-20,3.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+187,2019-06-21,2.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+188,2019-06-25,1.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+189,2019-06-25,2.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+190,2019-06-25,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+191,2019-06-25,1.17,Lunch Break,,,,,
+192,2019-06-25,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+193,2019-06-27,1.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+194,2019-06-27,0.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+195,2019-06-27,0.75,Lunch Break,,,,,
+196,2019-06-27,0.83,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+197,2019-06-27,1.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+198,2019-06-27,0.75,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+199,2019-06-28,1.5,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+200,2019-06-28,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+201,2019-07-01,2.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+202,2019-07-04,5.0,Holiday,,,,,
+203,2019-07-05,0.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+204,2019-07-09,2.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+205,2019-07-09,0.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+206,2019-07-09,3.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+207,2019-07-11,4.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+208,2019-07-11,0.75,Lunch Break,,,,,
+209,2019-07-11,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+210,2019-07-12,3.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+211,2019-07-12,1.08,Lunch Break,,,,,
+212,2019-07-12,2.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+213,2019-07-16,3.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+214,2019-07-16,0.5,Lunch Break,,,,,
+215,2019-07-16,0.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+216,2019-07-18,0.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+217,2019-07-18,1.58,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+218,2019-07-18,1.08,Lunch Break,,,,,
+219,2019-07-18,0.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+220,2019-07-18,0.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+221,2019-07-18,0.83,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+222,2019-07-18,3.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+223,2019-07-19,4.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+224,2019-07-19,0.5,Lunch Break,,,,,
+225,2019-07-19,2.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+226,2019-07-23,3.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+227,2019-07-25,5.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+228,2019-07-25,0.83,Lunch Break,,,,,
+229,2019-07-25,4.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+230,2019-07-26,4.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+231,2019-07-30,3.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+232,2019-07-30,1.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+233,2019-08-02,4.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+234,2019-08-02,0.67,Lunch Break,,,,,
+235,2019-08-02,2.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+236,2019-08-06,1.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+237,2019-08-06,0.5,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+238,2019-08-06,1.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+239,2019-08-06,1.08,Lunch Break,,,,,
+240,2019-08-06,1.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+241,2019-08-09,0.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+242,2019-08-09,0.67,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+243,2019-08-09,3.58,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
+244,2019-08-09,0.5,Lunch Break,,,,,
+245,2019-08-09,2.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+246,2019-08-13,3.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+247,2019-08-13,0.5,Lunch Break,,,,,
+248,2019-08-13,0.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+249,2019-08-15,3.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+250,2019-08-15,1.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+251,2019-08-15,0.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+252,2019-08-15,0.5,Lunch Break,,,,,
+253,2019-08-15,3.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+254,2019-08-16,3.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+255,2019-08-16,0.92,Lunch Break,,,,,
+256,2019-08-16,3.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+257,2019-08-19,3.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+258,2019-08-19,0.83,Lunch Break,,,,,
+259,2019-08-19,3.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+260,2019-08-20,3.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+261,2019-08-20,0.5,Lunch Break,,,,,
+262,2019-08-20,2.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+263,2019-08-20,2.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+264,2019-08-22,2.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+265,2019-08-22,0.83,Lunch Break,,,,,
+266,2019-08-22,3.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+267,2019-08-23,3.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+268,2019-08-23,0.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+269,2019-08-23,0.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+270,2019-08-23,1.33,Lunch Break,,,,,
+271,2019-08-23,1.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+272,2019-08-26,1.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+273,2019-08-26,0.75,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+274,2019-08-26,0.83,Lunch Break,,,,,
+275,2019-08-26,0.5,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+276,2019-08-26,0.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+277,2019-08-26,0.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+278,2019-08-26,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+279,2019-08-27,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+280,2019-08-27,0.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+281,2019-08-27,0.92,Lunch Break,,,,,
+282,2019-08-27,0.08,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+283,2019-08-27,0.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+284,2019-08-27,1.25,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+285,2019-08-27,1.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+286,2019-08-29,3.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+287,2019-08-29,0.5,Lunch Break,,,,,
+288,2019-08-29,0.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+289,2019-08-29,1.0,SiteLogiq,19191 Walmart DC LTOs,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+290,2019-08-29,2.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+291,2019-08-30,0.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+292,2019-09-02,8.0,Holiday,,,,,
+293,2019-09-03,1.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+294,2019-09-03,1.75,Gabel Energy,,Gabel: Special Projects,No,Overhead,Overhead
+295,2019-09-03,0.75,Lunch Break,,,,,
+296,2019-09-03,4.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+297,2019-09-03,1.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+298,2019-09-05,0.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+299,2019-09-05,1.33,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+300,2019-09-05,0.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+301,2019-09-05,0.5,Lunch Break,,,,,
+302,2019-09-05,0.5,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+303,2019-09-05,5.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+304,2019-09-06,3.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+305,2019-09-06,1.25,Lunch Break,,,,,
+306,2019-09-06,4.92,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+307,2019-09-07,1.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+308,2019-09-09,2.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+309,2019-09-09,0.5,Lunch Break,,,,,
+310,2019-09-09,0.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+311,2019-09-09,4.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+312,2019-09-10,8.0,Gabel Energy,,Gabel: Training/Education,No,Overhead,Overhead
+313,2019-09-12,1.08,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+314,2019-09-12,1.83,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+315,2019-09-12,0.08,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+316,2019-09-12,0.75,Lunch Break,,,,,
+317,2019-09-12,3.92,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+318,2019-09-12,2.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+319,2019-09-13,3.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+320,2019-09-13,1.08,Lunch Break,,,,,
+321,2019-09-13,2.58,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+322,2019-09-13,0.58,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+323,2019-09-13,0.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+324,2019-09-16,3.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+325,2019-09-16,0.58,Lunch Break,,,,,
+326,2019-09-16,4.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+327,2019-09-17,0.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+328,2019-09-17,0.67,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+329,2019-09-17,2.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+330,2019-09-17,0.67,Lunch Break,,,,,
+331,2019-09-17,1.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+332,2019-09-17,0.25,Rest Break,,,,,
+333,2019-09-17,2.0,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+334,2019-09-20,1.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+335,2019-09-20,2.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+336,2019-09-20,0.75,Lunch Break,,,,,
+337,2019-09-20,1.42,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+338,2019-09-20,0.5,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+339,2019-09-20,0.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+340,2019-09-23,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+341,2019-09-23,0.25,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+342,2019-09-23,1.5,Lunch Break,,,,,
+343,2019-09-23,4.75,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+344,2019-09-24,2.25,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+345,2019-09-24,0.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+346,2019-09-24,0.0,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+347,2019-09-24,0.75,Lunch Break,,,,,
+348,2019-09-24,3.5,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+349,2019-09-24,0.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+350,2019-09-26,3.42,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+351,2019-09-26,0.92,Lunch Break,,,,,
+352,2019-09-26,2.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+353,2019-09-27,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+354,2019-09-27,0.75,Lunch Break,,,,,
+355,2019-09-27,1.83,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+356,2019-09-30,1.33,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+357,2019-09-30,1.42,Lunch Break,,,,,
+358,2019-09-30,4.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+359,2019-10-01,2.67,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+360,2019-10-01,0.67,Lunch Break,,,,,
+361,2019-10-01,3.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+362,2019-10-03,2.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+363,2019-10-03,1.33,Lunch Break,,,,,
+364,2019-10-03,3.83,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+365,2019-10-04,3.17,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+366,2019-10-04,0.67,Lunch Break,,,,,
+367,2019-10-04,4.17,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+368,2019-10-07,1.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+369,2019-10-07,1.75,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1801: Admin Support (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+370,2019-10-07,0.5,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+371,2019-10-07,0.25,Rest Break,,,,,
+372,2019-10-07,0.67,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+373,2019-10-07,1.5,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+374,2019-10-08,2.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+375,2019-10-08,0.67,Lunch Break,,,,,
+376,2019-10-08,2.42,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+377,2019-10-10,0.67,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+378,2019-10-10,2.33,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+379,2019-10-10,0.08,Gabel Energy,,Gabel: Misc,No,Nonresidential,Overhead
+380,2019-10-10,0.5,Lunch Break,,,,,
+381,2019-10-10,3.92,Gabel Energy,,Gabel: Misc,No,Nonresidential,Overhead
+382,2019-10-11,3.17,Gabel Energy,,Gabel: Misc,No,Nonresidential,Overhead
+383,2019-10-14,3.17,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
+384,2019-10-14,1.0,Lunch Break,,,,,
+385,2019-10-14,1.0,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Energy Model/Takeoffs,No,Nonresidential,Energy Code Compliance Work
+386,2019-10-14,1.17,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+387,2019-10-14,0.67,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+388,2019-10-14,0.17,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+389,2019-10-15,0.58,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+390,2019-10-15,0.67,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+391,2019-10-15,0.25,Rest Break,,,,,
+392,2019-10-15,1.58,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+393,2019-10-15,2.83,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+394,2019-10-17,1.5,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+395,2019-10-17,1.83,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1802: General (add notes):,Yes,Utilities:PG&E,Task 3 - Compliance Improvement
+396,2019-10-17,0.17,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+397,2019-10-17,0.67,Lunch Break,,,,,
+398,2019-10-17,3.0,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+399,2019-10-18,4.83,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+400,2019-10-18,0.5,Lunch Break,,,,,
+401,2019-10-18,1.67,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+402,2019-10-21,4.0,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+403,2019-10-22,3.42,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+404,2019-10-22,0.5,Lunch Break,,,,,
+405,2019-10-22,1.42,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+406,2019-10-25,3.92,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+407,2019-10-25,0.75,Lunch Break,,,,,
+408,2019-10-25,0.58,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+409,2019-10-28,3.25,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+410,2019-10-28,0.75,Lunch Break,,,,,
+411,2019-10-28,3.17,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+412,2019-10-29,2.67,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+413,2019-10-29,0.58,Lunch Break,,,,,
+414,2019-10-29,3.75,Gabel Energy,,Gabel: Accounting,No,Overhead,Overhead
+415,2019-10-31,1.75,Gabel Energy,,Gabel: Meeting,No,Overhead,Overhead
+416,2019-10-31,1.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+417,2019-10-31,0.83,Lunch Break,,,,,
+418,2019-10-31,2.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+419,2019-11-01,3.75,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+420,2019-11-01,0.83,Lunch Break,,,,,
+421,2019-11-01,3.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+422,2019-11-04,3.25,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+423,2019-11-04,0.67,Lunch Break,,,,,
+424,2019-11-04,2.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+425,2019-11-05,3.58,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+426,2019-11-05,0.58,Lunch Break,,,,,
+427,2019-11-05,2.42,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+428,2019-11-07,2.42,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+429,2019-11-07,0.92,Lunch Break,,,,,
+430,2019-11-07,3.33,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+431,2019-11-08,3.0,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+432,2019-11-11,1.92,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+433,2019-11-11,1.42,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+434,2019-11-11,2.17,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+435,2019-11-11,0.67,Lunch Break,,,,,
+436,2019-11-11,1.42,Gabel Energy,,Gabel: Misc,No,Overhead,Overhead
+437,2019-11-12,3.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+438,2019-11-12,0.5,Lunch Break,,,,,
+439,2019-11-12,0.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+440,2019-11-12,0.42,"Industrial Energy Services, Inc.",18199 Walmart Lighting Alterations,Project Coordination,No,Nonresidential,Energy Code Compliance Work
+441,2019-11-12,2.42,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+442,2019-11-17,3.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+443,2019-11-18,4.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+444,2019-11-18,1.17,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+445,2019-11-19,4.0,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+446,2019-11-21,3.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+447,2019-11-21,1.42,Lunch Break,,,,,
+448,2019-11-21,2.75,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+449,2019-11-22,3.5,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+450,2019-11-25,3.67,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+451,2019-11-25,0.67,Lunch Break,,,,,
+452,2019-11-25,2.83,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+453,2019-11-26,3.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+454,2019-11-26,0.5,Lunch Break,,,,,
+455,2019-11-26,2.75,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+456,2019-11-28,8.0,Holiday,,,,,
+457,2019-11-29,8.0,Holiday,,,,,
+458,2019-12-02,4.75,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+459,2019-12-02,0.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+460,2019-12-02,0.5,Lunch Break,,,,,
+461,2019-12-02,2.75,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+462,2019-12-03,0.83,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+463,2019-12-03,0.5,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T#1801: Admin Support (add notes):,Yes,Utilities,Task 3 - Compliance Improvement
+464,2019-12-03,2.58,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+465,2019-12-03,0.5,Lunch Break,,,,,
+466,2019-12-03,2.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+467,2019-12-06,0.25,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+468,2019-12-09,1.25,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+469,2019-12-09,1.67,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+470,2019-12-09,1.75,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+471,2019-12-09,0.5,Lunch Break,,,,,
+472,2019-12-09,0.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+473,2019-12-09,1.08,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+474,2019-12-09,0.25,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+475,2019-12-10,2.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+476,2019-12-10,0.08,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+477,2019-12-10,0.83,Lunch Break,,,,,
+478,2019-12-10,0.25,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+479,2019-12-10,1.58,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+480,2019-12-12,1.75,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+481,2019-12-13,0.25,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+482,2019-12-13,0.5,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+483,2019-12-13,7.92,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+484,2019-12-16,2.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+485,2019-12-16,1.58,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+486,2019-12-16,0.5,Lunch Break,,,,,
+487,2019-12-16,0.42,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+488,2019-12-16,1.92,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+489,2019-12-17,0.08,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+490,2019-12-17,1.75,Pacific Gas & Electric Co.,19001 Codes & Standards Buildings Edu,T31819: Inventory Management,Yes,Utilities,Task 3 - Compliance Improvement
+491,2019-12-17,0.92,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+492,2019-12-17,0.5,Lunch Break,,,,,
+493,2019-12-17,3.25,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+494,2019-12-19,2.5,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+495,2019-12-20,4.42,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+496,2019-12-20,0.25,Rest Break,,,,,
+497,2019-12-20,1.67,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+498,2019-12-23,3.33,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+499,2019-12-23,0.5,Lunch Break,,,,,
+500,2019-12-23,3.42,Gabel Energy,,Gabel: Office Support/Admin,No,Overhead,Overhead
+501,2019-12-25,8.0,Holiday,,,,,
+502,2019-12-26,8.0,Holiday,,,,,

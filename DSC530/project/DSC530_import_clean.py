@@ -2,10 +2,11 @@ import xlrd # pandas dependency
 import numpy as np
 import pandas as pd
 import os
+import json
 ###
 g = {
     'remove_cols': ['username', 'payroll_id', 'fname', 'lname', 'number', 'group','local_day', 'local_start_time', 'local_end_time', 'tz', 'location', 'notes', 'approved_status'],
-    'obsfuscate': {},
+    'obfuscate': {},
 }
 curDir = os.getcwd()
 
@@ -22,7 +23,7 @@ for fname in fileList:
 
         # //*** Each employee is EMP_ with a number
         generic_name = f"EMP_{employee_counter}"
-
+        print(generic_name)
         loop_df = pd.read_excel(curDir+"\\orig\\"+fname,1)
 
         print(loop_df.loc[0,'fname'])
@@ -33,18 +34,25 @@ for fname in fileList:
             'fname': loop_df.loc[0, 'fname'],
             'lname': loop_df.loc[0, 'lname'],
             'group': loop_df.loc[0, 'group'],
+            'file': generic_name + ".dat"
         }
         print(loop_df.columns.values.tolist())
 
         ### Remove unneeded columns
         loop_df = loop_df.drop(columns=g['remove_cols'])
 
+        loop_df.to_csv(generic_name+".dat")
 
-        print(loop_df.columns.values.tolist())
-        print(loop_df.head(5))
-        break
+        g['obfuscate'][generic_name] = loop_user_details
 
+#print(g['obfuscate'])
 
+#for x in g['obfuscate']:
+#    print(f"{g['obfuscate'][x]}")
 
+#print(f"Results:{results}")
+
+with open('keys.json', 'w') as outfile:
+    outfile.write(json.dumps(g['obfuscate']))
 
 
