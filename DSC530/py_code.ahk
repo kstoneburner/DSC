@@ -8,6 +8,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 	reload
 return
 
+::@pf::
 ::#pf::
 	temp=%clipboard%
 	clipboard=print(f"{}")
