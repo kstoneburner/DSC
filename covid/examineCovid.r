@@ -1,5 +1,6 @@
 #install.packages("tidyverse")
 #install.packages("ggplot2")
+#install.packages("rtools")
 # Load
 library(ggplot2)
 
@@ -1331,6 +1332,7 @@ print("DONE: Build Functions")
 
 workingDir <- dirname(rstudioapi::getActiveDocumentContext()$path)
 setwd(workingDir)
+workingDir
 #########################################
 ### Import and process original data ###
 ##################################################################################
@@ -2099,6 +2101,7 @@ ggplot() + theme_light() +
         x=NULL 
   ) 
 
+
 mean(death_model_last_30_df$tested)
 
 ########################################
@@ -2158,3 +2161,4 @@ last_day_tested
 #    confirm_icu_mse = confirm_predict_icu_df$mse,
 #    confirm_icu_offset = confirm_predict_icu_df$offset_index
 #  )
+cor(death_model_df[2:15])
