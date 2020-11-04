@@ -1,0 +1,67 @@
+This is XeTeX, Version 3.14159265-2.6-0.99999 (MiKTeX 2.9.6730) (preloaded format=xelatex 2020.11.4)  4 NOV 2020 13:02
+entering extended mode
+**.\notebook.tex
+(Week09_StoneburnerKurt_DSC530.ipynb
+! Interruption.
+l.1 
+    {
+? 
+LaTeX2e <2018-04-01> patch level 5
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.2  "
+      cells": [
+? 
+Missing character: There is no " in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no " in font nullfont!
+Missing character: There is no : in font nullfont!
+Missing character: There is no [ in font nullfont!
+Missing character: There is no " in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no l in font nullfont!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4    "cell_
+             type": "markdown",
+? 
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 4.
+! You can't use `macro parameter character #' in math mode.
+l.7     "#
+           Stoneburner, Kurt\n",
+? 
+! Undefined control sequence.
+l.7     "# Stoneburner, Kurt\n
+                              ",
+? 獤獤獤獤exit
+Type <return> to proceed, S to scroll future error messages,
+R to run without stopping, Q to run quietly,
+I to insert something, E to edit your file,
+1 or ... or 9 to ignore the next 1 to 9 tokens of input,
+H for help, X to quit.
+? x
+ 
+Here is how much of TeX's memory you used:
+ 12 strings out of 429703
+ 223 string characters out of 3179425
+ 55098 words of memory out of 3000000
+ 3977 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 18i,2n,12p,60b,60s stack positions out of 5000i,500n,10000p,200000b,50000s
+No pages of output.
