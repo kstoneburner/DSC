@@ -1,4 +1,4 @@
-cty_fibs,county,population,Latino,White,Asian,Black,American Indian or Alaska Native,Hawaiian,Other,0rf_num,0rf_rate,0rf_err,1-2rf_num,1-2rf_rate,1-2rf_err,3plrf_num,3plrf_rate,3plrf_err
+cty_fibs,county,population,Latino,White,Asian,Black,American Indian or Alaska Native,Hawaiian,Multiracial,0rf_num,0rf_rate,0rf_err,1-2rf_num,1-2rf_rate,1-2rf_err,3plrf_num,3plrf_rate,3plrf_err
 1,Alameda,1671329,373055,512134,529698,169954,4157,13474,68857,52135,3.16,1.99,1159312,70.37,6.98,436060,26.47,6.84
 3,Alpine,1129,139,692,18,4,243,0,33,241,21.89,8.4,579,52.59,10.35,281,25.52,9.31
 5,Amador,39752,5753,30742,575,994,606,83,999,7169,20.35,5.97,17817,50.59,7.16,10235,29.06,6.49
