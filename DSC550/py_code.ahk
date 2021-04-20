@@ -10,6 +10,7 @@ return
 
 ::@pf::
 ::#pf::
+^#p::
 	temp=%clipboard%
 	clipboard=print(f"{}")
 	send ^v
