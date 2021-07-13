@@ -1,0 +1,114 @@
+import os
+import sys
+# //*** Imports and Load Data
+#import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import json
+
+#//*** Use the whole window in the IPYNB editor
+from IPython.core.display import display, HTML
+display(HTML("<style>.container { width:100% !important; }</style>"))
+
+#//*** Maximize columns and rows displayed by pandas
+pd.set_option('display.max_rows', 100)
+pd.set_option('display.max_columns', None)
+
+#//*** Setup plaid keras
+import plaidml.keras
+
+import os
+os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
+
+plaidml.keras.install_backend()
+
+
+import keras
+
+import keras
+import keras.backend as K
+
+K
+
+# 
+
+
+#importing the libraries
+import math
+#import matplotlib.pyplot as plt
+#import seaborn
+import pandas as pd
+import numpy as np
+import datetime
+import time
+#import requests
+import io
+from sklearn.preprocessing import MinMaxScaler
+#from statsmodels.tsa.arima_model import ARIMA
+#import statsmodels.api as sm
+#import pandas_datareader as web
+from sklearn.metrics import mean_squared_error
+#Importing the keras model
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.optimizers import SGD
+
+from keras.layers import LSTM
+from keras.layers import Dropout
+from keras.wrappers.scikit_learn import KerasRegressor
+
+#data_df = web.DataReader('APOLLOHOSP.NS', data_source = 'yahoo', start="2016-05-01", end="2021-05-01")
+data_df = pd.read_csv("amc_daily.csv.zip")
+data_df.head(10)
+
+#Create a new dataframe with only the 'Adj close column'
+new_data = data_df.filter(['close'])
+#Convert the dataframe to a numpy array
+dataset = new_data.to_numpy()
+#Get the number of rows to train the model on
+len_train = math.ceil(len(dataset)*.8)
+
+train = dataset[0:len_train, :]
+test = dataset[len_train:len(dataset), :1]
+
+##Feature Scaling
+sc = MinMaxScaler(feature_range = (0, 1)) 
+train_scaled = sc.fit_transform(train.reshape(-1,1))
+test_scaled = sc.fit_transform(test.reshape(-1,1))
+
+X_train, y_train = [], []
+for i in range(len(train)-80-1):
+    a = dataset[i:(i+80), 0]
+    X_train.append(a)
+    y_train.append(dataset[i+80, 0])
+X_train = np.array(X_train)
+y_train = np.array(y_train)
+
+#Reshaping
+X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], 1)
+#X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
+X_test = test.reshape(test.shape[0], test.shape[1], 1)
+
+#create and fit the LSTM network
+def model_lstm(lrn_rate = 0.01, mntum = 0):
+    #Intializing the RNN
+    model = Sequential()
+    #1st layer
+    model.add(LSTM(50, return_sequences=True, input_shape = (X_train.shape[1], 1)))
+    model.add(Dropout(0.2))
+    #2nd layer
+    model.add(LSTM(50))
+    model.add(Dropout(0.2))
+    #Adding the output layer
+    model.add(Dense(units = 1))
+    model.compile(loss = 'mean_squared_error', optimizer='adam')
+    return model
+
+start_time = time.time()
+LSTModel = model_lstm(lrn_rate=0.01, mntum=0)
+LSTMmodel_fit = LSTModel.fit(X_train, y_train, batch_size=1, epochs=10)
+print(f"Run time internal CPU: {time.time()-start_time}")
+
+closing_price = LSTModel.predict(X_test)
+closing_price = sc.inverse_transform(closing_price)
+closing_price
