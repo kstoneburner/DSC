@@ -68,7 +68,11 @@ def harvest_terms(input_df,terms,**kwargs):
             newdex.append(index)
 
             for x in range(1,post_story_count+1):
-                newdex.append(index+x)
+            	if (index+x) in input_df.index:
+            		newdex.append(index+x)
+
+
+        #print("Newdex: ", len(newdex),newdex)
         df = input_df.loc[newdex]
         df = df.drop_duplicates()  
     
