@@ -1,0 +1,71 @@
+This is XeTeX, Version 3.141592653-2.6-0.999993 (MiKTeX 21.12.10) (preloaded format=xelatex 2021.12.15)  15 DEC 2021 20:45
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./DSC650_Assignment_5_01.ipynb
+(DSC650_Assignment_5_01.ipynb
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2021-11-22>
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.2  "
+      cells": [
+? 
+Missing character: There is no " in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no s in font nullfont!
+Missing character: There is no " in font nullfont!
+Missing character: There is no : in font nullfont!
+Missing character: There is no [ in font nullfont!
+Missing character: There is no " in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no l in font nullfont!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.4    "cell_
+             type": "markdown",
+? 
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 4.
+! Undefined control sequence.
+l.7     "Notes:\n
+                 ",
+? ^^A^^A^^A^^A^^Z^^Z
+Type <return> to proceed, S to scroll future error messages,
+R to run without stopping, Q to run quietly,
+I to insert something, E to edit your file,
+1 or ... or 9 to ignore the next 1 to 9 tokens of input,
+H for help, X to quit.
+? 
+! Undefined control sequence.
+l.8 ...n creating a method for future retrieval.\n
+                                                  ",
+? 
+! Emergency stop.
+l.8 
+    
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 19 strings out of 411044
+ 417 string characters out of 2829676
+ 306265 words of memory out of 3000000
+ 20771 multiletter control sequences out of 15000+600000
+ 403430 words of font info for 27 fonts, out of 8000000 for 9000
+ 1348 hyphenation exceptions out of 8191
+ 18i,2n,12p,567b,62s stack positions out of 5000i,500n,10000p,200000b,80000s
+No pages of output.
