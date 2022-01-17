@@ -15950,19 +15950,17 @@ JavaScript error: https://assets-cdn.abcotvs.net/abcotv/8290d3590f3a-release-01-
 JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 801 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
 [Child 13720, MediaDecoderStateMachine #1] WARNING: 1acfe448740 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
 JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 1886 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
-Level3=5461073930&moatClientLevel4=138321598657&moatClientSlicer1=21782482296&moatClientSlicer2=21792374099&zMoatPS=adhesion&zMoatSW=&zMoatAdUnitPath=/21783347309/kgo/abc7news.com/web/education&zMoatMData=&zMoatSZ=71642117671261	Marionette	INFO	Marionette enabled
-[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
-console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\family\\AppData\\Local\\Temp\\rust_mozprofileZ5wQX3\\search.json.mozlz4", (void 0)))
-DevTools listening on ws://localhost:61771/devtools/browserJavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJ1642117673890	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
-JavaScript warning: https://z.moatads.com/abcimavideo618769704984/moatvideo.js#_moatApi31802657, line 262: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
-1642117678280	Marionette	INFO	Stopped listening on port 61830
+[Child 13720, MediaDecoderStateMachine #1] WARNING: 1acfe448740 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 1761 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+[Child 13720, MediaDecoderStateMachine #1] WARNING: 1acfd12b900 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 2833 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+[Child 13720, MediaDecoderStateMachine #1] WARNING: 1acfe49b200 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 6789 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+[Child 13720, MediaDecoderStateMachine #1] WARNING: 1acfe448040 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 4823 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
+[Child 13720, MediaDecoderStateMachine #1] WARNING: 1acffef2f20 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 1772 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
 
-###!!! [Parent][MessageChannel] ErroJavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
-JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 1276 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
-JavaScript error: , line 0: TypeError: NetworkError when attempting to fetch resource.
-JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 7329 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
-JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 6871 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
-1642117727205	Marionette	INFO	Stopped listening on port 61661
 
 ###!!! [Parent][MessageChannel] Error: (msgtype=0x3A014F,name=PContent::Reply_DiscardBrowsingContext) Closed channel: cannot send/recv
 
@@ -24764,9 +24762,9 @@ JavaScript error: https://assets-cdn.abcotvs.net/abcotv/8290d3590f3a-release-01-
 JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 2726 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
 JavaScript error: https://assets-cdn.abcotvs.net/abcotv/8290d3590f3a-release-01-12-22-real.0/client/abcotv.js, line 1: Error: timeout of 10000ms exceeded
 JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 2408 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
-1642122121719	geckodriver	INFO	Listening on 127.0.0.1:57209
-1642122124777	mozrunner::runner	INFO	Running command: "C:\\Program Files\\Mozilla Firefox\\firefox.exe" "--marionette" "--remote-debugging-port" "57210" "-no-remote" "-profile" "C:\\Users\\family\\AppData\\Local\\Temp\\rust_mozprofilesVhd9g"
-1642122125390	Marionette	INFO	Marionette enabled
+[Child 30920, MediaDecoderStateMachine #2] WARNING: 16ebd4ec040 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 30920, MediaDecoderStateMachine #3] WARNING: 16ebd5b5820 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+O	Marionette enabled
 console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at C:\\Users\\family\\AppData\\Local\\Temp\\rust_mozprofilesVhd9g\\search.json.mozlz4", (void 0)))
 DevTools listening on ws://localhost:57210/devtools/browser/c265f35e-b9fe-4be7-b168-4e3f6d1baf6b
 1642122129594	Marionette	INFO	Listening on port 57222
@@ -31290,46 +31288,15 @@ JavaScript error: https://assets-cdn.abcotvs.net/abcotv/8290d3590f3a-release-01-
 JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 7527 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
 JavaScript error: https://assets-cdn.abcotvs.net/abcotv/8290d3590f3a-release-01-12-22-real.0/client/abcotv.js, line 1: Error: timeout of 10000ms exceeded
 JavaScript warning: https://pagead2.googlesyndication.com/bg/qOjxjXcXCvgvcs-4P0zsCT9Wg6D8_9jxJtnS_OGjMvI.js line 1 > eval line 2826 > eval line 1 > eval, line 1: WEBGL_debug_renderer_info is deprecated in Firefox and will be removed. Please use RENDERER.
-s will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
-
-
-###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+[Child 18556, MediaDecoderStateMachine #3] WARNING: 19ad2908040 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 18556, MediaDecoderStateMachine #3] WARNING: 19ac5487e40 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 18556, MediaDecoderStateMachine #4] WARNING: 19ad29083c0 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 18556, MediaDecoderStateMachine #5] WARNING: 19ad29083c0 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 18556, MediaDecoderStateMachine #5] WARNING: 19ad29083c0 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 18556, MediaDecoderStateMachine #6] WARNING: 19ad2908e40 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 18556, MediaDecoderStateMachine #7] WARNING: 19ad2908580 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+[Child 18556, MediaDecoderStateMachine #9] WARNING: 19ad2908e40 Could not set cubeb stream name.: file /builds/worker/checkouts/gecko/dom/media/AudioStream.cpp:367
+be lost
 
 
 ###!!! [Child][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
