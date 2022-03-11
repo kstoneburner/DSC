@@ -1,0 +1,6 @@
+JSON,compressed,3327145
+JSON,uncompressed,59109449
+Avro,uncompressed,19646227
+Parquet,uncompressed,1975465
+Protocol Buffer,uncompressed,22523154
+Protocol Buffer,compressed,3762689
