@@ -5,7 +5,9 @@ import os
 import requests
 from datetime import datetime
 from IPython.display import clear_output
-
+import time
+from io import StringIO
+import datetime as DT
 class process_covid():
     
     def process_patient_impact(self,**kwargs):
@@ -46,6 +48,9 @@ class process_covid():
         data_dir = current_dir.joinpath(data_folder_name)
         base_filename = "covid_people.pkl.zip"
         out_df = pd.DataFrame()
+
+        start_time = time.time()
+
         #//**** Load each file
         for filename in os.listdir(data_dir):
             if base_filename in filename:
@@ -63,6 +68,7 @@ class process_covid():
         columns = list(out_df.columns)
         
         #//*** Convert column names if specified
+        print(f"Elapsed Time: {int(time.time() - start_time)}s")
 
         for rc in rename_cols:
 
@@ -137,7 +143,8 @@ class process_covid():
                 for col in process_cols:
 
                     tds[col] = fips_group[1][col].sum()
-            
+                
+                tds['case_count'] = len(fips_group[1])
                 out_df = pd.concat([out_df,tds],axis=1)
             
         
@@ -156,7 +163,7 @@ def download_data(**kwargs):
     death_data_filename = data_dir.joinpath("z_us_death_cases.csv")
     vaccine_data_filename = data_dir.joinpath("z_us_vaccination.csv")
     county_vaccine_data_filename = data_dir.joinpath("z_us_county_vaccination.csv.zip")
-    state_hospital_filename = data_dir.joinpath("z_state_hospital.csv")
+    county_hospital_filename = data_dir.joinpath("z_county_hospital.csv.zip")
 
 
 
@@ -242,13 +249,18 @@ def download_data(**kwargs):
 
     try:
         #response = requests.get("https://data.cdc.gov/api/views/8xkx-amqh/rows.csv?accessType=DOWNLOAD")
-        response = requests.get("https://healthdata.gov/api/views/g62h-syeh/rows.csv?accessType=DOWNLOAD")
+        #response = requests.get("https://healthdata.gov/api/views/g62h-syeh/rows.csv?accessType=DOWNLOAD")
+        response = requests.get("https://healthdata.gov/api/views/anag-cw7u/rows.csv?accessType=DOWNLOAD")
         if response.ok:
             print("Hospitalization Data Downloading")
-            f = open(state_hospital_filename, "w")
-            f.write(response.text)
-            f.close()
-            print("US Hospitalization Data Written to file.")
+            #f = open(county_hospital_filename, "w")
+            #f.write(response.text)
+            #f.close()
+            
+            #//*** Convert text to FileIO Object, to load into CSV
+            #//*** Pickle to save the DataFrame with Compression
+            pd.read_csv(StringIO(response.text)).to_pickle(county_hospital_filename)
+            print("county Hospitalization Data Written to file.")
     except:
         print("US Hospitalization: Trouble Downloading From Healthdata.gov")
 
@@ -279,6 +291,8 @@ def build_county_case_death(**kwargs):
     confirmed_data_filename = data_dir.joinpath(confirmed_data_filename)
     death_data_filename = data_dir.joinpath(death_data_filename)
     county_daily_df_filename = data_dir.joinpath("z_county_daily_df.csv.zip")
+
+    start_time = time.time()
     #//****************************************************
     #//*** Prepare Confirmed Cases and Deaths For Merge
     #//****************************************************
@@ -337,6 +351,8 @@ def build_county_case_death(**kwargs):
 
     print("Begin Merge Confirm and Deaths Columns with Vaccination Rows....")
     county_daily_df = pd.DataFrame()
+
+    all_dfs = []
 
     for FIPS in death_df.sort_values(['FIPS'])['FIPS'].unique():
 
@@ -432,20 +448,32 @@ def build_county_case_death(**kwargs):
 
 
         #//*** All Data merged and Calculated. Merge with temporary Dataframe()
-        county_daily_df = pd.concat([county_daily_df,loop_df])
+        #county_daily_df = pd.concat([county_daily_df,loop_df])
+
+        #//*** Add Loop_df to List, Concat Later
+        all_dfs.append(loop_df)
 
         if i % 100 == 0:
             print(f"Working: {i} of {len(death_df['FIPS'].unique())}")
+
+    county_daily_df = pd.concat(all_dfs)
 
     county_daily_df = county_daily_df.dropna()
 
     print(f"Writing county daily to File: {county_daily_df_filename}")
     county_daily_df.to_pickle(county_daily_df_filename)
-    print("Done!")    
+    print(f"Elapsed Time: {int(time.time() - start_time)}s")
+
 
 def load_data(**kwargs):
+
+    #//*** Load Dataframe from file
+
     data_folder_name = "raw_data"
 
+    #//*** Action is Either None or 'county_vaccine'
+    #//*** county_vaccine is specifically load the the county vaccination data.
+    #//*** This dataset is specially split to meet filesize github requiments
     action = None
 
     filename = None
@@ -454,6 +482,13 @@ def load_data(**kwargs):
 
     date_col = "Date"
 
+    trim_first_date = False
+    trim_last_date = False
+
+    clean_col_names = None
+    rename_cols = None
+    remove_cols = None
+    auto_convert_to_float = False
     for key,value in kwargs.items():
 
         if key == "action":
@@ -471,8 +506,31 @@ def load_data(**kwargs):
         if key == 'date_col':
             date_col = value
 
+        if key == 'filename':
+            filename = value
+
+        if key == 'trim_first_date':
+            trim_first_date = value
+
+        if key == 'trim_last_date':
+            trim_last_date = value
+
+        if key == 'clean_col_names':
+            clean_col_names = value
+
+        if key == 'rename_cols':
+            rename_cols = value
+
+        if key == 'remove_cols':
+            remove_cols = value
+
+        if key == 'auto_convert_to_float':
+            auto_convert_to_float = value
+
     current_dir = Path(os.getcwd()).absolute()
     data_dir = current_dir.joinpath(data_folder_name)
+
+
 
     if action == "county_vaccine":
         county_vaccine_data_filename_1 = data_dir.joinpath("z_1_us_county_vaccination.csv.zip")
@@ -519,8 +577,11 @@ def load_data(**kwargs):
             
         return county_vax_df
 
+
+
     if filename != None and action == None:
-        
+
+
         if ".zip" in filename:
 
             df = pd.read_pickle(data_dir.joinpath(filename))
@@ -532,6 +593,61 @@ def load_data(**kwargs):
         if min_date != None:
 
             df = df [ df[date_col] >= min_date]
+        
+        #//*** Remove All Dates that include the last date
+        if trim_first_date:
+            df = df[df[date_col] != df[date_col].unique()[0]]
+
+        #//*** Remove All Dates that include the last date
+        if trim_last_date:
+            df = df[df[date_col] != df[date_col].unique()[-1]]
+
+        #//*** Tidy up column names by removing fragments in clean_col_names
+        if clean_col_names != None:
+
+            cols = []
+            for orig_col in df.columns:
+
+                for find in clean_col_names:
+                   orig_col = orig_col.replace(find,"")
+                cols.append(orig_col)
+
+            df.columns = cols
+
+        if rename_cols != None:
+
+            cols = []
+
+            for col in df.columns:
+                skip = False
+                #//*** frt = find replace tuple. First key is find, Second is replace
+                for frt in rename_cols:
+                    if col == frt[0]:
+                        cols.append(frt[1])
+                        skip = True
+                if skip:
+                    continue
+
+                cols.append(col)
+
+            df.columns = cols
+
+        #//*** Delete Columns if Specified
+        if remove_cols != None:
+            for col in remove_cols:
+                #print(col,out_df.columns,col in out_df.columns)
+                if col in df.columns:
+                    del df[col]
+
+
+        if auto_convert_to_float:
+
+            #//*** Convert all Numeric Columns to Float if possible
+            for col in df.columns:
+                try:
+                    df[col] = df[col].astype(float)
+                except:
+                    pass
 
         return df
 
@@ -541,6 +657,10 @@ def merge_df(df1,df2,**kwargs):
     left_col = None
     right_col = None
     date_col = "Date"
+    export_filename = None
+    data_dir = "raw_data"
+    remove_cols = None
+    start_time = time.time()
 
     for key,value in kwargs.items():
 
@@ -555,8 +675,20 @@ def merge_df(df1,df2,**kwargs):
 
         if key == 'date_col':
             date_col = value
+        
+        if key == 'export':
+            export_filename = value
+
+        if key == 'folder':
+            data_dir = value
+
+        if key == 'remove_cols':
+            remove_cols = value
+
 
     out_df = pd.DataFrame()
+    
+    all_dfs = []
 
     for group in df1.groupby(by):
         
@@ -570,13 +702,358 @@ def merge_df(df1,df2,**kwargs):
         del loop_df2[date_col]
 
 
-        out_df = pd.concat([out_df,loop_df1.merge(loop_df2,left_on=left_col,right_on=right_col)])
+        #out_df = pd.concat([out_df,loop_df1.merge(loop_df2,left_on=left_col,right_on=right_col)])
+        #//*** Merge DataFrames on by Value (Date)
+        #//*** Append to all_dfs for later concatenation
+        #//*** This method is quite a timesaver! as Concat is inefficient compared to list append with a single concat
+        all_dfs.append(loop_df1.merge(loop_df2,left_on=left_col,right_on=right_col))
     
+    out_df = pd.concat(all_dfs)
     clear_output(wait=True)
-    return out_df
+    #print("Remove Cols:",remove_cols)
+    #//*** Delete Columns if Specified
+    if remove_cols != None:
+        for col in remove_cols:
+            #print(col,out_df.columns,col in out_df.columns)
+            if col in out_df.columns:
+                del out_df[col]
+    print(f"Elapsed Time: {int(time.time() - start_time)}s")
+
+    #//*** Export File if value is defined
+    if export_filename != None:
+        current_dir = Path(os.getcwd()).absolute()
+        data_dir = current_dir.joinpath(data_dir)
+        export_filename = data_dir.joinpath(export_filename)
+
+        print("Exporting DataFrame to Disk.")
+        if ".zip" in str(export_filename):
+            out_df.to_pickle(export_filename)
+            return
+        else:
+            out_df.to_csv(export_filename)
+            return
+
+    #//*** Otherwise return out_df
+    else:
+        return out_df
+
+def create_monthly_data(df, **kwargs):
+
+    
+    data_folder_name = "raw_data"
+    export_filename = "z_county_monthly_df.csv.zip"
+    export_filename = None
+    date_col = "Date"
+    FIPS_col = "FIPS"
+    sum_cols = ['New_Confirm','New_Deaths']
+    remove_cols = ['case_7_day_avg','death_7_day_avg','case_100k_avg','death_100k_avg','case_scaled_100k','death_scaled_100k']
 
 
+    for key,value in kwargs.items():
+        if key == 'folder':
+            data_folder_name = value
+
+        if key == 'date_col':
+            date_col = value
+
+        if key == 'FIPS_col':
+            FIPS_col = value
+
+        if key == 'sum_cols':
+            sum_cols = value
+
+        if key == 'remove_cols':
+            remove_cols = value
+
+        if key == 'export':
+            export_filename = value
         
 
+    current_dir = Path(os.getcwd()).absolute()
+    data_dir = current_dir.joinpath(data_folder_name)
+
+    if export_filename != None:
+        export_filename = data_dir.joinpath(export_filename)
+
+    start_time = time.time()
+
+    out_df = pd.DataFrame()
+    date_col = "Date"
+    sum_cols = ['New_Confirm','New_Deaths']
+    remove_cols = ['case_7_day_avg','death_7_day_avg','case_100k_avg','death_100k_avg','case_scaled_100k','death_scaled_100k']
+    each_col = []
+    start_time = time.time()
+    counter = 0
+    tot_count = len(df[FIPS_col].unique())
+    for FIPS_group in df.groupby('FIPS'):
+        FIPS_group[1].index = pd.to_datetime(FIPS_group[1]['Date'])
+        counter += 1
+        #//*** Group FIPS by month & Year (ie each individual month)
+        for date_group in FIPS_group[1].groupby(by=[FIPS_group[1].index.month,FIPS_group[1].index.year] ):
+            clear_output(wait=True)
+            print(counter,"/",tot_count,"Processing FIPS:",FIPS_group[0],FIPS_group[1].iloc[0]['Combined_Key'])
+            tds = date_group[1].iloc[-1].copy()
+            
+            for col in df.columns:
+                if col == date_col:
+                    tds[date_col] = date_group[1][date_col].iloc[0]
+                    continue
+                if col in sum_cols:
+                    tds[col] = date_group[1][col].sum()
+                    tds[f"{col}_100k"] = tds[col] / (tds['Population'] / 100000)
+                    tds[f"{col}_avg_daily_100k"] = date_group[1][col].mean() / (tds['Population'] / 100000)
+                    continue
+                if col in remove_cols:
+                    del tds[col]
+                    continue
+            #//*** TDS is a column, Store to a list for later concatenating 
+            each_col.append(tds)
+            
+            
+            
+    clear_output(wait=True)
+
+    #//*** Build a dataframe using each_col as a column. Transpose, sort by Date then reset the Index.
+    out_df = pd.concat(each_col,axis=1).transpose().sort_values("Date").reset_index(drop=True)
+    out_df[date_col] = pd.to_datetime(out_df[date_col])
+    print(f"Elapsed Time: {int(time.time() - start_time)}s")
+    #//*** If export_filename is defined, save the df to disk
+    if export_filename != None:
+
+        print("Saving Combined Monthly DataFrame to Disk.")
+        if ".zip" in str(export_filename):
+            out_df.to_pickle(export_filename)
+            return
+        else:
+            out_df.to_csv(export_filename)
+            return
+
+    #//*** Return the DF
+    return df
+    
+
+           
+def aggregate_columns(df, **kwargs):
+
+    #//*** Process Columns by date and another field (typically FIPS)
+    #//*** Sum Columns adds the total values for all entries and returns a single entry
+
+    data_folder_name = "raw_data"
+    export_filename = None
+    date_col = None
+    FIPS_col = None
+    process_cols = []
+    by = None
+    base_cols = []
+    disp_cols = None
+    method = "sum"
+
+    for key,value in kwargs.items():
+        if key == 'folder':
+            data_folder_name = value
+
+        if key == 'export':
+            export_filename = value
+
+        if key == 'date_col':
+            date_col = value
+
+        if key == 'FIPS_col':
+            FIPS_col = value
+
+        if key == 'process_cols':
+            process_cols = value
+
+        if key == 'by':
+            by = value
+
+        if key == 'base_cols':
+            base_cols = value
+
+        if key == 'disp_cols':
+            disp_cols = value
+ 
+        if key == 'method':
+            method = value    
+
+    current_dir = Path(os.getcwd()).absolute()
+    data_dir = current_dir.joinpath(data_folder_name)
+
+    if export_filename != None:
+        export_filename = data_dir.joinpath(export_filename)
+
+    start_time = time.time()
+
+    df = df.replace(-999999.0,1)
+
+    #//*** Hold all rows as a list and append once when done
+    all_rows = [] 
+    
+    max_date = df[date_col].max()
+    #//*** for each Date in df
+    for date_group in df.groupby(date_col):
+        clear_output(wait=True)
+        try:
+            print("Processing:",date_group[0], "/", max_date )
+        except:
+            pass
+        
+        for by_group in date_group[1].groupby(by):
+            #display(by_group[1][disp_cols])
+
+            #display(by_group[1])
+
+            #//*** Create a Temporary Series
+            tds = by_group[1][disp_cols].iloc[-1].copy()
+
+            #//*** PRocess each col in process_cols
+            for col in process_cols:
+
+                #//*** Perform calc based on method
+                if method == 'sum':
+
+                    tds[col] = by_group[1][col].sum()
+                    
+                else:
+                    print(f"Unknown Method: {method}")
+                    print("quitting!")
+                    return
+
+            
+            #print(tds)
+            all_rows.append(tds)
+        
+        
+    out_df = pd.concat(all_rows,axis=1).transpose()
+    print(f"Elapsed Time: {int(time.time() - start_time)}s")
+    #//*** If export_filename is defined, save the df to disk
+    if export_filename != None:
+
+        print("Saving Combined Monthly DataFrame to Disk.")
+        if ".zip" in str(export_filename):
+            out_df.to_pickle(export_filename)
+            return
+        else:
+            out_df.to_csv(export_filename)
+            return
+
+    
+    
+
+
+
+
+def create_weekly_data(df, **kwargs):
+
+    
+    data_folder_name = "raw_data"
+    export_filename = "z_county_monthly_df.csv.zip"
+    export_filename = None
+    date_col = "Date"
+    dates = None
+    FIPS_col = "FIPS"
+    sum_cols = ['New_Confirm','New_Deaths']
+    remove_cols = ['case_7_day_avg','death_7_day_avg','case_100k_avg','death_100k_avg','case_scaled_100k','death_scaled_100k']
+
+
+    for key,value in kwargs.items():
+        if key == 'folder':
+            data_folder_name = value
+
+        if key == 'date_col':
+            date_col = value
+
+        if key == 'dates':
+            dates = value
+
+        if key == 'FIPS_col':
+            FIPS_col = value
+
+        if key == 'sum_cols':
+            sum_cols = value
+
+        if key == 'remove_cols':
+            remove_cols = value
+
+        if key == 'export':
+            export_filename = value
         
 
+    current_dir = Path(os.getcwd()).absolute()
+    data_dir = current_dir.joinpath(data_folder_name)
+
+    if export_filename != None:
+        export_filename = data_dir.joinpath(export_filename)
+
+    start_time = time.time()
+
+    out_df = pd.DataFrame()
+    date_col = "Date"
+    sum_cols = ['New_Confirm','New_Deaths']
+    remove_cols = ['case_7_day_avg','death_7_day_avg','case_100k_avg','death_100k_avg','case_scaled_100k','death_scaled_100k']
+    each_col = []
+    start_time = time.time()
+    counter = 0
+    tot_count = len(dates)
+
+    #//*** Convert Dates to TimeStamp
+    dates = pd.Series(dates).apply(lambda x: pd.Timestamp(x))
+    df[date_col] = df[date_col].apply(lambda x: pd.Timestamp(x))
+    #dates = pd.to_datetime(pd.Series(dates))
+    display(df.head())
+
+    for date in dates:
+        counter += 1
+        #date_end = datetime.strptime(date,"%Y/%m/%d").date()
+        date_start = date - DT.timedelta(days=6)
+
+        date_df = df[ (df[date_col] >= date_start) & (df[date_col] <= date) ]
+
+        #tdf =  date_df.groupby([date_col,FIPS_col]).agg({'New_Confirm' : ['sum'],'New_Deaths' : ['sum']})
+
+        clear_output(wait=True)
+
+        print(counter,"/",tot_count,"Processing Dates:",date.date(),"/",dates.iloc[-1].date(),date_df[date_col].min(),date_df[date_col].max())
+        for FIPS_group in date_df.groupby(FIPS_col):
+
+            tds = FIPS_group[1].iloc[-1].copy()
+            #print(len(FIPS_group[1]))
+
+            
+            for col in df.columns:
+                #if col == date_col:
+                #    tds[date_col] = FIPS_group[1][date_col].iloc[0]
+                #    continue
+                if col in sum_cols:
+                    tds[col] = FIPS_group[1][col].sum()
+                    tds[f"{col}_100k"] = tds[col] / (tds['Population'] / 100000)
+                    tds[f"{col}_avg_daily_100k"] = FIPS_group[1][col].mean() / (tds['Population'] / 100000)
+                    continue
+                if col in remove_cols:
+                    del tds[col]
+                    continue
+            #print(tds)       
+            #//*** TDS is a column, Store to a list for later concatenating 
+            each_col.append(tds)
+        
+    clear_output(wait=True)
+
+    #//*** Build a dataframe using each_col as a column. Transpose, sort by Date then reset the Index.
+    out_df = pd.concat(each_col,axis=1).transpose().sort_values("Date").reset_index(drop=True)
+    out_df[date_col] = pd.to_datetime(out_df[date_col])
+    print(f"Elapsed Time: {int(time.time() - start_time)}s")
+    display(out_df)
+    
+    #//*** If export_filename is defined, save the df to disk
+    if export_filename != None:
+
+        print("Saving Weekly Aggregated DataFrame to Disk.")
+        if ".zip" in str(export_filename):
+            out_df.to_pickle(export_filename)
+            return
+        else:
+            out_df.to_csv(export_filename)
+            return
+
+    #//*** Return the DF
+    return df
