@@ -6,6 +6,7 @@ import requests
 from datetime import datetime
 from IPython.display import clear_output
 import time
+import pickle5 as pickle
 from io import StringIO
 import datetime as DT
 class process_covid():
