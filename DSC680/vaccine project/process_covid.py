@@ -6,7 +6,7 @@ import requests
 from datetime import datetime
 from IPython.display import clear_output
 import time
-import pickle5 as pickle
+import pickle
 from io import StringIO
 import datetime as DT
 class process_covid():
@@ -1027,8 +1027,15 @@ def create_weekly_data(df, **kwargs):
                 #    continue
                 if col in sum_cols:
                     tds[col] = FIPS_group[1][col].sum()
-                    tds[f"{col}_100k"] = tds[col] / (tds['Population'] / 100000)
-                    tds[f"{col}_avg_daily_100k"] = FIPS_group[1][col].mean() / (tds['Population'] / 100000)
+                    try:
+                        tds[f"{col}_100k"] = tds[col] / (tds['Population'] / 100000)
+                    except:
+                        tds[f"{col}_100k"] = 0
+
+                    try:
+                        tds[f"{col}_avg_daily_100k"] = FIPS_group[1][col].mean() / (tds['Population'] / 100000)
+                    except:
+                        tds[f"{col}_avg_daily_100k"] = 0
                     continue
                 if col in remove_cols:
                     del tds[col]
