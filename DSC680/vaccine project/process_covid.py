@@ -9,6 +9,13 @@ import time
 import pickle
 from io import StringIO
 import datetime as DT
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+import matplotlib.pyplot as plt
+
+
 class process_covid():
     
     def process_patient_impact(self,**kwargs):
@@ -939,11 +946,6 @@ def aggregate_columns(df, **kwargs):
             return
 
     
-    
-
-
-
-
 def create_weekly_data(df, **kwargs):
 
     
@@ -1065,3 +1067,61 @@ def create_weekly_data(df, **kwargs):
 
     #//*** Return the DF
     return df
+
+
+def eda_models(model,x,y, **kwargs):
+    model_action = None
+
+    disp_col = None
+    test_size = .2 #//*** Test Split Size
+    title = ""
+    for key,value in kwargs.items():
+        if key == 'disp_col':
+            disp_col = value
+
+        if key == 'test_size':
+            test_size = value
+
+        if key == 'title':
+            title = value
+
+    if model == 'linear' or model == 'lr':
+        model_action = 'linear_regression'
+
+    if model_action  == 'linear_regression':
+
+        x = np.array(x)
+
+        #//*** Reshape x if a single dimension
+        if x.ndim == 1:
+            x = x.reshape(-1,1)
+
+        y = np.array(y)
+
+        #//*** Perform Test Train Split
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2, shuffle=False)
+
+        regr = LinearRegression()
+        regr.fit(x_train, y_train)
+        y_pred = regr.predict(x_test)
+
+        print("R2: ", r2_score(y_test, y_pred))
+        
+        #//*** If Not defined, use a range value for x display.
+        try:
+            if disp_col == None:
+                disp_col = range(len(y_pred))
+        except:
+            disp_col = np.array(disp_col)[len(y_pred) * -1 : ]
+
+
+        plt.figure(figsize=(12, 8))
+        plt.style.use('fivethirtyeight')
+        plt.plot(disp_col,y_test, label='actual')
+        plt.plot(disp_col,y_pred, label='predict')
+        plt.title(title) 
+        plt.legend()
+
+
+
+        plt.show()
