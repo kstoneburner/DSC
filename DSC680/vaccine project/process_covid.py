@@ -1071,6 +1071,7 @@ def create_weekly_data(df, **kwargs):
 
 def eda_models(model,x,y, **kwargs):
     model_action = None
+    labels = None
 
     disp_col = None
     test_size = .2 #//*** Test Split Size
@@ -1085,8 +1086,14 @@ def eda_models(model,x,y, **kwargs):
         if key == 'title':
             title = value
 
+        if key == 'labels':
+            labels = value
+
     if model == 'linear' or model == 'lr':
         model_action = 'linear_regression'
+
+    if model == 'linear_regression_analysis' or model == 'lra':
+        model_action = 'linear_regression_analysis'
 
     if model_action  == 'linear_regression':
 
@@ -1104,7 +1111,7 @@ def eda_models(model,x,y, **kwargs):
         regr = LinearRegression()
         regr.fit(x_train, y_train)
         y_pred = regr.predict(x_test)
-
+        xx_pred = regr.predict(x_train)
         print("R2: ", r2_score(y_test, y_pred))
         
         #//*** If Not defined, use a range value for x display.
@@ -1122,6 +1129,83 @@ def eda_models(model,x,y, **kwargs):
         plt.title(title) 
         plt.legend()
 
+        plt.show()
 
+        plt.figure(figsize=(12, 8))
+        plt.plot(y_train, label='actual')
+
+        plt.plot(xx_pred, label='predict')
+
+        plt.legend()
 
         plt.show()
+
+    elif model_action == 'linear_regression_analysis':
+        x = np.array(x)
+
+        #//*** Reshape x if a single dimension
+        if x.ndim == 1:
+            x = x.reshape(-1,1)
+
+        y = np.array(y)
+
+        regr = LinearRegression()
+        regr.fit(x, y)
+        y_pred = regr.predict(x)
+        
+        print("R2: ", r2_score(y, y_pred))
+
+        print("Coef:", regr.coef_, "Intercept: ",regr.intercept_)
+        if labels == None:
+            print("Coef:", regr.coef_, "Intercept: ",int(regr.intercept_))
+
+        else:
+            msg = "Coef:\n"
+            for x in range(len(labels)):
+                msg += f"\t{labels[x]}: {round(regr.coef_[x],4)}\n"
+
+            print(msg, "Intercept: ",regr.intercept_)
+        
+        #//*** If Not defined, use a range value for x display.
+        try:
+            if disp_col == None:
+                disp_col = range(len(y_pred))
+        except:
+            disp_col = np.array(disp_col)[len(y_pred) * -1 : ]
+
+
+        plt.figure(figsize=(12, 8))
+        plt.style.use('fivethirtyeight')
+        plt.plot(disp_col,y, label='actual')
+        plt.plot(disp_col,y_pred, label='predict')
+        plt.title(title) 
+        plt.legend()
+
+        plt.show()
+
+
+def qplot(x,y=None):
+
+
+        try:
+            x = x.values
+        except:
+            pass
+
+        if isinstance(y,type(None)):
+            plt.figure(figsize=(12, 8))
+            plt.style.use('fivethirtyeight')
+            plt.plot(range(len(x)))
+            plt.show()
+        else:
+            try:
+                y = y.values
+            except:
+                pass
+
+
+
+            plt.figure(figsize=(12, 8))
+            plt.style.use('fivethirtyeight')
+            plt.plot(x,y)
+            plt.show()
