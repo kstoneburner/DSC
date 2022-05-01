@@ -1209,3 +1209,130 @@ def qplot(x,y=None):
             plt.style.use('fivethirtyeight')
             plt.plot(x,y)
             plt.show()
+
+def build_stats_for_analysis(df,**kwargs):
+
+    
+    #//*** Default values
+    kw = {
+        'action' : None,
+        'vax_col' : 'vax_ct',
+        'pop_col' : 'pop',
+        'by_col' : 'Date',
+        'agg' : 'sum',
+        'cols' : None,
+        'reset_index' : True,
+        'label' : None,
+        'cumsum' : None,
+        'build_100k' : False,
+        'outcome_ratios': None,
+        'verbose' : True,
+    }
+    
+    #//*******************************************************************************************
+    #//*** Assign every key,value pair in kwargs.
+    #//*** It's a little insecure since there is no validation and bad things can be passed in
+    #//*** It's not accepting random API info from the wild. It's fine
+    #//*******************************************************************************************
+    for key,value in kwargs.items():
+        kw[key] = value
+        
+    
+    verbose = kw['verbose']    
+
+    
+    if isinstance(kw['cols'],type(None)):
+        print("Need to define cols= as a list of columns to aggregate")
+        return None
+    
+    out_df = df.groupby(kw['by_col'], dropna=False)[kw['cols']].agg([kw['agg']])
+    if verbose:
+        print("Aggregating Columns by", kw['by_col'], "Action:",kw['agg'], " Columns:",kw['cols'])
+    
+    #//*** Rename the columns to the input columns
+    out_df.columns = kw['cols']
+    
+    #//*** Add Label Column if it is Not None
+    if isinstance(kw['label'],type(None)) == False:
+        #//*** Add Label Column
+        label_column = kw['label'][0]
+        label_value = kw['label'][1]
+        if verbose:
+            print("Adding Label Column: ", label_column,"-",label_value)
+
+        out_df[ label_column ] = label_value
+
+        #//*** Reorder Columns so label comes first
+        out_df = out_df[[label_column] + list(out_df.columns)[:-1]]
+
+    
+    if kw['reset_index']:
+        if verbose:
+            print("Resetting Index")
+        out_df.reset_index(inplace=True)
+    
+    #//*** Build Unvaccinated Value
+    if verbose:
+        print("Building Unvaccinated")
+
+    try:
+        out_df['uvx'] = out_df[kw['pop_col']] - out_df[kw['vax_col']]
+    except:
+        if verbose:
+            print("Skipping Unvaccinated")
+        pass
+
+    if isinstance(kw['cumsum'],list):
+        if verbose:
+            print("Building Cumulative Sums for Columns: ", kw['cumsum'])
+        #//*** Add Cumulatively Sum Columns if defined - Defaults to None
+        for col in kw['cumsum']:
+            out_df[f"{col}_tot"] = out_df[col].cumsum()
+
+    #//*** Build percapita 100k for every column after 'pop'
+    if kw['build_100k']:
+        #//*** Get a list of every column after pop_col
+        cols_100k = list(out_df.columns[list(out_df.columns).index(kw['pop_col'])+1:])
+        
+        if verbose:
+            print("Building 100k Values:",cols_100k)
+        for col in cols_100k:
+            #//*** Verify it's a float column    
+            if out_df[col].dtype == 'float64':
+                out_df[f"{col}_100k"] = (out_df[col] / (out_df[kw['pop_col']] / 100000)).astype(int)
+
+
+    #//*** Build Vax and UnVax Percentages
+    if verbose:
+        print("Build Vax and UnVax Percentage Columns")
+
+    #//*** Build if Vax Col Exists
+    if kw['vax_col'] in out_df.columns:
+        out_df['vax_pct'] = out_df[ kw['vax_col'] ] / out_df[ kw['pop_col'] ]
+
+    if 'uvx' in out_df.columns:
+        out_df['uvx_pct'] = out_df['uvx'] / out_df[ kw['pop_col'] ]
+    
+    #//*** Build Outcome Ratios if defined
+    if isinstance(kw['outcome_ratios'],type(None))==False:
+        if verbose:
+            print("Building Vaccine Outcome Ratios")
+        
+        for cn in kw['outcome_ratios']:
+            
+            col1 = cn[0]
+            col2 = cn[1]
+            name = cn[2]
+            
+            #//*** Check if there are rows where vaccine count is 0
+            if len(out_df[ out_df[ kw['vax_col'] ] == 0  ]) > 0:
+                #//*** If yes, get a list of rows with with vax = 0. Set the initial value to the last instance
+                initial_value = out_df[ out_df[ kw['vax_col'] ] == 0  ].iloc[-1][col2]
+            else:
+                #//*** Just use the first row value
+                initial_value = out_df.iloc[0][col2]
+
+            #//*** Reads as 1 / vax_ct or unvax_ct / (outcomes totals from vaccine start)
+            out_df[name] = 1 / ( out_df[ col1 ] / ( out_df[col2] - initial_value ) ).fillna(0)
+    
+    return out_df
