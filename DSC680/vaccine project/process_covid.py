@@ -933,6 +933,8 @@ def aggregate_columns(df, **kwargs):
         
         
     out_df = pd.concat(all_rows,axis=1).transpose()
+
+
     print(f"Elapsed Time: {int(time.time() - start_time)}s")
     #//*** If export_filename is defined, save the df to disk
     if export_filename != None:
@@ -1335,6 +1337,8 @@ def build_stats_for_analysis(df,**kwargs):
             #//*** Reads as 1 / vax_ct or unvax_ct / (outcomes totals from vaccine start)
             out_df[name] = 1 / ( out_df[ col1 ] / ( out_df[col2] - initial_value ) ).fillna(0)
     
+    if "Date" in out_df.columns:
+        out_df["Date"] = pd.to_datetime(out_df["Date"])
     return out_df
 
 
