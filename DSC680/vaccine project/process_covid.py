@@ -1336,3 +1336,48 @@ def build_stats_for_analysis(df,**kwargs):
             out_df[name] = 1 / ( out_df[ col1 ] / ( out_df[col2] - initial_value ) ).fillna(0)
     
     return out_df
+
+
+class collect_dataframes():
+    def __init__(self):
+        #//*** Initialize Collection of DataFrames as Dictionary
+        self.dfs = {
+
+        }
+
+    def add(self,df,key,description='None'):
+        self.dfs[key] = {
+            'df' : df,
+            'desc' : description,
+            'key' : key
+        }
+
+    def get(self,key):
+        if key in self.dfs.keys():
+            return self.dfs[key]['df']
+        else:
+            print("DataFrame Key:[",key,"] Not Found")
+            print("Current DFs")
+            for key, df_dict in self.dfs.items():
+                print("[",key,"] Desc:", self.dfs[key]['desc'])
+            return None
+
+    def l(self,mode="desc" ):
+        self.list(mode)
+
+    def list(self,mode="desc"):
+
+        if mode == 'list':
+            return self.dfs.keys()
+
+        if mode == 'desc':
+            print("===================================================")
+            print("Collected Dataframe Count: ", len(self.dfs.keys()))
+            print("===================================================")
+            for key, df_dict in self.dfs.items():
+                print(f"[{key}] Desc:", self.dfs[key]['desc'])
+            return
+        print("Unknown list Mode: ",mode)
+        print("Valid Options: list,desc")
+        return
+
