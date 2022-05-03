@@ -1341,6 +1341,64 @@ def build_stats_for_analysis(df,**kwargs):
         out_df["Date"] = pd.to_datetime(out_df["Date"])
     return out_df
 
+def rename_state_abbreviations(input_series):
+
+    rename_dict = {
+        'AL' : 'Alabama',
+        'AR' : 'Arkansas',
+        'AZ' : 'Arizona',
+        'CA' : 'California',
+        'CO' : 'Colorado',
+        'CT' : 'Connecticut',
+        'DC' : 'District of Columbia',
+        'DE' : 'Delaware',
+        'FL' : 'Florida',
+        'GA' : 'Georgia',
+        'IA' : 'Iowa',
+        'ID' : 'Idaho',
+        'IL' : 'Illinois',
+        'IN' : 'Indiana',
+        'KS' : 'Kansas', 
+        'KY' : 'Kentucky',
+        'LA' : 'Louisiana',
+        'MA' : 'Massachusetts',
+        'MD' : 'Maryland',
+        'ME' : 'Maine',
+        'MI' : 'Michigan',
+        'MN' : 'Minnesota',
+        'MO' : 'Missouri',
+        'MS' : 'Mississippi',
+        'MT' : 'Montana',
+        'NC' : 'North Carolina',
+        'ND' : 'North Dakota',
+        'NE' : 'Nebraska',
+        'NH' : 'New Hampshire',
+        'NJ' : 'New Jersey',
+        'NM' : 'New Mexico',
+        'NV' : 'Nevada',
+        'NY' : 'New York',
+        'OH' : 'Ohio',
+        'OK' : 'Oklahoma',
+        'OR' : 'Oregon',
+        'PA' : 'Pennsylvania',
+        'RI' : 'Rhode Island',
+        'SC' : 'South Carolina',
+        'SD' : 'South Dakota',
+        'TN' : 'Tennessee',
+        'TX' : 'Texas',
+        'UT' : 'Utah',
+        'VA' : 'Virginia',
+        'VT' : 'Vermont',
+        'WA' : 'Washington',
+        'WI' : 'Wisconsin',
+        'WV' : 'West Virginia',
+        'WY' : 'Wyoming',         
+    }
+
+    for key,value in rename_dict.items():
+        input_series = input_series.replace(key,value)
+
+    return input_series
 
 class collect_dataframes():
     def __init__(self):
@@ -1385,3 +1443,63 @@ class collect_dataframes():
         print("Valid Options: list,desc")
         return
 
+def plot(input_df,**kwargs):
+
+    kw = {
+        'col' : None,
+        'action' : None,
+        'show' : False,
+        'vlines' : [],
+    }
+    for key,value in kwargs.items():
+
+        kw[key] = value
+
+    if kw['col'] == None:
+        print("Need col=Column to plot")
+        return
+    if kw['col'] not in input_df.columns:
+        print("Col must be a valid column.",kw[col],"not in",list(input_df.columns))
+    
+    year_color = {
+        2020 : 'steelblue',
+        2021 : 'red',
+        2022 : 'gold',
+    }
+    if kw['action'] == "plot_by_year":
+
+        plt.style.use('fivethirtyeight')
+        plt.figure(figsize=(12, 8))
+
+        
+        #//*** Plot each Yeah
+        for year in input_df['Date'].dt.year.unique():
+            tdf = input_df[input_df['Date'].dt.year >= year]
+
+            
+
+            plt.plot(tdf['Date'],tdf[kw['col']],color=year_color[year],label=year)
+
+
+        font = {
+
+            'size' : 15
+        }
+
+        for vline in kw['vlines']:
+            v_date = pd.to_datetime(vline['date'])
+            v_text = vline['text']
+            v_height = vline['height']
+            v_offset = vline['offset']
+            plt.vlines(x = input_df[input_df['Date'] == v_date]['Date'], ymin=0, ymax=v_height, color='purple', linestyle="dotted")
+            plt.text(input_df[input_df['Date'] ==  v_date - pd.Timedelta(v_offset, unit='W')]['Date'],v_height*1.02,v_text, fontdict=font)
+
+        plt.legend()
+        if kw['show']:
+            plt.show()
+            return
+        else:
+            return plt
+
+    print("Need a Valid Action= value")
+    return
