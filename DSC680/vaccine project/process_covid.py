@@ -1071,6 +1071,110 @@ def create_weekly_data(df, **kwargs):
     return df
 
 
+def create_weekly_data_v2(df, **kwargs):
+
+    
+    data_folder_name = "raw_data"
+    export_filename = "z_county_monthly_df.csv.zip"
+    export_filename = None
+    date_col = "Date"
+    dates = None
+    FIPS_col = "FIPS"
+    sum_cols = ['New_Confirm','New_Deaths']
+    remove_cols = ['case_7_day_avg','death_7_day_avg','case_100k_avg','death_100k_avg','case_scaled_100k','death_scaled_100k']
+
+
+    for key,value in kwargs.items():
+        if key == 'folder':
+            data_folder_name = value
+
+        if key == 'date_col':
+            date_col = value
+
+        if key == 'dates':
+            dates = value
+
+        if key == 'FIPS_col':
+            FIPS_col = value
+
+        if key == 'sum_cols':
+            sum_cols = value
+
+        if key == 'remove_cols':
+            remove_cols = value
+
+        if key == 'export':
+            export_filename = value
+        
+
+    current_dir = Path(os.getcwd()).absolute()
+    data_dir = current_dir.joinpath(data_folder_name)
+
+    if export_filename != None:
+        export_filename = data_dir.joinpath(export_filename)
+
+    start_time = time.time()
+
+    out_df = pd.DataFrame()
+    date_col = "Date"
+    sum_cols = ['New_Confirm','New_Deaths']
+    remove_cols = ['case_7_day_avg','death_7_day_avg','case_100k_avg','death_100k_avg','case_scaled_100k','death_scaled_100k']
+    each_col = []
+    start_time = time.time()
+    counter = 0
+    tot_count = len(dates)
+
+    #//*** Convert Dates to TimeStamp
+    dates = pd.Series(dates).apply(lambda x: pd.Timestamp(x))
+    df[date_col] = df[date_col].apply(lambda x: pd.Timestamp(x))
+    #dates = pd.to_datetime(pd.Series(dates))
+    display(len(df))
+    
+    disp_cols=['Date', 'FIPS', 'Recip_County', 'Recip_State','total_vaccinated_percent', 'total_vaccinated_count', 'first_dose_pct','first_dose_count', 'Admin2', 'Province_State', 'Combined_Key','Population', 'tot_confirm', 'tot_deaths', 'New_Confirm', 'New_Deaths']
+    all_df = []
+    for group in df[df[date_col].isin(dates)].groupby("FIPS"):
+        counter +=1
+
+        group[1]['New_Confirm'] = group[1]['tot_confirm'].diff().fillna(0)
+        group[1]['New_Deaths'] = group[1]['tot_deaths'].diff().fillna(0)
+        group[1]['pv_tot_confirm'] = group[1]['New_Confirm'].cumsum()
+        if 'pv_tot_confirm' not in disp_cols:
+            disp_cols.append('pv_tot_confirm')
+        group[1]['pv_tot_death'] = group[1]['New_Deaths'].cumsum()
+        if 'pv_tot_death' not in disp_cols:
+            disp_cols.append('pv_tot_death')
+
+
+    
+        all_df.append(group[1])
+
+
+
+    clear_output(wait=True)
+
+    #//*** Build a dataframe using each_col as a column. Transpose, sort by Date then reset the Index.
+    out_df = pd.concat(all_df).sort_values("Date").reset_index(drop=True)
+
+
+    out_df[date_col] = pd.to_datetime(out_df[date_col])
+    print(f"Elapsed Time: {int(time.time() - start_time)}s")
+    display(out_df)
+    
+    #//*** If export_filename is defined, save the df to disk
+    if export_filename != None:
+
+        print("Saving Weekly Aggregated DataFrame to Disk.")
+        if ".zip" in str(export_filename):
+            out_df.to_pickle(export_filename)
+            return
+        else:
+            out_df.to_csv(export_filename)
+            return
+
+    #//*** Return the DF
+    return df
+
+
 def eda_models(model,x,y, **kwargs):
     model_action = None
     labels = None
@@ -1442,6 +1546,187 @@ class collect_dataframes():
         print("Unknown list Mode: ",mode)
         print("Valid Options: list,desc")
         return
+
+def cumsum_cols(df,**kwargs):
+
+    cols = []
+    by = "fips_code"
+    date_col = "Date"
+    suffix = ""
+    prefix = ""
+
+    for key,value in kwargs.items():
+
+        if key == "cols":
+            cols = value
+
+        if key == "by":
+            by = value
+
+        if key == "date_col":
+            date_col = value
+
+        if key == "suffix":
+            suffix = value
+
+        if key == "prefix":
+            prefix = value
+
+
+    counter = 0
+    all_df = []
+
+    #//*** Group by col Usually FIPS
+    for group in df.groupby(by):
+
+        #//*** Sort Col (FIPS) by Datae
+        loop_df = group[1].sort_values(date_col)
+
+        #//*** Cumsum Columns
+        for col in cols:
+            loop_df[f'{prefix}{col}{suffix}'] = loop_df[col].cumsum()
+
+        #//*** Add Partial Data Frame to List
+        all_df.append(loop_df)
+
+    #//*** ConCat list of DFs to a single DF
+    out_df = pd.concat(all_df).sort_values("Date").reset_index(drop=True)
+
+
+    out_df[date_col] = pd.to_datetime(out_df[date_col])
+
+    return out_df
+
+def sum_cols(df,**kwargs):
+
+    cols = []
+    by = "fips_code"
+    date_col = "Date"
+    suffix = ""
+    prefix = ""
+
+    for key,value in kwargs.items():
+
+        if key == "cols":
+            cols = value
+
+        if key == "by":
+            by = value
+
+        if key == "date_col":
+            date_col = value
+
+        if key == "suffix":
+            suffix = value
+
+
+    counter = 0
+    all_df = []
+
+    #//*** Group by col Usually FIPS
+    for group in df.groupby(by):
+
+        #//*** Sort Col (FIPS) by Datae
+        loop_df = group[1].sort_values(date_col)
+
+        #//*** Cumsum Columns
+        for col in cols:
+            loop_df[f'{col}{suffix}'] = loop_df[col].sum()
+
+        #//*** Add Partial Data Frame to List
+        all_df.append(loop_df)
+
+    #//*** ConCat list of DFs to a single DF
+    out_df = pd.concat(all_df).sort_values("Date").reset_index(drop=True)
+
+    
+    out_df[date_col] = pd.to_datetime(out_df[date_col])
+
+    return out_df
+
+def build_100k(df,**kwargs):
+
+    cols = []
+   
+    date_col = "Date"
+    pop_col = "pop"
+    suffix = "_100k"
+    prefix = ""
+
+    for key,value in kwargs.items():
+
+        if key == "cols":
+            cols = value
+
+        if key == "pop_col":
+            pop_col = value
+
+        if key == "date_col":
+            date_col = value
+
+        if key == "suffix":
+            suffix = value
+
+
+    counter = 0
+    all_df = []
+
+
+
+    #//*** 100k Columns
+    for col in cols:
+        df[f'{col}{suffix}'] = (df[col] / (df[pop_col] / 100000)).astype(int)
+
+    return df
+
+def diff_cols(df,**kwargs):
+
+    cols = []
+    by = "fips_code"
+    date_col = "Date"
+    suffix = ""
+
+
+
+    for key,value in kwargs.items():
+
+        if key == "cols":
+            cols = value
+
+        if key == "by":
+            by = value
+
+        if key == "date_col":
+            date_col = value
+
+        if key == "suffix":
+            suffix = value
+
+
+    counter = 0
+    all_df = []
+
+    #//*** Group by col Usually FIPS
+    for group in df.groupby(by):
+
+        #//*** Sort Col (FIPS) by Datae
+        loop_df = group[1].sort_values(date_col)
+
+        #//*** Cumsum Columns
+        for col in cols:
+
+            loop_df[col[1]] = loop_df[col[0]].diff().fillna(0)
+
+        #//*** Add Partial Data Frame to List
+        all_df.append(loop_df)
+
+    #//*** ConCat list of DFs to a single DF
+    out_df = pd.concat(all_df).sort_values("Date").reset_index(drop=True)
+
+    
+    out_df[date_col] = pd.to_datetime(out_df[date_col])
+
+    return out_df
 
 def plot(input_df,**kwargs):
 
