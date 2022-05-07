@@ -1554,6 +1554,7 @@ def cumsum_cols(df,**kwargs):
     date_col = "Date"
     suffix = ""
     prefix = ""
+    zero = False
 
     for key,value in kwargs.items():
 
@@ -1572,6 +1573,8 @@ def cumsum_cols(df,**kwargs):
         if key == "prefix":
             prefix = value
 
+        if key == "zero":
+            zero = value
 
     counter = 0
     all_df = []
@@ -1584,7 +1587,12 @@ def cumsum_cols(df,**kwargs):
 
         #//*** Cumsum Columns
         for col in cols:
-            loop_df[f'{prefix}{col}{suffix}'] = loop_df[col].cumsum()
+
+            #//*** If Zero, Subtract the First Value from the list to get a running cumsum
+            if zero:
+                loop_df[f'{prefix}{col}{suffix}'] = loop_df[col].cumsum() - loop_df[col].iloc[0]
+            else:
+                loop_df[f'{prefix}{col}{suffix}'] = loop_df[col].cumsum()
 
         #//*** Add Partial Data Frame to List
         all_df.append(loop_df)
@@ -1675,7 +1683,7 @@ def build_100k(df,**kwargs):
 
     #//*** 100k Columns
     for col in cols:
-        df[f'{col}{suffix}'] = (df[col] / (df[pop_col] / 100000)).astype(int)
+        df[f'{col}{suffix}'] = (df[col].fillna(0) / (df[pop_col] / 100000)).astype(int)
 
     return df
 
