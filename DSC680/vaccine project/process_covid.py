@@ -14,7 +14,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
-
+from matplotlib import cm
+from matplotlib import colors
 
 class process_covid():
     
@@ -1542,10 +1543,11 @@ class collect_dataframes():
             print("===================================================")
             for key, df_dict in self.dfs.items():
                 print(f"[{key}] Desc:", self.dfs[key]['desc'])
-            return
+
+            return ""
         print("Unknown list Mode: ",mode)
         print("Valid Options: list,desc")
-        return
+        return ""
 
 def cumsum_cols(df,**kwargs):
 
@@ -1796,3 +1798,302 @@ def plot(input_df,**kwargs):
 
     print("Need a Valid Action= value")
     return
+
+def qgeo(df,**kwargs):
+    
+    df = df.copy()
+    
+    column=None
+    vcenter=None
+    suptitle=None
+    title=None
+    reverse = False
+    cmap='coolwarm'
+    vmin=None
+    vmax=None
+    std=2
+    state_geo = None
+    figsize=(5,4)
+    input_ax=None
+    for key,value in kwargs.items():
+        if key == 'column':
+            column = value
+        
+        if key == 'vcenter':
+            vcenter = value
+        
+        if key == 'suptitle':
+            suptitle = value
+
+        if key == 'title':
+            title = value
+        
+        if key == 'cmap':
+            cmap = cmap
+
+        if key == 'reverse':
+            reverse = value
+            
+        if key == 'vmin':
+            vmin = value
+
+        if key == 'vmax':
+            vmax = value
+        
+        if key == 'figsize':
+            figsize = value
+        
+        if key == 'state_geo':
+            state_geo = value
+        
+        if key == 'std':
+            std = value
+
+        if key == 'ax':
+            input_ax = value
+    
+    if column not in df.columns:
+        print(f"Column: {column} not found in ")
+        print(list(df.columns))
+        return
+
+    #//*** If No Center Default to Mean
+    if vcenter == None:
+        vcenter = df[column].mean()
+            
+    #//*** If vmin and vmax Not Specified. Calculate vmin and vmax based on a multiple
+    #//*** of standard deviation. Default is 2
+    if vmin == None:
+        vmin = df[column].mean() - (std * df[column].std() )
+        
+        if vmin < df[column].min():
+            vmin = df[column].min()
+
+    if vmax == None:
+        vmax = df[column].mean() + (std * df[column].std() )
+            
+        if vmax > df[column].max():
+            vmax = df[column].max()
+    
+        
+    #//*** Temporarily replace values larger than vmax with vmax
+    for val in df[df[column] <= vmin][column].values:
+        df[column] = df[column].replace(val,vmin)
+
+    vmin = df[column].min()
+
+    #//*** Temporarily replace values larger than vmax with vmax
+    for val in df[df[column] >= vmax][column].values:
+        df[column] = df[column].replace(val,vmax)
+
+    vmax = df[column].max()
+    
+    cmap=cm.get_cmap(cmap)
+    
+    if reverse:
+        cmap=cmap.reversed()
+    """
+    cb_dict = {}
+    tick_list = []
+    #//*** Build Values for Color Bar
+    lower_25 = int( (vcenter - vmin) *.25  )+vmin
+    lower_50 = int( (vcenter - vmin) / 2  )+vmin
+    lower_75 = int( (vcenter - vmin) / 1.5  )+vmin
+    upper_25 = int( (vcenter - vmin) / 4  )+vcenter
+    upper_50 = int( (vcenter - vmin) / 2  )+vcenter
+    upper_75 = int( (vcenter - vmin) / 1.5  )+vcenter
+    for val in [vmin,lower_25,lower_50,lower_75,vcenter,upper_25,upper_50,upper_75,vmax]:
+        w = str(val)
+        
+        if len(w) <= 1:
+            cb_dict[val] = val
+            tick_list.append(val)
+            continue
+        
+        digits = w[:2]
+        mults = w[2:]
+        
+        
+        #//*** If vmax round up
+        if val == vmin:
+            digits = int(digits) + 1
+        
+        #//*** add rounded vale to dict
+        cb_dict[val] = int(int(digits) * (10 ** len(mults)))
+        tick_list.append( int(int(digits) * (10 ** len(mults))) )
+    """
+        
+    
+    
+    # Dynamic ColorBar, set vmin & vmax, centered around the US mean
+    # dynamic range:
+    try:
+        divnorm = colors.TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
+    except:
+        print("Trouble with normalization values!", vmin, vcenter, vmax)
+        print(df[column].describe(),vmin, vcenter, vmax)
+    
+
+
+
+    ax= df.plot(column=column,cmap=cmap,norm=divnorm,ax=input_ax ) 
+
+    
+    if isinstance(state_geo,type(None)):
+        #//*** Draw State Shapes over top, Set Color to transparant with Black edgecolor
+        ax = df.plot(categorical=True,legend=True, linewidth=1,edgecolor=(0,0,0,.5),color=(1,1,1,0),ax=ax)
+    else:
+        ax = df.plot(categorical=True,legend=True, linewidth=1,edgecolor=(0,0,0,.15),color=(1,1,1,0),ax=ax)
+        
+        keep_state = df['STATEFP'].unique()
+
+        all_state = state_geo['STATEFP'].unique()
+
+        for state in all_state:
+            if state not in keep_state:
+                state_geo = state_geo[state_geo['STATEFP'] != state]
+        
+        ax = state_geo.plot(categorical=True,legend=True, linewidth=1,edgecolor=(0,0,0,.5),color=(1,1,1,0),ax=ax)
+        
+    
+    ax.grid(False)
+    ax.axis('off')
+
+    plt.suptitle(suptitle)
+    plt.title(title)
+    fig = ax.get_figure()
+    fig = plt.gcf()
+    fig.set_size_inches(figsize)
+    cax = fig.add_axes([1.05, 0.1, 0.03, 0.8])
+    cax.grid(False)
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=divnorm)
+    # fake up the array of the scalar mappable. Urgh...
+    sm._A = []
+    cb = fig.colorbar(sm, cax=cax)
+    #cb.set_ticks([cb_dict[vmin],cb_dict[vcenter],cb_dict[vmax]])
+    #cb.set_ticks(tick_list)
+    
+    
+    #tick_list=[vmin,vcenter,vmax]
+    #cb.set_ticks(tick_list)
+    plt.show()
+
+def part_geoplot(df,**kwargs):
+
+    all_geo_df = None
+    state_geo_df = None
+    color = "blue"
+    column = None
+    figsize = (5,8)
+    title = None
+    suptitle = None
+    for key,value in kwargs.items():
+
+        if key == 'all_geo_df':
+            all_geo_df = value
+
+        if key == 'state_geo_df':
+            state_geo_df = value
+
+        if key == 'color':
+            color = value
+
+        if key == 'column':
+            column = value
+
+        if key == 'figsize':
+            figsize = value
+
+        if key == 'suptitle':
+            suptitle = value
+
+        if key == 'title':
+            title = value
+
+    ax = None
+    if isinstance(all_geo_df,type(None))==False:
+        ax = all_geo_df.plot(categorical=True, linewidth=1,edgecolor=(0,0,0,.15),color=(1,1,1,0), ax=ax)
+
+        if isinstance(state_geo_df,type(None))==False:
+            state_geo_df = state_geo_df[state_geo_df['STATEFP'].isin(list(all_geo_df['STATEFP'].unique()))]
+            ax = state_geo_df.plot(categorical=True,legend=True, linewidth=3,edgecolor=(0,0,0,.5),color=(1,1,1,0),ax=ax)
+
+    df.plot(column=column,color=color,ax=ax)
+
+    ax.grid(False)
+    ax.axis('off')
+
+    fig = ax.get_figure()
+    fig = plt.gcf()
+    fig.set_size_inches(figsize)
+
+    plt.suptitle(suptitle)
+    plt.title(title)
+
+    plt.show()
+
+def standard_recalc_cols(df,**kwargs):
+
+    df=df.copy()
+
+    to_build_100k = True
+    pop_col = 'pop'
+    tot_confirm_col = 'tot_confirm'
+    tot_death_col = 'tot_deaths'
+
+    for key,value in kwargs.items():
+
+        if key == 'to_build_100k':
+            to_build_100k = value
+
+        if key == 'pop_col':
+            pop_col = value
+
+        if key == 'tot_confirm_col':
+            tot_confirm_col = value
+
+        if key == 'tot_death_col':
+            tot_death_col = value
+
+    #//*** Build Daily Values
+    df['New_Confirm'] = df[tot_confirm_col].diff().fillna(0)
+    df['New_Deaths'] = df[tot_death_col].diff().fillna(0)
+
+    #//*** Build Post Vax Totals
+    df['pv_New_Confirm_tot'] = df['New_Confirm'].cumsum()
+    df['pv_New_Deaths_tot'] = df['New_Deaths'].cumsum()
+
+    #//*** Build Total Hospital Beds
+    df['beds_covid_tot'] = df['beds_covid'].cumsum()
+    df['icu_covid_tot'] = df['icu_covid'].cumsum()
+
+    df['beds_tot']      = df['beds'].cumsum()
+    df['beds_used_tot'] = df['beds_used'].cumsum()
+    df['all_icu_tot']   = df['all_icu'].cumsum()
+    df['icu_used_tot']  = df['icu_used'].cumsum()
+
+
+    #//*** Build Post Vax Hospital Beds
+    df['pv_beds_covid_tot'] = df['beds_covid_tot'] - df['beds_covid_tot'].iloc[0]
+    df['pv_icu_covid_tot'] = df['icu_covid_tot'] - df['icu_covid_tot'].iloc[0]
+
+    df['pv_beds_tot']      = df['beds_tot']      - df['beds_tot'].iloc[0]
+    df['pv_beds_used_tot'] = df['beds_used_tot'] - df['beds_used_tot'].iloc[0]
+    df['pv_all_icu_tot']   = df['all_icu_tot']   - df['all_icu_tot'].iloc[0]
+    df['pv_icu_used_tot']  = df['icu_used_tot']  - df['icu_used_tot'].iloc[0]
+
+    if to_build_100k:
+        for col in [tot_confirm_col,tot_death_col,'New_Confirm','New_Confirm','pv_New_Confirm_tot',
+                    'pv_New_Deaths_tot','beds_covid_tot','icu_covid_tot','pv_beds_covid_tot','pv_icu_covid_tot','vax_ct',
+                    'pv_beds_tot','pv_beds_used_tot','pv_all_icu_tot','pv_icu_used_tot']:
+
+            #//*** Some Vaccines Report as NaN, fill as
+            df[f"{col}_100k"] = (df[col].fillna(0) / (df[pop_col] / 100000)).astype(int)
+        
+    #//*** Build Bed Percentages
+    df['all_bed_util'] = df['pv_beds_used_tot'] / df['pv_beds_tot'] 
+    df['covid_bed_util'] = df['pv_beds_covid_tot'] / df['pv_beds_used_tot'] 
+    df['icu_util'] = df['pv_icu_used_tot'] / df['pv_all_icu_tot']
+    df['icu_covid_util'] = df['pv_icu_covid_tot'] / df['pv_icu_used_tot']
+
+    return df
