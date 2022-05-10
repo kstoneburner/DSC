@@ -1815,6 +1815,7 @@ def qgeo(df,**kwargs):
     state_geo = None
     figsize=(5,4)
     input_ax=None
+    fontsize=30
     for key,value in kwargs.items():
         if key == 'column':
             column = value
@@ -1892,36 +1893,6 @@ def qgeo(df,**kwargs):
     
     if reverse:
         cmap=cmap.reversed()
-    """
-    cb_dict = {}
-    tick_list = []
-    #//*** Build Values for Color Bar
-    lower_25 = int( (vcenter - vmin) *.25  )+vmin
-    lower_50 = int( (vcenter - vmin) / 2  )+vmin
-    lower_75 = int( (vcenter - vmin) / 1.5  )+vmin
-    upper_25 = int( (vcenter - vmin) / 4  )+vcenter
-    upper_50 = int( (vcenter - vmin) / 2  )+vcenter
-    upper_75 = int( (vcenter - vmin) / 1.5  )+vcenter
-    for val in [vmin,lower_25,lower_50,lower_75,vcenter,upper_25,upper_50,upper_75,vmax]:
-        w = str(val)
-        
-        if len(w) <= 1:
-            cb_dict[val] = val
-            tick_list.append(val)
-            continue
-        
-        digits = w[:2]
-        mults = w[2:]
-        
-        
-        #//*** If vmax round up
-        if val == vmin:
-            digits = int(digits) + 1
-        
-        #//*** add rounded vale to dict
-        cb_dict[val] = int(int(digits) * (10 ** len(mults)))
-        tick_list.append( int(int(digits) * (10 ** len(mults))) )
-    """
         
     
     
@@ -1959,12 +1930,15 @@ def qgeo(df,**kwargs):
     ax.grid(False)
     ax.axis('off')
 
-    plt.suptitle(suptitle)
+    plt.suptitle(suptitle,fontsize=fontsize)
     plt.title(title)
+    plt.annotate(f"[ {df['Date'].min().date()} - {df['Date'].max().date()} ]",(0,0),xycoords='axes fraction',fontsize=fontsize*.75)
+
+    
     fig = ax.get_figure()
     fig = plt.gcf()
     fig.set_size_inches(figsize)
-    cax = fig.add_axes([1.05, 0.1, 0.03, 0.8])
+    cax = fig.add_axes([.9, 0.1, 0.03, 0.8])
     cax.grid(False)
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=divnorm)
     # fake up the array of the scalar mappable. Urgh...
@@ -1972,12 +1946,12 @@ def qgeo(df,**kwargs):
     cb = fig.colorbar(sm, cax=cax)
     #cb.set_ticks([cb_dict[vmin],cb_dict[vcenter],cb_dict[vmax]])
     #cb.set_ticks(tick_list)
-    
-    
+
     #tick_list=[vmin,vcenter,vmax]
     #cb.set_ticks(tick_list)
     plt.show()
 
+    
 def part_geoplot(df,**kwargs):
 
     all_geo_df = None
@@ -2074,6 +2048,7 @@ def standard_recalc_cols(df,**kwargs):
 
 
     #//*** Build Post Vax Hospital Beds
+
     df['pv_beds_covid_tot'] = df['beds_covid_tot'] - df['beds_covid_tot'].iloc[0]
     df['pv_icu_covid_tot'] = df['icu_covid_tot'] - df['icu_covid_tot'].iloc[0]
 
@@ -2083,8 +2058,8 @@ def standard_recalc_cols(df,**kwargs):
     df['pv_icu_used_tot']  = df['icu_used_tot']  - df['icu_used_tot'].iloc[0]
 
     if to_build_100k:
-        for col in [tot_confirm_col,tot_death_col,'New_Confirm','New_Confirm','pv_New_Confirm_tot',
-                    'pv_New_Deaths_tot','beds_covid_tot','icu_covid_tot','pv_beds_covid_tot','pv_icu_covid_tot','vax_ct',
+        for col in [tot_confirm_col,tot_death_col,'New_Confirm','New_Deaths','pv_New_Confirm_tot',
+                    'pv_New_Deaths_tot','beds_covid','icu_covid','beds_covid_tot','icu_covid_tot','pv_beds_covid_tot','pv_icu_covid_tot','vax_ct',
                     'pv_beds_tot','pv_beds_used_tot','pv_all_icu_tot','pv_icu_used_tot']:
 
             #//*** Some Vaccines Report as NaN, fill as
