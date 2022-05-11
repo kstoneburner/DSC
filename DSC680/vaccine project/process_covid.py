@@ -1816,6 +1816,7 @@ def qgeo(df,**kwargs):
     figsize=(5,4)
     input_ax=None
     fontsize=30
+    return_ax = None
     for key,value in kwargs.items():
         if key == 'column':
             column = value
@@ -1852,6 +1853,9 @@ def qgeo(df,**kwargs):
 
         if key == 'ax':
             input_ax = value
+
+        if key == 'return_ax':
+            return_ax = value
     
     if column not in df.columns:
         print(f"Column: {column} not found in ")
@@ -1949,7 +1953,10 @@ def qgeo(df,**kwargs):
 
     #tick_list=[vmin,vcenter,vmax]
     #cb.set_ticks(tick_list)
-    plt.show()
+    if return_ax == None:
+        plt.show()
+    else:
+        return fig
 
     
 def part_geoplot(df,**kwargs):
