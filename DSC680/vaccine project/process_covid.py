@@ -1817,6 +1817,7 @@ def qgeo(df,**kwargs):
     input_ax=None
     fontsize=30
     return_ax = None
+    timelapse = False
     for key,value in kwargs.items():
         if key == 'column':
             column = value
@@ -1856,6 +1857,9 @@ def qgeo(df,**kwargs):
 
         if key == 'return_ax':
             return_ax = value
+
+        if key == 'timelapse':
+            timelapse = value
     
     if column not in df.columns:
         print(f"Column: {column} not found in ")
@@ -1898,27 +1902,36 @@ def qgeo(df,**kwargs):
     if reverse:
         cmap=cmap.reversed()
         
-    
+    if (vcenter <= vmin) or (vcenter >= vmax):
+        vcenter = (vmin+vmax) /2
     
     # Dynamic ColorBar, set vmin & vmax, centered around the US mean
     # dynamic range:
     try:
         divnorm = colors.TwoSlopeNorm(vmin=vmin, vcenter=vcenter, vmax=vmax)
+        ax= df.plot(column=column,cmap=cmap,norm=divnorm,ax=input_ax )
     except:
         print("Trouble with normalization values!", vmin, vcenter, vmax)
         print(df[column].describe(),vmin, vcenter, vmax)
+        #if timelapse == False:
+        #    print("Trouble with normalization values!", vmin, vcenter, vmax)
+        #    print(df[column].describe(),vmin, vcenter, vmax)
+        #else:
+        #    divnorm=None
+        #    ax= df.plot(column=column,cmap=cmap,ax=input_ax )
+
     
 
 
 
-    ax= df.plot(column=column,cmap=cmap,norm=divnorm,ax=input_ax ) 
+     
 
     
     if isinstance(state_geo,type(None)):
         #//*** Draw State Shapes over top, Set Color to transparant with Black edgecolor
         ax = df.plot(categorical=True,legend=True, linewidth=1,edgecolor=(0,0,0,.5),color=(1,1,1,0),ax=ax)
     else:
-        ax = df.plot(categorical=True,legend=True, linewidth=1,edgecolor=(0,0,0,.15),color=(1,1,1,0),ax=ax)
+        ax = df.plot(categorical=True,legend=True, linewidth=.5,edgecolor=(0,0,0,.15),color=(1,1,1,0),ax=ax)
         
         keep_state = df['STATEFP'].unique()
 
@@ -1928,7 +1941,7 @@ def qgeo(df,**kwargs):
             if state not in keep_state:
                 state_geo = state_geo[state_geo['STATEFP'] != state]
         
-        ax = state_geo.plot(categorical=True,legend=True, linewidth=1,edgecolor=(0,0,0,.5),color=(1,1,1,0),ax=ax)
+        ax = state_geo.plot(categorical=True,legend=True, linewidth=1.5,edgecolor=(0,0,0,.5),color=(1,1,1,0),ax=ax)
         
     
     ax.grid(False)
@@ -1936,7 +1949,19 @@ def qgeo(df,**kwargs):
 
     plt.suptitle(suptitle,fontsize=fontsize)
     plt.title(title)
-    plt.annotate(f"[ {df['Date'].min().date()} - {df['Date'].max().date()} ]",(0,0),xycoords='axes fraction',fontsize=fontsize*.75)
+    
+    if timelapse:
+        if pd.to_datetime(df['Date'].max().date()) < pd.to_datetime('2021-07-02'):
+            plt.annotate(f"[ {df['Date'].max().date()} ]",(0,0),xycoords='axes fraction',fontsize=fontsize*.75)
+
+        elif (pd.to_datetime(df['Date'].max().date()) >= pd.to_datetime('2021-07-02')) and (pd.to_datetime(df['Date'].max().date()) < pd.to_datetime('2021-12-24')):
+            plt.annotate(f"[ {df['Date'].max().date()} ] Delta",(0,0),xycoords='axes fraction',fontsize=fontsize*.75)
+
+        elif pd.to_datetime(df['Date'].max().date()) >= pd.to_datetime('2021-12-24'):
+            plt.annotate(f"[ {df['Date'].max().date()} ] Omicron BA.1",(0,0),xycoords='axes fraction',fontsize=fontsize*.75)
+
+    else:
+        plt.annotate(f"[ {df['Date'].min().date()} - {df['Date'].max().date()} ]",(0,0),xycoords='axes fraction',fontsize=fontsize*.75)
 
     
     fig = ax.get_figure()
@@ -1944,7 +1969,10 @@ def qgeo(df,**kwargs):
     fig.set_size_inches(figsize)
     cax = fig.add_axes([.9, 0.1, 0.03, 0.8])
     cax.grid(False)
-    sm = plt.cm.ScalarMappable(cmap=cmap, norm=divnorm)
+    if isinstance(divnorm,type(None)):
+        sm = plt.cm.ScalarMappable(cmap=cmap)    
+    else:
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=divnorm)
     # fake up the array of the scalar mappable. Urgh...
     sm._A = []
     cb = fig.colorbar(sm, cax=cax)
