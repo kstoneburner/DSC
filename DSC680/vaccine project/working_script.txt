@@ -1,0 +1,300 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[track 1]
+This is a story that looks to measure the effects of COVID vaccines across the entire US Population. 
+
+The expectation is that as vaccination rates increase, outcomes will decrease. Like many things COVID the answers are not straightforward. There are two significant factors that drive COVID outcomes: Unequal vaccine uptake combined with COVID mutations. 
+
+[track 2]
+[us_new_vax_timeline] 
+
+Let’s start with Vaccine uptake which begins in December 2020. At first, vaccines were in short supply. Priority was given to medical professionals and those deemed the most vulnerable.  
+
+[pause 2021-04-23] 
+
+By April 23rd, over 1.4 million people a day had received their second vaccine shot which comprised 23% of the US population.  
+
+[oncam] 
+
+That’s a herculean public health achievement and it represents peak daily vaccination. 
+
+[pause 2021-06-04] 
+
+Starting In June the entire population becomes eligible, and coincidentally, the daily vaccination rate has fallen by half from the peak. 
+
+[pause 2021-07-02] 
+
+Starting In July, the more contagious Delta variant becomes dominant with only 40% of the U.S. population fully vaccinated.  
+
+[continue] 
+
+...And Vaccination rates have generally declined since.... Basically, everyone who wants to be vaccinated is vaccinated. 
+
+[oncam] 
+
+So, how do vaccinations affect the outcomes of Cases, Hospitalization, and Death? Quite a bit, probably, at least in beginning. 
+
+[Quad Timeline --> 2021-06-25] 
+
+For the first 6 month since vaccines were released, all outcomes were on the decline. Is this due to vaccines, good public health hygiene, or the natural ebb and flow of the disease? We can’t definitively say. All outcomes were dramatically down. Vaccines were on the rise, the future looked rosy . The U.S. was poised to beat COVID. 
+
+[oncam] 
+
+Of course not. Collectively, the country eased into a summer of complacency just as COVID mutated into the more infectious Delta variant. 
+
+[quad timelime: 2021-07-02 --> 2021-09-10] 
+
+This variant is estimated to be 30% more transmissible and outcomes spiked over the next two months even as vaccinations increased. 
+
+[oncam?] 
+
+At the national level, it’s hard to tell if vaccines are making a difference. 54% of the US population is unvaccinated, that’s over a 150 million people. It’s impossible to tell from the national data if the people who are getting sick are vaccinated or not. 
+
+[quad: -->2021-12-24] 
+
+The COVID variants are the biggest driver of outcomes. Like OMICRON BA.1, which became officially dominant right before the holidays. Omicron was even more infectious than delta. So infectious that OMICRON likely ran out of people to easily infect which is why the outcomes dropped so quickly. 
+
+[oncam] 
+
+There is a narrative... That although OMICRON is more infectious, it is less deadly. There is no evidence of this in the national data.  
+
+[Montage graphs] 
+
+Hospitalizations..... ICU... and deaths all exceed levels from the previous year. If vaccination reduces the risk of these outcomes, it’s not to be seen here. 
+
+[oncam] 
+
+This is probably due to looking at the country as a whole. With a 150 million unvaccinated individuals, it's impossible to discern the effects of vaccines. We’ll need a more granular approach.  
+
+[*** track 3 ***]
+[state_geo_vax_timeline] 
+
+Looking at vaccinations by State, it is apparent that vaccines are not evenly distributed throughout the country. Vaccination uptake varies greatly between the states. Texas didn’t even report vaccinations to the CDC until September 2021. Although Texas isn’t quite the vaccine holdout it appears to be. 
+
+…. 
+[*** track  4***]
+
+The West coast and the Northeast have high vaccination rates, while much of the Midwest and South are well below the national mean 
+
+[oncam] 
+
+The expectation is west and northeast will be well protected and the midwest and south will be hit harder at least until the variants become dominant. 
+
+A note about the data itself. This analysis starts with vaccine rollout with all outcomes set to zero. This focuses on how the introduction of vaccines changes outcomes. All data is measured in cases per 100 thousand, which is a per capita metric designed to measure outcome prevalence regardless of population density. By measuring prevalence, small populations can be compared to large ones. 
+
+[state_geo_confirm] 
+
+These plots are all centered around national mean values. Blue represents better than the mean, red is worse.  
+
+Beginning with state cases, California and Arizona start the year with a surge and the Northeast is not far behind. 
+
+… 
+
+[Pause 7-02-2021] 
+
+When the Delta wave arrives, California has returned to the national mean. New York, New Jersey and Washington DC, are struggling with higher case rates while also having relatively high vaccination rates around 50%. Most of the South has slightly more cases than the mean, which is unexpected. The low vax states should look more like South Carolina. 
+
+[Continue --> Pause 12-17-2021] 
+
+Delta pushes things towards expectations as cases rise dramatically in the South. 
+
+[Continue --> END] 
+
+Then Omicron hits. 
+
+…. 
+
+Just like Vaccinations.. Case rates vary greatly by state. 
+
+[state_geo_hospitals] 
+
+Hospitalizations broadly follow the case rates. States with higher infection have higher hospitalization rates. 
+
+[State_geo_icu] 
+
+ICU rates are closely linked to hospital rates. 
+
+[Quad Montage recap?] 
+
+Combined...COVID outcomes look like this....... 
+
+[oncam] 
+
+Geography aside, how do vaccinations relate to outcomes over time. 
+
+[state_date_vax_quad_timeline]  
+
+[pause... 2021-12-17] 
+
+[*** track  5***]
+
+By the end of Delta, high vaccinations states generally have better outcome rates. This is quite clear with Deaths and ICU. 
+
+[resume] 
+
+As Omicron Proceeds, we can see cases and vaccinations completely decouple. This implies vaccines are becoming less effective at preventing infection. But overall, higher vaccinated states tend to have better outcomes. 
+
+[*** track 6 ***]
+
+[oncam] 
+
+When looking at the State level data, there is strong evidence that vaccinations do improve outcomes, especially for the worst outcomes. However, States are not community monoliths. Vaccinations and outcomes vary greatly by county. 
+
+[county_geo_vax_timeline] 
+
+The picture of county vaccinations looks quite different than the states. Geographically, vaccinated and unvaccinated counties cluster together. 
+
+… 
+
+This leaves large territorial swaths for COVID to spread with little vaccine resistance. 
+
+[ County Cases then Deaths] 
+
+COVID spreads in waves, it ebbs and surges across the country seemingly in its own time. Note, how outcomes flare during Delta and Omicron 
+
+[ County Hospitalizations then ICU ] 
+[*** track  7***]
+
+Hospitalizations highlight that inpatient care is not equally distributed across the country. Starting with Delta, Hospitals in the Midwest and South have rates well above the national mean. These hospitals are filled with COVID patients and they stay that way. 
+
+[County ICU] 
+
+ICU beds are even more concentrated. This implies there is less overall access to ICU care. 
+
+[date_vax_cases_1] 
+
+Looking at case outcomes by vaccinations, the expectation is to see low vaccinated counties is the upper left and high vax in the lower right. 
+
+[pause 2021-11-05] 
+
+Just before the holidays, the cases are generally in the shape of expectations. It’s messy but generally True.  
+
+[continue] 
+
+Then it falls apart with Omicron 
+
+[date_vax_cases_2] 
+
+Let’s look at that again. Let’s add the US Mean and the correlation value R which measures the relationship between vaccine rates and outcomes. It should be negative, as vaccine rates go up, outcomes should go down.  
+
+[pause 2021-11-05] 
+
+This holds true right up to November. As vaccines increase, the negative correlation becomes stronger.  
+
+[continue] 
+
+Then it doesn’t. This is likely due to the rise of Omicron which is officially recognized 6 weeks later. 
+
+[date_vax_Hospitals] 
+
+Hospitalizations follow a similar trajectory, but surprisingly the correlations are not as strong. Probably, due to unequal distribution of hospitals across the country. 
+
+[date_vax_Deaths] 
+
+Deaths show the strongest link between vaccination and reduction in deaths. An R value of .4 is quite significant. 
+
+[date_vax_quad] 
+
+The Combined outcomes look like this. 
+
+… 
+
+We can see higher vaccinated counties generally have less deaths but relationship is tenuous for the other outcomes. 
+
+[oncam] 
+
+The difficulty lies in the diversity of COVID responses across the country. Outcomes by county might be too granular and noisy to see the effect of vaccines. This warrants a different statistical approach. How about grouping by high, medium and low vaccination rates. 
+
+[distrib_vax_01] 
+
+This is a distribution graph of county vaccination rates. 
+
+[--> 004 distrib vax] 
+
+And this is the Inter Quartile Range. Half the counties fall into this range. Based on this distribution, counties can be divided into Low, medium and high vaccination tiers..... More than half the country’s population falls into the high vaccinated tier 
+
+[tier vax counties] 
+
+Geographically, those tiers look like this. 
+
+…. 
+
+Over half the county’s population lives here 
+
+[tier vax confirm --> 2021-06-25] 
+
+Looking at total case counts by tier. Before Delta, the virus was generally in decline and country was flattening the curve. 
+
+[--> 2021-12-17] 
+
+During Delta the high vax tier had 20% fewer cases. 
+
+[--> 2021-01-28]  
+
+Omicron was the great equalizer. 
+
+[--> end] 
+[*** track  8 ***]
+
+And the post Omicron case rates are much smaller than with Delta. Omicron appears to be much better at infecting people. 
+
+[tier vax hosp] 
+
+High vax hospitalizations struggled through Delta, then split from the medium tier. 
+
+The low tier likely reflects fewer beds per capita due to these counties being rural and less densely populated.  
+
+[tier vax ICU] 
+
+The difference in ICU outcomes is even more pronounced 
+
+[tier vax death] 
+
+[*** track  9 ***]
+
+The highest vaccinated counties have half the per capita deaths. 
+
+[tier vax quad] 
+
+Together the outcomes look like this 
+
+[tier vax quad scatter] 
+
+Or like this 
+
+… 
+
+The final results, High vaccinated counties have better overall outcomes. Especially for Hospitalizations, ICU and Deaths. 
+
+[oncam] 
+[*** track  10***]
+
+It’s simple, vaccines work. Now the mutations are getting better at infecting everyone including the vaccinated. Transmission rates will continue to climb especially as people are reluctant to wear medical grade masks. We need reformulated vaccines that are targeted to the current variants, which should cut down on transmission rates for the upcoming winter...
+
+ Even without being updated, vaccines dramatically reduce the risk of hospitalization and death. 
+
+Ultimately, in order to beat COVID or at least make it more livable, more people need to be vaccinated... it’s just that simple. 
+
+ 
+
+ 
+
+ 
+
+ 
