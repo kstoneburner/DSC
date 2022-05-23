@@ -152,7 +152,7 @@ As Omicron Proceeds, we can see cases and vaccinations completely decouple. This
 
 [*** track 6 ***]
 
-[oncam] 
+[oncam]  
 
 When looking at the State level data, there is strong evidence that vaccinations do improve outcomes, especially for the worst outcomes. However, States are not community monoliths. Vaccinations and outcomes vary greatly by county. 
 
@@ -284,7 +284,7 @@ The final results, High vaccinated counties have better overall outcomes. Especi
 
 [oncam] 
 [*** track  10***]
-
+ 
 It’s simple, vaccines work. Now the mutations are getting better at infecting everyone including the vaccinated. Transmission rates will continue to climb especially as people are reluctant to wear medical grade masks. We need reformulated vaccines that are targeted to the current variants, which should cut down on transmission rates for the upcoming winter...
 
  Even without being updated, vaccines dramatically reduce the risk of hospitalization and death. 
