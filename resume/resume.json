@@ -1,0 +1,140 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Kurt Stoneburner",
+    "label": "Data Scientist\u0387Leader\u0387Innovator",
+    "image": "",
+    "email": "kurt.stoneburner@abc.com",
+    "phone": "(510) 366-9198",
+    "url": "https://kstoneburner.github.io/",
+    "summary": "Earned a data science Master's Degree in June, 2022. Looking to apply Statistical, Analytical and Data Science skills as a Decision Scientist. Deep interest in exploring COVID data and Tensorflow modeling. 30 Years directing live television news, guiding a multi-department team through daily production challenges using unique problem solving skills combined with programming to generate innovative solutions. ",
+    "location": {
+      "address": "4621 Alma Ave",
+      "postalCode": "CA 94546",
+      "city": "Castro Valley",
+      "countryCode": "US",
+      "region": "California"
+    }
+  },
+  "work": [
+    {
+      "name": "KGO-TV",
+      "location": "San Francisco, CA",
+      "description": "Television",
+      "position": "Broadcast Director",
+      "url": "http://abc7news.com",
+      "startDate": "2006-07-01",
+      
+      "summary": "Talk about Leadership, Innovation, and Problem Solving",
+      "highlights": [
+        "Team Leadership",
+        "iPads",
+        "Checker",
+        "Autohotkey"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Bellevue University",
+      "url": "https://www.bellevue.edu/",
+      "area": "Data Science",
+      "studyType": "Master's",
+      "startDate": "2019-11-18",
+      "endDate": "2022-06-04",
+      "score": "4.0",
+      "courses": [
+        "DSC510 - Introduction to Programming",
+        "DSC520 - Statistics for Data Science",
+        "DSC530 - Data Preparation",
+        "DSC540 - Data Exploration and Analysis",
+        "DSC550 - Data Mining",
+        "DSC630 - Predictive Analytics",
+        "DSC640 - Data Presentation and Visualization",
+        "DSC650 - Big Data",
+        "DSC680 - Applied Data Science"
+      ]
+    },
+    {
+      "institution": "California State University Bakersfield",
+      "url": "https://www.csub.edu/",
+      "area": "Communications",
+      "studyType": "Bachelor",
+      "startDate": "1993-08-01",
+      "endDate": "1998-06-01",
+      "score": "3.0"
+    }
+  ],
+  
+  "skills": [
+    {
+      "name": "Web Development",
+      "level": "Master",
+      "keywords": [
+        "HTML",
+        "CSS",
+        "Javascript"
+      ]
+    },
+    {
+      "name": "Compression",
+      "level": "Master",
+      "keywords": [
+        "Mpeg",
+        "MP4",
+        "GIF"
+      ]
+    }
+  ],
+  "languages": [
+    {
+      "language": "English",
+      "fluency": "Native speaker"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Wildlife",
+      "keywords": [
+        "Ferrets",
+        "Unicorns"
+      ]
+    }
+  ],
+  "references": [
+    {
+      "name": "Erlich Bachman",
+      "reference": "It is my pleasure to recommend Richard, his performance working as a consultant for Main St. Company proved that he will be a valuable addition to any company."
+    }
+  ],
+  "projects": [
+    {
+      "name": "Miss Direction",
+      "description": "A mapping engine that misguides you",
+      "highlights": [
+        "Won award at AIHacks 2016",
+        "Built by all women team of newbie programmers",
+        "Using modern technologies such as GoogleMaps, Chrome Extension and Javascript"
+      ],
+      "keywords": [
+        "GoogleMaps",
+        "Chrome Extension",
+        "Javascript"
+      ],
+      "startDate": "2016-08-24",
+      "endDate": "2016-08-24",
+      "url": "missdirection.example.com",
+      "roles": [
+        "Team lead",
+        "Designer"
+      ],
+      "entity": "Smoogle",
+      "type": "application"
+    }
+  ],
+  "meta": {
+    "canonical": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/resume.json",
+    "version": "v1.0.0",
+    "lastModified": "2017-12-24T15:53:00"
+  }
+}
