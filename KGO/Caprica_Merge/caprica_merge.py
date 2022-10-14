@@ -7,6 +7,7 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
 from functools import partial
+import json
 
 # Create an instance of tkinter frame
 win = Tk()
@@ -26,7 +27,6 @@ class widget_builder():
 	def open_file(self,target):
 		name = filedialog.askopenfilename(filetypes=[('Python Files', '*.py')]) 
 
-		print(self.widget_holder)
 		if name:
 			if target == "merge_source_filename":
 				self.merge_source_filename = name
@@ -151,136 +151,40 @@ class widget_builder():
 
 					options['command'] = self.open_file
 
+				elif action == "export":
+					options['command'] = self.export
 
 
-					if hook == None:
-						ttk.Button(win, text=options["text"], width=width, command=self.open_file).grid(grid)
-					else:
-						#//*** Build Hooked Button
-						self.widget_holder[hook] = ttk.Button(win, text=options["text"], width=width, command=partial(self.open_file,target) )
 
-						#//*** Draw Hooked Button
-						self.widget_holder[hook].grid(grid)
+
+				if hook == None:
+					ttk.Button(win, text=options["text"], width=width, command=options['command']).grid(grid)
+				else:
+					#//*** Build Hooked Button
+					self.widget_holder[hook] = ttk.Button(win, text=options["text"], width=width, command=partial(options['command'],target) )
+
+					#//*** Draw Hooked Button
+					self.widget_holder[hook].grid(grid)
 
 
 		else:
 			#//*** No type in keys, kinda can't do anything
 			pass
 
+	def export(self):
+		print(self.merge_source_filename)
+		print(self.merge_target_label)
+
+
 wb = widget_builder()
-widgets = [
-{
-	"type" : "label",
-	"text" : "Source Caprica Files",
 
-	"row" : 0,
-	"columnspan" : 2,
-	"options" : {
-		"font" : "Georgia 15",
-	}
-},
+with open("widgets.json", "r") as f:
+	widgets = json.loads(f.read())
 
-{
-	"type" : "button",
-	"hook" : "merge_source",
-	"text" : "Browse",
-	"width" : 10,
-	"row" : 1,
-	"column" : 0,
-	"action" : "select_filename",
-	"target" : "merge_source_filename",
-},
 
-{
-	"type" : "label",
-	"text" : "No File Selected",
-	"hook" : "merge_source_label",
-	"width" : 50,
-	"row" : 1,
-	"column" : 1,
-	"options" : {
-		"font" : "Georgia 10",
-	}
-},
-
-{
-	"type" : "label",
-	"text" : " ",
-
-	"row" : 2,
-	"columnspan" : 2,
-	"options" : {
-		"font" : "Georgia 20",
-	}
-},
-{
-	"type" : "label",
-	"text" : "Target Caprica Files",
-
-	"row" : 3,
-	"columnspan" : 2,
-	"options" : {
-		"font" : "Georgia 15",
-	}
-},
-
-{
-	"type" : "button",
-	"hook" : "merge_target",
-	"text" : "Browse",
-	"width" : 10,
-	"row" : 4,
-	"column" : 0,
-	"action" : "select_filename",
-	"target" : "merge_target_filename",
-},
-
-{
-	"type" : "label",
-	"text" : "No File Selected",
-	"hook" : "merge_target_label",
-	"width" : 50,
-	"row" : 4,
-	"column" : 1,
-	"options" : {
-		"font" : "Georgia 10",
-	}
-},
-]
 
 for widget in widgets:
 	wb.add_widgets(widget)
 
-# Add a Label widget
-#label = Label(win, text="Click the Button to browse the Files", font=('Georgia 13'))
-#label.pack(pady=10)
-#label.grid(row=0, column=0)
-
-
-
-# Create a Button
-##ttk.Button(win, text="Browse", command=open_file).pack(pady=20)
-#ttk.Button(win, text="Browse", command=open_file).grid(row=0,column=1)
-
-message ='''
-Dear Reader,
-
-    Thank you for giving your
-    Love and Support to PythonGuides.
-    PythonGuides is now available on 
-    YouTube with the same name.
-
-Thanks & Regards,
-Team PythonGuides '''
-
-#text_box = Text(
-#    win,
-#    height=12,
-#    width=40
-#)
-#text_box.pack(expand=True)
-#text_box.grid(row=1,column=0)
-#text_box.insert('end', message)
-#text_box.config(state='disabled')
 
 win.mainloop()
