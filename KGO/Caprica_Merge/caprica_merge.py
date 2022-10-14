@@ -7,25 +7,21 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
 from functools import partial
-import json
+import json,sys,os,gzip,tarfile
 
 # Create an instance of tkinter frame
 win = Tk()
-
-# Set the geometry of tkinter frame
-win.geometry("700x250")
-
-
 
 class widget_builder():
 
 	def __init__(self):
 		self.widget_holder = {}
 		self.merge_source_filename = None
-		self.merge_target_label = None
+		self.merge_target_filename = None
+
 	
 	def open_file(self,target):
-		name = filedialog.askopenfilename(filetypes=[('Python Files', '*.py')]) 
+		name = filedialog.askopenfilename(filetypes=[('Caprica Files', '*.tgz')]) 
 
 		if name:
 			if target == "merge_source_filename":
@@ -33,20 +29,23 @@ class widget_builder():
 				self.widget_holder["merge_source_label"]["text"] = name
 
 			if target == "merge_target_filename":
-				self.merge_target_label = name
+				self.merge_target_filename = name
 				self.widget_holder["merge_target_label"]["text"] = name
 
 	def add_widgets(self,input_obj,win=win):
 
+		#//*** Initialize empty options 
 		options = {}
 
-
+		#//*** Build Options if it exists
 		if "options" in input_obj.keys():
 
 			options = input_obj["options"]
 
+		#//*** Add Default Text value
 		options["text"] = "No Text Specified"
 
+		#//*** Assign default values
 		row = -1
 		column = -1
 		columnspan = -1
@@ -55,40 +54,42 @@ class widget_builder():
 		action = None
 		target = None
 		text = None
-
 		width = -1
 		
-		for verify_key in ["row","column", "type", "hook", "action", "target", "text", "columnspan", "width"]:
+		#//*** Assign values based on input_obj key.
+		#//*** Items NOT listed in verify_key list will not be proccessed.
+		#//*** This is an explicit whitelist process
+		#for verify_key in ["row","column", "type", "hook", "action", "target", "text", "columnspan", "width"]:
 
-			if verify_key in input_obj.keys():
+		for verify_key in input_obj.keys():
 
-				if verify_key == "row":
-					row = input_obj[verify_key]
+			if verify_key == "row":
+				row = input_obj[verify_key]
 
 
-				if verify_key == "column":
-					column = input_obj[verify_key]
+			if verify_key == "column":
+				column = input_obj[verify_key]
 
-				if verify_key == "type":
-					obj_type = input_obj[verify_key]
+			if verify_key == "type":
+				obj_type = input_obj[verify_key]
 
-				if verify_key == "hook":
-					hook = input_obj["hook"]
+			if verify_key == "hook":
+				hook = input_obj["hook"]
 
-				if verify_key == "action":
-					action = input_obj["action"]
+			if verify_key == "action":
+				action = input_obj["action"]
 
-				if verify_key == "target":
-					target = input_obj["target"]
+			if verify_key == "target":
+				target = input_obj["target"]
 
-				if verify_key == "text":
-					options["text"] = input_obj["text"]
+			if verify_key == "text":
+				options["text"] = input_obj["text"]
 
-				if verify_key == "columnspan":
-					columnspan = input_obj["columnspan"]
+			if verify_key == "columnspan":
+				columnspan = input_obj["columnspan"]
 
-				if verify_key == "width":
-					width = input_obj["width"]
+			if verify_key == "width":
+				width = input_obj["width"]
 
 
 		if row == -1:
@@ -107,7 +108,8 @@ class widget_builder():
 			print(input_obj)
 			return
 
-		grid = {}
+		#//*** Build Grid Object to handle row, column, columspan values
+		grid = { "sticky" : "W"}
 
 		if row != -1:
 			grid["row"] = row
@@ -117,22 +119,16 @@ class widget_builder():
 		else:
 			grid["columnspan"] = columnspan
 
-		print(row,column)
-
+		#//*** Process the object types: Labels, buttons, etc
 		if "type" in input_obj.keys():
 
 			if input_obj["type"] == "label":
-
-				
 
 				if "text" in input_obj.keys():
 					options["text"] = input_obj["text"]
 
 				options["width"] = width
-				#label = Label(win, text="Click the Button to browse the Files", font=('Georgia 13'))
 
-				#if "text" input_obj.keys():
-				#options["text"] = input_obj["text"]
 
 				if hook == None:
 					#//*** No Hook, just draw the label
@@ -171,20 +167,200 @@ class widget_builder():
 			#//*** No type in keys, kinda can't do anything
 			pass
 
+
 	def export(self):
-		print(self.merge_source_filename)
-		print(self.merge_target_label)
-
-
-wb = widget_builder()
-
-with open("widgets.json", "r") as f:
-	widgets = json.loads(f.read())
+		print("Source: ",self.merge_source_filename)
+		print("Target:" ,self.merge_target_filename)
 
 
 
-for widget in widgets:
-	wb.add_widgets(widget)
+		#### Build the Export Folder Path
+		if not os.path.exists(export_folder):
+			os.mkdir("." + export_folder)
+
+		#### Build the Temporary Folder Path
+		if not os.path.exists(tempFolderName):
+			os.mkdir(tempFolderName)
+
+		self.widget_holder["response_label"]["text"] = ""
+
+		#//******************************************
+		#//*** Verify Files are selected and Exist
+		#//******************************************
+		try:
+			if not os.path.exists(self.merge_source_filename):
+				self.widget_holder["response_label"]["text"] = "Problem Opening Source File"	
+				return
+		except:
+			self.widget_holder["response_label"]["text"] = "Please Select a Source File"
+			return
+
+		try:
+			if not os.path.exists(self.merge_target_filename):
+				self.widget_holder["response_label"]["text"] = "Problem Opening Target File"	
+				return
+		except:
+			self.widget_holder["response_label"]["text"] = "Please Select a Target File"
+			return
 
 
-win.mainloop()
+		#//************************************
+		#//*** Open the Source File
+		#//************************************
+		try:
+			srcTar = tarfile.open(self.merge_source_filename,"r:gz")
+		except:
+			self.widget_holder["response_label"]["text"] = "Trouble opening Source file. Is it a Caprica .tgz file?"
+			return
+
+		#//************************************
+		#//*** Open the Destination File
+		#//************************************
+		try:
+			dstTar = tarfile.open(self.merge_source_filename,"r:gz")
+		except:
+			self.widget_holder["response_label"]["text"] = "Trouble opening Destination file. Is it a Caprica .tgz file?"
+			return
+		
+		#//*** Extract the target folder. We'll be keeping most of these
+		#dstTar.extractall(tempFolderName,dstTar.getmembers())
+
+		for item in srcTar.getmembers():
+			if "./caprica/data/flash/custct/" in item.name:
+				#//*** Only Process xml files
+				if ".xml" in item.name:
+						#//*** Get the Bank number from the name
+						#//*** Get just the filename by splitting by "/"
+						#//*** Remove the prepended CC
+						#//*** Split by _ and grab the first field
+						#//*** Convert to int to type match self.banks
+						tar_bank = int(item.name.split("/")[-1].replace("cc","").split("_")[0])
+						
+						#//*** If zero based index tar_bank matches zero based index in self.banks we keep sync the file
+						if tar_bank in self.banks:
+							print("Extracting " + item.name + " from source Acuity File to working Folder")
+							sourceCC = srcTar.extractfile(item.name)
+							print("Writing " + item.name + " to Temporary Files")
+							f = open(tempFolderName + "/"+ item.name,"wb")
+							f.write(sourceCC.read())
+							f.close()
+
+		destFilename = "merged_"+self.merge_target_filename
+
+		print("Building New File: " + destFilename)
+		finalTar = tarfile.open(destFilename,"w:gz")
+
+		for root, dirs, files in os.walk(tempFolderName + "\\"):
+			for file in files:
+				finalTar.add(os.path.join(root, file),arcname=file)
+				print("Adding: " + os.path.join(root, file))
+		finalTar.close()
+
+		################################################
+		################################################
+		#### File Cleanup
+		################################################
+		################################################
+		#### Delete Files in temporary Directory
+		################################################
+		print("Deleting Temp Files")
+		for root, dirs, files in os.walk(tempFolderName + "/"):
+			for name in dirs:
+				print(name)
+		print("Deletng Temp Folder")
+		#os.rmdir(tempFolderName)
+		shutil.rmtree(tempFolderName)
+
+
+#//*************************************
+#//*** End widget_builder class
+#//*************************************
+
+if __name__ == '__main__':
+
+	config_filename = "settings.config"
+	export_folder = "merged/"
+	banks = []
+	tempFolderName = "exaction_temp/"
+
+	tempFolderName = "./" + export_folder + tempFolderName
+
+
+
+	# Set the geometry of tkinter frame
+	win.geometry("900x250")
+
+	#//*** Initialize Widget Builder Object
+	wb = widget_builder()
+
+	#//*** Load Widget Parameters from JSON
+	#//*** Everything loads from an object making it easy to add widgets to the GUI
+	with open("widgets.json", "r") as f:
+		widgets = json.loads(f.read())
+
+	#//*** Process settings.config file
+	if os.path.exists(config_filename):
+	    print("Process Config File")
+	    with open(config_filename) as f:
+	        for line in f:
+	            
+	            #//*** strip out everything after # comment
+	            if "#" in line:
+	                line = line.split("#")[0]
+
+
+	            #//*** Look for lines with values:
+	            if "=" in line:
+
+	                key,value = line.split("=")
+
+	                #//*** Strip all whitespace from key & value
+	                key = key.strip()
+	                value = value.strip()
+
+	                #print(f">{key}<")
+	                #print(f">{value}<")
+
+	                if key == "HOST":
+	                    HOST = value
+
+	                if key == "banks":
+	                    banks = []
+	                    for x in value.split(","):
+	                        try:
+	                            banks.append( int(x.strip()) )
+	                        except:
+	                            pass
+	else:
+		print("Configuration File Missing: player.config")
+		print("Quitting")
+		sys.exit()
+
+	
+	#//*** Convert banks to Zero based indexes
+	for x in range(len(banks)):
+		banks[x] = int(banks[x])-1
+	
+
+	#//*** Assign zero based banks to wb class
+	wb.banks = banks
+
+	#//*** Load each widget into the gui
+	for widget in widgets:
+		wb.add_widgets(widget)
+
+	filename = "WLS_CAPRICA NEW GFX 7-13-22.tgz"
+	wb.merge_source_filename = filename
+	wb.widget_holder["merge_source_label"]["text"] = filename
+
+
+	filename = "KGO_Caprica-Diskset-2022-10-06T21 40 18PCR2_Launch_Candidate_9.tgz"
+	wb.merge_target_filename = filename
+	wb.widget_holder["merge_target_label"]["text"] = filename
+
+
+	#//*** Run the GUI
+	win.mainloop()
+
+
+
