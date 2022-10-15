@@ -1,16 +1,19 @@
 # https://pythonbasics.org/tkinter-filedialog/
 # https://pythonguides.com/python-tkinter-text-box/
-
+#//*** pyinstaller --onefile caprica_merge.py -n KGO_Caprica_CC_Merge
 
 # Import the required Libraries
 from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
 from functools import partial
-import json,sys,os,gzip,tarfile
+import json,sys,os,gzip,tarfile,shutil,time
+
+debug_mode = False
 
 # Create an instance of tkinter frame
 win = Tk()
+win.title("KGO_Caprica_CC_Merge")
 
 class widget_builder():
 
@@ -167,6 +170,9 @@ class widget_builder():
 			#//*** No type in keys, kinda can't do anything
 			pass
 
+	def draw_response(self,input_text):
+		self.widget_holder["response_label"]["text"] = input_text
+		win.update()
 
 	def export(self):
 		print("Source: ",self.merge_source_filename)
@@ -182,25 +188,25 @@ class widget_builder():
 		if not os.path.exists(tempFolderName):
 			os.mkdir(tempFolderName)
 
-		self.widget_holder["response_label"]["text"] = ""
+		self.draw_response("Working......")
 
 		#//******************************************
 		#//*** Verify Files are selected and Exist
 		#//******************************************
 		try:
 			if not os.path.exists(self.merge_source_filename):
-				self.widget_holder["response_label"]["text"] = "Problem Opening Source File"	
+				self.draw_response("Problem Opening Source File")
 				return
 		except:
-			self.widget_holder["response_label"]["text"] = "Please Select a Source File"
+			self.draw_response("Please Select a Source File")
 			return
 
 		try:
 			if not os.path.exists(self.merge_target_filename):
-				self.widget_holder["response_label"]["text"] = "Problem Opening Target File"	
+				self.draw_response("Problem Opening Target File")	
 				return
 		except:
-			self.widget_holder["response_label"]["text"] = "Please Select a Target File"
+			self.draw_response("Please Select a Target File")
 			return
 
 
@@ -210,7 +216,7 @@ class widget_builder():
 		try:
 			srcTar = tarfile.open(self.merge_source_filename,"r:gz")
 		except:
-			self.widget_holder["response_label"]["text"] = "Trouble opening Source file. Is it a Caprica .tgz file?"
+			self.draw_response("Trouble opening Source file. Is it a Caprica .tgz file?")
 			return
 
 		#//************************************
@@ -219,11 +225,11 @@ class widget_builder():
 		try:
 			dstTar = tarfile.open(self.merge_source_filename,"r:gz")
 		except:
-			self.widget_holder["response_label"]["text"] = "Trouble opening Destination file. Is it a Caprica .tgz file?"
+			self.draw_response( "Trouble opening Destination file. Is it a Caprica .tgz file?")
 			return
 		
 		#//*** Extract the target folder. We'll be keeping most of these
-		#dstTar.extractall(tempFolderName,dstTar.getmembers())
+		dstTar.extractall(tempFolderName,dstTar.getmembers())
 
 		for item in srcTar.getmembers():
 			if "./caprica/data/flash/custct/" in item.name:
@@ -239,21 +245,25 @@ class widget_builder():
 						#//*** If zero based index tar_bank matches zero based index in self.banks we keep sync the file
 						if tar_bank in self.banks:
 							print("Extracting " + item.name + " from source Acuity File to working Folder")
+							self.draw_response("Extracting " + item.name + " from source Acuity File to working Folder")
 							sourceCC = srcTar.extractfile(item.name)
 							print("Writing " + item.name + " to Temporary Files")
+							self.draw_response("Writing " + item.name + " to Temporary Files")
 							f = open(tempFolderName + "/"+ item.name,"wb")
 							f.write(sourceCC.read())
 							f.close()
 
-		destFilename = "merged_"+self.merge_target_filename
+		destFilename = "./"+export_folder + "merged_"+self.merge_target_filename
 
 		print("Building New File: " + destFilename)
+		self.draw_response("Building New File: " + destFilename)
 		finalTar = tarfile.open(destFilename,"w:gz")
 
 		for root, dirs, files in os.walk(tempFolderName + "\\"):
 			for file in files:
 				finalTar.add(os.path.join(root, file),arcname=file)
 				print("Adding: " + os.path.join(root, file))
+				self.draw_response("Adding: " + os.path.join(root, file))
 		finalTar.close()
 
 		################################################
@@ -266,10 +276,13 @@ class widget_builder():
 		print("Deleting Temp Files")
 		for root, dirs, files in os.walk(tempFolderName + "/"):
 			for name in dirs:
+				self.draw_response("Delete Temp File:"+name)
 				print(name)
 		print("Deletng Temp Folder")
-		#os.rmdir(tempFolderName)
+		self.draw_response("Deletng Temp Folder")
 		shutil.rmtree(tempFolderName)
+
+		self.draw_response("Merged file saved to:\n"+destFilename)
 
 
 #//*************************************
@@ -349,14 +362,16 @@ if __name__ == '__main__':
 	for widget in widgets:
 		wb.add_widgets(widget)
 
-	filename = "WLS_CAPRICA NEW GFX 7-13-22.tgz"
-	wb.merge_source_filename = filename
-	wb.widget_holder["merge_source_label"]["text"] = filename
+	#//*** Automatically assign source and target files if in debug mode
+	if debug_mode:
+		filename = "WLS_CAPRICA NEW GFX 7-13-22.tgz"
+		wb.merge_source_filename = filename
+		wb.widget_holder["merge_source_label"]["text"] = filename
 
 
-	filename = "KGO_Caprica-Diskset-2022-10-06T21 40 18PCR2_Launch_Candidate_9.tgz"
-	wb.merge_target_filename = filename
-	wb.widget_holder["merge_target_label"]["text"] = filename
+		filename = "KGO_Caprica-Diskset-2022-10-06T21 40 18PCR2_Launch_Candidate_9.tgz"
+		wb.merge_target_filename = filename
+		wb.widget_holder["merge_target_label"]["text"] = filename
 
 
 	#//*** Run the GUI
