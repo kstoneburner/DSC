@@ -6,6 +6,13 @@ from pywinauto import application
 import pywinauto 
 import pyautogui
 
+# Import the required Libraries
+from tkinter import *
+from tkinter import ttk, filedialog
+from tkinter.filedialog import askopenfile
+from functools import partial
+import json,sys,os,gzip,tarfile,shutil
+
 #//*** Pyperclip documentation
 #https://medium.com/analytics-vidhya/clipboard-operations-in-python-3cf2b3bd998c
 #https://github.com/boppreh/keyboard
@@ -181,7 +188,7 @@ def send_vo():
 						pc.paste()
 
 #keyboard.add_hotkey('ctrl + windows + q', send_vo, args =(),suppress=True,trigger_on_release=True)
-
+"""
 while True:
 	
 	
@@ -198,7 +205,7 @@ while True:
 
 
 
-		"""
+		
 		dlg = app[active_window_text]
 
 		wrapper = dlg.wrapper_object()
@@ -225,10 +232,197 @@ while True:
 							print( key,":",value)
 		except:
 			pass
-		"""
+		
 	try:
 		print(win32gui.GetCursorInfo())
 	except: 
 		pass
 	time.sleep(.1)
+"""
 
+# https://pythonbasics.org/tkinter-filedialog/
+# https://pythonguides.com/python-tkinter-text-box/
+#//*** pyinstaller --onefile caprica_merge.py -n KGO_Caprica_CC_Merge
+
+
+
+debug_mode = False
+
+# Create an instance of tkinter frame
+win = Tk()
+win.title("Dalet Hotkeys")
+
+class widget_builder():
+
+	def __init__(self):
+		self.widget_holder = {}
+		self.merge_source_filename = None
+		self.merge_target_filename = None
+
+	
+	def open_file(self,target):
+		name = filedialog.askopenfilename(filetypes=[('Caprica Files', '*.tgz')]) 
+
+		if name:
+			if target == "merge_source_filename":
+				self.merge_source_filename = name
+				self.widget_holder["merge_source_label"]["text"] = name
+
+			if target == "merge_target_filename":
+				self.merge_target_filename = name
+				self.widget_holder["merge_target_label"]["text"] = name
+
+	def add_widgets(self,input_obj,win=win):
+
+		#//*** Initialize empty options 
+		options = {}
+
+		#//*** Build Options if it exists
+		if "options" in input_obj.keys():
+
+			options = input_obj["options"]
+
+		#//*** Add Default Text value
+		options["text"] = "No Text Specified"
+
+		#//*** Assign default values
+		row = -1
+		column = -1
+		columnspan = -1
+		obj_type = None
+		hook = None
+		action = None
+		target = None
+		text = None
+		width = -1
+		
+		#//*** Assign values based on input_obj key.
+		#//*** Items NOT listed in verify_key list will not be proccessed.
+		#//*** This is an explicit whitelist process
+		#for verify_key in ["row","column", "type", "hook", "action", "target", "text", "columnspan", "width"]:
+
+		for verify_key in input_obj.keys():
+
+			if verify_key == "row":
+				row = input_obj[verify_key]
+
+
+			if verify_key == "column":
+				column = input_obj[verify_key]
+
+			if verify_key == "type":
+				obj_type = input_obj[verify_key]
+
+			if verify_key == "hook":
+				hook = input_obj["hook"]
+
+			if verify_key == "action":
+				action = input_obj["action"]
+
+			if verify_key == "target":
+				target = input_obj["target"]
+
+			if verify_key == "text":
+				options["text"] = input_obj["text"]
+
+			if verify_key == "columnspan":
+				columnspan = input_obj["columnspan"]
+
+			if verify_key == "width":
+				width = input_obj["width"]
+
+
+		if row == -1:
+			print("QUITTING widget: Widget missing Row attribute")
+			print(input_obj)
+			return
+
+		if column == -1 and columnspan == -1:
+			print(column,columnspan)
+			print("QUITTING widget: Widget missing Column attribute")
+			print(input_obj)
+			return
+
+		if obj_type == None:
+			print("QUITTING widget: Widget missing type attribute")
+			print(input_obj)
+			return
+
+		#//*** Build Grid Object to handle row, column, columspan values
+		grid = { "sticky" : "W"}
+
+		if row != -1:
+			grid["row"] = row
+
+		if column != -1:
+			grid["column"] = column
+		else:
+			grid["columnspan"] = columnspan
+
+		#//*** Process the object types: Labels, buttons, etc
+		if "type" in input_obj.keys():
+
+			if input_obj["type"] == "label":
+
+				if "text" in input_obj.keys():
+					options["text"] = input_obj["text"]
+
+				options["width"] = width
+
+
+				if hook == None:
+					#//*** No Hook, just draw the label
+					Label(win,options).grid(grid)
+				else:
+					#//*** Build Label
+					self.widget_holder[hook] = Label(win,options)
+
+					#//*** Draw Label
+					self.widget_holder[hook].grid(grid)
+
+
+			if input_obj["type"] == "button":
+
+				if action == "select_filename":
+
+					options['command'] = self.open_file
+
+				elif action == "export":
+					options['command'] = self.export
+
+
+
+
+				if hook == None:
+					ttk.Button(win, text=options["text"], width=width, command=options['command']).grid(grid)
+				else:
+					#//*** Build Hooked Button
+					self.widget_holder[hook] = ttk.Button(win, text=options["text"], width=width, command=partial(options['command'],target) )
+
+					#//*** Draw Hooked Button
+					self.widget_holder[hook].grid(grid)
+
+
+		else:
+			#//*** No type in keys, kinda can't do anything
+			pass
+
+	def draw_response(self,input_text):
+		self.widget_holder["response_label"]["text"] = input_text
+		win.update()
+
+#//*** Initialize Widget Builder Object
+wb = widget_builder()
+
+wb.add_widgets({
+	"type" : "button",
+	"hook" : "merge_target",
+	"text" : "Browse",
+	"row" : 4,
+	"column" : 0,
+	"action" : "select_filename",
+	"target" : "merge_target_filename"
+})
+
+#//*** Run the GUI
+win.mainloop()
