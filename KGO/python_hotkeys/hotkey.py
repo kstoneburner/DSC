@@ -1,3 +1,5 @@
+#//*** Check Box
+#https://www.pythontutorial.net/tkinter/tkinter-checkbox/
 #import keyboard #pip install keyboard
 import win32gui, os, sys
 import time, threading, pyperclip
@@ -293,8 +295,10 @@ class widget_builder():
 		hook = None
 		action = None
 		target = None
-		text = None
+		text = ""
 		width = -1
+		check_value = False
+		padx = 0
 		
 		#//*** Assign values based on input_obj key.
 		#//*** Items NOT listed in verify_key list will not be proccessed.
@@ -331,6 +335,11 @@ class widget_builder():
 			if verify_key == "width":
 				width = input_obj["width"]
 
+			if verify_key == "value":
+				check_value = input_obj["value"]
+
+			if verify_key == "padx":
+				padx = input_obj["padx"]
 
 		if row == -1:
 			print("QUITTING widget: Widget missing Row attribute")
@@ -373,6 +382,7 @@ class widget_builder():
 				if hook == None:
 					#//*** No Hook, just draw the label
 					Label(win,options).grid(grid)
+
 				else:
 					#//*** Build Label
 					self.widget_holder[hook] = Label(win,options)
@@ -383,12 +393,9 @@ class widget_builder():
 
 			if input_obj["type"] == "button":
 
-				if action == "select_filename":
+				if action == "add_code":
 
-					options['command'] = self.open_file
-
-				elif action == "export":
-					options['command'] = self.export
+					options['command'] = self.add_code
 
 
 
@@ -397,32 +404,229 @@ class widget_builder():
 					ttk.Button(win, text=options["text"], width=width, command=options['command']).grid(grid)
 				else:
 					#//*** Build Hooked Button
-					self.widget_holder[hook] = ttk.Button(win, text=options["text"], width=width, command=partial(options['command'],target) )
+					self.widget_holder[hook] = ttk.Button(win, 
+						text=options["text"], 
+						width=width, 
+						command=partial(options['command'],win) ,
+						)
 
 					#//*** Draw Hooked Button
 					self.widget_holder[hook].grid(grid)
 
+			if input_obj["type"] == "rule_checkbox":
+
+				#//*** Build a Unique Variable name based Hook, row and Col values
+				#hook = f"{row}_{hook}_{col}"
+				var = BooleanVar(win, name=hook,value=check_value)
+				
+				self.widget_holder[hook] = Checkbutton(win, text=text, variable=var, width=width)
+				#print(win.getvar(name=hook))
+				
+				self.widget_holder[hook].grid(grid)
+
+			if input_obj["type"] == "label":
+
+				#//*** Build a Unique Variable name based Hook, row and Col values
+				Label(win, text=options["text"], padx=padx).grid(grid)
+				
+			if input_obj["type"] == "textbox":
+				hook = f"{row}_{hook}_{column}"
+				var = BooleanVar(win, name=hook,value=check_value)
+
+				#//*** Build a Unique Variable name based Hook, row and Col values
+				Entry(win, width=width).grid(grid)
+				
 
 		else:
 			#//*** No type in keys, kinda can't do anything
 			pass
 
-	def draw_response(self,input_text):
-		self.widget_holder["response_label"]["text"] = input_text
+	
+	def add_code(self,win):
+		print("Add Code")
+		print((win.params))
+		win.params["elems"] += 1
+		row = win.params["elems"]
+		col = 6
+
+		self.add_widgets({
+		"type" : "rule_checkbox",
+		"row" : row,
+		"column" : col,
+		"hook" : f"tran_{col}",
+		"width" : 1,
+		},win)
+
+		col += 1
+		self.add_widgets({
+		"type" : "textbox",
+		"row" : row,
+		"column" : col,
+		"hook" : f"code_{col}",
+		"width" : 100,
+		},win)
+
+		
 		win.update()
+def update_window():
+	time.sleep(3)
+	print("update")
+	print(win.getvar(name="b"))
+
+
+
+
 
 #//*** Initialize Widget Builder Object
 wb = widget_builder()
 
-wb.add_widgets({
-	"type" : "button",
-	"hook" : "merge_target",
-	"text" : "Browse",
-	"row" : 4,
-	"column" : 0,
-	"action" : "select_filename",
-	"target" : "merge_target_filename"
-})
+def build_first_rule_row():
+	row=0
+	col=0
 
+	rule_row = Frame(win)
+
+	widget_row = widget_builder()
+
+
+	#//*** Build Label Line
+	#for x in ["Name","CTRL","WIN","SHIFT","ALT","Keyboard Key"]:
+	wb.add_widgets({
+		"type" : "label",
+		"text" : "Name",
+		"row" : row,
+		"column" : col,
+		"padx" : 20
+	},rule_row)
+	col+=1
+
+	wb.add_widgets({
+		"type" : "label",
+		"text" : "CTRL",
+		"row" : row,
+		"column" : col,
+		"padx" : -10
+	},rule_row)
+	col+=1
+
+	wb.add_widgets({
+		"type" : "label",
+		"text" : "WIN",
+		"row" : row,
+		"column" : col,
+		"padx" : 0
+	},rule_row)
+	col+=1
+
+	wb.add_widgets({
+		"type" : "label",
+		"text" : "SHIFT",
+		"row" : row,
+		"column" : col,
+		"padx" : 0
+	},rule_row)
+	col+=1
+
+	wb.add_widgets({
+		"type" : "label",
+		"text" : "ALT",
+		"row" : row,
+		"column" : col,
+		"padx" : 10
+	},rule_row)
+	col+=1
+
+	wb.add_widgets({
+		"type" : "label",
+		"text" : "Key",
+		"row" : row,
+		"column" : col,
+		"padx" : 20
+	},rule_row)
+	col+=1
+
+	wb.add_widgets({
+		"type" : "label",
+		"text" : "Codes",
+		"row" : row,
+		"column" : col,
+		"padx" : 10
+	},rule_row)
+	col+=1
+	return rule_row
+
+def build_rule_row():
+
+
+	row = 0
+	col = 0
+
+	rule_row = Frame(win)
+	widget_row = widget_builder()
+	
+	rule_row.params = {
+		"elems" : 0
+	}
+	
+	widget_row.add_widgets({
+		"type" : "textbox",
+		"row" : row,
+		"column" : col,
+		"hook" : "name",
+		"width" : 15,
+	},rule_row)
+
+	for hook in ["CTRL","WIN","SHIFT","ALT"]:
+		col = col + 1
+		wb.add_widgets({
+			"type" : "rule_checkbox",
+			"row" : row,
+			"column" : col,
+			"hook" : hook,
+			"width" : 1,
+		},rule_row)
+
+	col = col + 1
+	wb.add_widgets({
+		"type" : "textbox",
+		"row" : row,
+		"column" : col,
+		"hook" : "key",
+		"width" : 5,
+	},rule_row)
+
+	col = col + 1
+	wb.add_widgets({
+		"type" : "button",
+		"row" : row,
+		"column" : col,
+		"hook" : "add_rule",
+		"width" : 5,
+		"action" : "add_code",
+		"text" : "+",
+		"padx" : 10,
+	},rule_row)
+	return rule_row
+
+
+#Label(win, text=options["text"]).grid(grid)
+
+
+#Label(widget_row, text="1").grid(column=0, row=0)
+#Label(widget_row, text="2").grid(column=1, row=0)
+#Label(widget_row, text="3").grid(column=2, row=0)
+#Label(widget_row, text="4").grid(column=3, row=0)
+row=0
+build_first_rule_row().grid(column=0, row=row, sticky="w")
+row +=1
+
+build_rule_row().grid(column=0, row=row, sticky="w")
+row +=1
+col=0
+build_rule_row().grid(column=0, row=row, sticky="w")
+row +=1
+col=0
+build_rule_row().grid(column=0, row=row, sticky="w")
+#win.update()
 #//*** Run the GUI
 win.mainloop()
