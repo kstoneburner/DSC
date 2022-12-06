@@ -12,20 +12,23 @@ import pyautogui
 
 import tkinter as tk
 
-from tkinterdnd2 import DND_FILES, DND_ALL, TkinterDnD
+
+#from tkinterdnd2 import DND_FILES, DND_ALL, TkinterDnD
 
 def updateField(txt):
 	lb.delete("1.0", "end") 
 	lb.insert(tk.END,txt) 
 	print(lb.get("1.0", "end"))
-	
-win = TkinterDnD.Tk()  # notice - use this instead of tk.Tk()
+
+win = tk.Tk()
+#win = TkinterDnD.Tk()  # notice - use this instead of tk.Tk()
 
 win.title("Dalet Hotkeys")
 
 from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
+from tkinter import dnd
 
 import pywinauto 
 from pywinauto import application
