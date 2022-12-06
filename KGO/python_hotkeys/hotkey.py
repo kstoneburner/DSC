@@ -2,16 +2,40 @@
 #https://www.pythontutorial.net/tkinter/tkinter-checkbox/
 #import keyboard #pip install keyboard
 import win32gui, os, sys
-import time, threading, pyperclip
+#//*** Options are 0 or 2
+sys.coinit_flags = 2
 
-from pywinauto import application
-import pywinauto 
+#import time, threading, pyperclip
+
+#from pywinauto import application
 import pyautogui
 
-# Import the required Libraries
+import tkinter as tk
+
+from tkinterdnd2 import DND_FILES, DND_ALL, TkinterDnD
+
+def updateField(txt):
+	lb.delete("1.0", "end") 
+	lb.insert(tk.END,txt) 
+	print(lb.get("1.0", "end"))
+	
+win = TkinterDnD.Tk()  # notice - use this instead of tk.Tk()
+
+win.title("Dalet Hotkeys")
+
 from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
+
+import pywinauto 
+from pywinauto import application
+pywinauto.multi_threading_mode = True
+
+
+
+# Import the required Libraries
+
+
 from functools import partial
 import json,sys,os,gzip,tarfile,shutil
 
@@ -19,9 +43,13 @@ import json,sys,os,gzip,tarfile,shutil
 #https://medium.com/analytics-vidhya/clipboard-operations-in-python-3cf2b3bd998c
 #https://github.com/boppreh/keyboard
 
+debug_mode = False
 
-app = application.Application()
-print(win32gui.FindWindow(None, "Dalet Galaxy"))
+# Create an instance of tkinter frame
+#win = Tk()
+
+app = application.Application(backend="uia")
+
 
 all_cols = ['icon','float','lock','page','slug','segment','brio5','brio6','brio7','brio8','anchor','cam','dur','stage','gfx','changes']
 cols = ['page','slug','segment','anchor','cam','stage','gfx','changes']
@@ -34,245 +62,17 @@ quit=False
 #cmd = 'tasklist /FI "imagename eq DaletGalaxy.exe" /v'
 #print(os.popen(cmd).read())
 
-"""
-def capture_keystroke_threaded():
-    global keystroke
-    lock = threading.Lock()
-    loop = True
-    while not quit:
-        with lock:
-            
-            keystroke = keyboard.on_press()
-            #keystroke = keyboard.read_key()
-            #keyboard.block_key(keystroke)
-            print(keystroke)
-            if keyboard.is_pressed(keystroke):
-
-            	#active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
-            	#if "Dalet Galaxy" in active_window_text:
-                #print(keystroke)
-                has_ctrl = keyboard.is_pressed('ctrl')
-                has_shift = keyboard.is_pressed('shift')
-                has_win = keyboard.is_pressed('win')
-                
-                #print(has_ctrl,has_shift,has_win)
-
-                if has_ctrl and has_win:
-
-                	
-                	if keystroke == "\\":
-                		readRundownLine()
-                	if keystroke == "w":
-                		keyboard.block_key("w")
-                		send_vo()
-                	#keyboard.unblock_key(keystroke)
-"""
-#keeb = threading.Thread(target = capture_keystroke_threaded)
-#keeb.daemon = True
-#keeb.start()                    
-
-
-def status_rundown():
-	global status
-	win32gui.GetCursorInfo()
-
-def readRundownLine():
-	#pyautogui.keyUp('windows')
-	#pyautogui.press('left')
-
-	#pywinauto.keyboard.send_keys("{LEFT}")
-	#pywinauto.keyboard.send_keys("{TAB}")
-	
-	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
-	if "Dalet Galaxy" in active_window_text:
-		print("Read Rundown")
-		
-		keyboard.release("windows")
-		keyboard.press("ctrl")
-		keyboard.send("left")
-		keyboard.release("ctrl")	
-
-
-		dlg = app[active_window_text]
-		wrapper = dlg.wrapper_object()
-
-		#keyboard.send("left")
-
-		for dalet_object in wrapper.children():
-			#dalet_object.draw_outline()
-			if dalet_object.has_keyboard_focus():
-
-				rundown = dalet_object
-				if len(rundown.children()) > 0:
-					elem = rundown.children()[-1]
-				else:
-					continue
-				
-				rd_obj = {}
-				for col in all_cols:
-					
-					elem = rundown.children()[-1]
-					#for key,value in elem.get_properties().items():
-					#	print( key,":",value)
-					elem.automation_id = col
-					
-					if col in cols:
-						print(col,elem.texts()[0],elem.automation_id)
-					
-					keyboard.send("tab")
-
-
-					
-				#for x in dir(elem):
-				#		print(x)
-				print(elem.writable_props)	
-				keyboard.press_and_release("left")
-				print(pyautogui.position())
-				#for key,value in elem.get_properties().items():
-				#	print( key,":",value)
-				
-				#print("Texts: ",elem.texts()[0])
-								
-				break
-
-				rundown.draw_outline()
-
-				for elem in rundown.children():
-					elem.draw_outline()
-					print(elem)
-
-	else:
-		print("Not in Dalet")
-
-#print(dir(keyboard))
-
-def send_vo():
-	print("DING!")
-	
-	keyboard.release("ctrl")
-	keyboard.release('windows')
-	pyperclip.copy(base_vo)
-	time.sleep(.5)
-	
-	pywinauto.keyboard.send_keys('+{INS}')
-	
-	return
-	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
-	if "Dalet Galaxy" in active_window_text:
-		dlg = app[active_window_text]
-
-		wrapper = dlg.wrapper_object()
-
-		#keyboard.send("left")
-
-		for dalet_object in wrapper.children():
-			
-			if dalet_object.has_keyboard_focus():
-				dalet_object.draw_outline()
-				
-				
-				if len(dalet_object.children()) > 0:
-
-					elem = dalet_object.children()[-1]
-					print(elem)	
-					print(elem.texts())
-				else:
-					print("=====")
-					if dalet_object.class_name() == "RICHEDIT50W":
-						print("in_editor")
-						print(len(dalet_object.texts()[0]))
-
-
-						#//** Add Test to see if Editor is active
-
-						pyperclip.copy(base_vo)
-						time.sleep(1)
-						pc.paste()
-
-#keyboard.add_hotkey('ctrl + windows + q', send_vo, args =(),suppress=True,trigger_on_release=True)
-"""
-while True:
-	
-	
-	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
-	if "Dalet Galaxy" in active_window_text:
-		#print(active_window_text)
-		#print(win32gui.GetForegroundWindow())
-		if not connected:
-			app.connect(handle=win32gui.GetForegroundWindow())
-			connected = True
-			dlg = app[active_window_text]
-			print(dir(dlg))
-
-
-
-
-		
-		dlg = app[active_window_text]
-
-		wrapper = dlg.wrapper_object()
-
-		#keyboard.send("left")
-		try:
-			for dalet_object in wrapper.children():
-				
-				if dalet_object.has_keyboard_focus():
-					dalet_object.draw_outline()
-					
-					
-					if len(dalet_object.children()) > 0:
-
-						elem = dalet_object.children()[-1]
-						print(elem)	
-						print(elem.texts())
-					else:
-						print("=====")
-						if dalet_object.class_name() == "RICHEDIT50W":
-							print("in_editor")
-							print(len(dalet_object.texts()[0]))
-						for key,value in dalet_object.get_properties().items():
-							print( key,":",value)
-		except:
-			pass
-		
-	try:
-		print(win32gui.GetCursorInfo())
-	except: 
-		pass
-	time.sleep(.1)
-"""
-
 # https://pythonbasics.org/tkinter-filedialog/
 # https://pythonguides.com/python-tkinter-text-box/
 #//*** pyinstaller --onefile caprica_merge.py -n KGO_Caprica_CC_Merge
 
 
-
-debug_mode = False
-
-# Create an instance of tkinter frame
-win = Tk()
-win.title("Dalet Hotkeys")
-
 class widget_builder():
 
 	def __init__(self):
 		self.widget_holder = {}
-		self.merge_source_filename = None
-		self.merge_target_filename = None
 
 	
-	def open_file(self,target):
-		name = filedialog.askopenfilename(filetypes=[('Caprica Files', '*.tgz')]) 
-
-		if name:
-			if target == "merge_source_filename":
-				self.merge_source_filename = name
-				self.widget_holder["merge_source_label"]["text"] = name
-
-			if target == "merge_target_filename":
-				self.merge_target_filename = name
-				self.widget_holder["merge_target_label"]["text"] = name
 
 	def add_widgets(self,input_obj,win=win):
 
@@ -436,11 +236,45 @@ class widget_builder():
 				#//*** Build a Unique Variable name based Hook, row and Col values
 				Entry(win, width=width).grid(grid)
 				
+			if input_obj["type"] == "dnd":
+
+				hook = f"{row}_{hook}_{column}"
+				var = BooleanVar(win, name=hook,value=check_value)
+
+				#//*** Build a Unique Variable name based Hook, row and Col values
+				#Entry(win, width=width).grid(grid)
+				
+				
+				self.widget_holder[hook] = Entry(win)
+				#lb.insert('end',"drag files to here")
+
+				# register the listbox as a drop target
+				self.widget_holder[hook].drop_target_register(DND_ALL)
+				self.widget_holder[hook].dnd_bind('<<Drop>>', lambda e: self.updateField(e.data))	
 
 		else:
 			#//*** No type in keys, kinda can't do anything
 			pass
 
+		def updateField(self,txt):
+			lb.delete("1.0", "end") 
+			lb.insert(tk.END,txt) 
+			print(lb.get("1.0", "end"))
+
+		"""
+		def updateField(txt):
+			lb.delete("1.0", "end") 
+			lb.insert(tk.END,txt) 
+			print(lb.get("1.0", "end"))
+		root = TkinterDnD.Tk()  # notice - use this instead of tk.Tk()
+
+		lb = tk.Text(root)
+		lb.insert('end',"drag files to here")
+
+		# register the listbox as a drop target
+		lb.drop_target_register(DND_ALL)
+		lb.dnd_bind('<<Drop>>', lambda e: updateField(e.data))			
+		"""
 	
 	def add_code(self,win):
 		print("Add Code")
@@ -459,7 +293,7 @@ class widget_builder():
 
 		col += 1
 		self.add_widgets({
-		"type" : "textbox",
+		"type" : "dnd",
 		"row" : row,
 		"column" : col,
 		"hook" : f"code_{col}",

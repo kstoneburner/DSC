@@ -8,6 +8,74 @@ import pyautogui
 connected = False
 app = application.Application()
 
+def readRundownLine():
+	#pyautogui.keyUp('windows')
+	#pyautogui.press('left')
+
+	#pywinauto.keyboard.send_keys("{LEFT}")
+	#pywinauto.keyboard.send_keys("{TAB}")
+	
+	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
+	if "Dalet Galaxy" in active_window_text:
+		print("Read Rundown")
+		
+		keyboard.release("windows")
+		keyboard.press("ctrl")
+		keyboard.send("left")
+		keyboard.release("ctrl")	
+
+
+		dlg = app[active_window_text]
+		wrapper = dlg.wrapper_object()
+
+		#keyboard.send("left")
+
+		for dalet_object in wrapper.children():
+			#dalet_object.draw_outline()
+			if dalet_object.has_keyboard_focus():
+
+				rundown = dalet_object
+				if len(rundown.children()) > 0:
+					elem = rundown.children()[-1]
+				else:
+					continue
+				
+				rd_obj = {}
+				for col in all_cols:
+					
+					elem = rundown.children()[-1]
+					#for key,value in elem.get_properties().items():
+					#	print( key,":",value)
+					elem.automation_id = col
+					
+					if col in cols:
+						print(col,elem.texts()[0],elem.automation_id)
+					
+					keyboard.send("tab")
+
+
+					
+				#for x in dir(elem):
+				#		print(x)
+				print(elem.writable_props)	
+				keyboard.press_and_release("left")
+				print(pyautogui.position())
+				#for key,value in elem.get_properties().items():
+				#	print( key,":",value)
+				
+				#print("Texts: ",elem.texts()[0])
+								
+				break
+
+				rundown.draw_outline()
+
+				for elem in rundown.children():
+					elem.draw_outline()
+					print(elem)
+
+	else:
+		print("Not in Dalet")
+
 class build_hotkeys():
 
 	def __init__(self): 
