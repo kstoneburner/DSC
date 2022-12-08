@@ -123,16 +123,16 @@ def capture_keystroke_threaded():
         with lock:
             time.sleep(.1)
             keystroke = keyboard.read_key()
+            print(keystroke, keyboard.is_pressed("ctrl"),keyboard.is_pressed("shift"),keyboard.is_pressed("win"),keyboard.is_pressed("alt"))
             if keyboard.is_pressed(keystroke):
-
-            		if keystroke == "up":
-            			spy_window()
-            		elif keystroke == "down":
-            			spy_window()
-            		elif keystroke == "left":
-            			spy_window()
-            		elif keystroke == "right":
-            			spy_window()
+            	if keystroke == "up":
+            		spy_window()
+            	elif keystroke == "down":
+            		spy_window()
+            	elif keystroke == "left":
+            		spy_window()
+            	elif keystroke == "right":
+            		spy_window()
 
 
 def spy_window():
@@ -160,9 +160,11 @@ def spy_window():
 					#print(elem)
 					#print(elem.get_properties())
 					print(elem.style(),elem.class_name(),elem.user_data(),elem.texts()[0])
+					print(keyboard.is_pressed("ctrl"),keyboard.is_pressed("shift"),keyboard.is_pressed("win"),keyboard.is_pressed("alt"))
 					#print(str(len(pyperclip.paste())),pyperclip.paste())
 						
-
+#  1426102724 - Nonedit
+#  1426100676 - Edit
 
 class build_hotkeys():
 
@@ -174,7 +176,10 @@ class build_hotkeys():
 			1427151300 : "non_editor_window",
 			1427149252 : "edit_window",
 			1073807812 : "rundown",
-			1342243268 : "rundown_field"
+			1342243268 : "rundown_field",
+			1426100676 : "edit_window",
+			1426102724 : "non_editor_window"
+
 		}
 
 	def __str__(self):
@@ -225,14 +230,31 @@ class build_hotkeys():
 		for hotkey in self.hotkeys:
 			key_str = self.get_keystroke_string(hotkey)
 			codes = hotkey['codes']
-			keyboard.add_hotkey(key_str, self.do_hotkey_macros, 
-				args =(
-					hotkey['keystroke']['ctrl'],
-					hotkey['keystroke']['shift'],
-					hotkey['keystroke']['win'],
-					hotkey['keystroke']['alt'],
-					[codes]
-				),suppress=True,trigger_on_release=True)
+			if 'function' not in hotkey.keys():
+				print(f"{hotkey['label']}:Hotkey needs a Function Value")
+				return
+			print(hotkey['function'])
+			if hotkey['function'] == "macro":
+				keyboard.add_hotkey(key_str, self.do_hotkey_macros, 
+					args =(
+						hotkey['keystroke']['ctrl'],
+						hotkey['keystroke']['shift'],
+						hotkey['keystroke']['win'],
+						hotkey['keystroke']['alt'],
+						[codes]
+					),suppress=True,trigger_on_release=False)
+
+			elif hotkey['function'] == 'enter_exit_script':
+					print(key_str)
+					keyboard.add_hotkey(key_str, self.do_enter_exit_script, 
+					args =(
+						hotkey['keystroke']['ctrl'],
+						hotkey['keystroke']['shift'],
+						hotkey['keystroke']['win'],
+						hotkey['keystroke']['alt'],
+						hotkey['key']
+					),suppress=True,trigger_on_release=False)
+
 
 	def block_all_modifiers(self):
 		keyboard.release("ctrl")
@@ -312,14 +334,46 @@ class build_hotkeys():
 		return None
 
 	def get_element_type(self,elem):
-
 		if elem.style() in self.style.keys():
 			return self.style[elem.style()]
 		
 		print("Unknown Element Style: ",str(elem.style()))
 		return None
 
-	#def enter_exit_script(self):
+		out = None
+
+		if len(elem.children()) > 0:
+			#//*** If focused Object has children, the last one is the keyboard control
+			elem = elem.children()[-1]
+			print("has children")
+			print(elem)
+			if elem.class_name() == "GXEDIT":
+				out = "rundown"
+		else:
+			#//*** If no children, then keep the object
+			print("no children")
+			if elem.class_name() == "GXEDIT":
+				out = "rundown_field"
+			if elem.class_name() == "RICHEDIT50W":
+				#//*** The editor is Selected, determine if editor is in edit mode
+				out = "Non_Specific_Editor"
+
+			elem = elem
+
+		print(elem)
+		print(elem.get_properties())
+
+		return out
+
+
+	def do_enter_exit_script(self, ctrl, shift, win, alt, key):
+		print("Enter Exit Script")
+		elem = self.get_focused_object()
+
+		if elem == None:
+			return
+
+		print(self.get_element_type(elem))
 
 	def enter_script(self,elem):
 		keyboard.press_and_release('f7')
@@ -328,7 +382,7 @@ class build_hotkeys():
 		#//*** Wait for Edit window
 		while self.get_element_type(elem) != "edit_window":
 
-			print("Waiting for edit window"self.get_element_type(self.get_element_type(elem)))
+			print("Waiting for edit window",self.get_element_type(self.get_element_type(elem)))
 
 
 
@@ -444,9 +498,25 @@ sotvo_hotkey = {
 	]
 }
 
+enter_exit_script_hotkey = {
+	"keystroke" : {
+		"ctrl" : True,
+		"shift" : False,
+		"alt" : False,
+		"win" : True,
+		"key" : "enter"
+	},
+	"function" : "enter_exit_script",
+	"label" : "enter_exit_script",
+	"key" : "f7",
+	"codes" : []
+
+}
+
 hk = build_hotkeys()
 
 hk.add_hotkey(sotvo_hotkey)
+hk.add_hotkey(enter_exit_script_hotkey)
 print(hk)
 hk.register_hotkeys()
 
