@@ -5,8 +5,47 @@ from pywinauto import application
 import pywinauto 
 import pyautogui
 
+
+# API Calls
+
+#//*** Switcher Crosspoints
+# http://10.218.116.11/server/rest/api/crosspoints
+
+
+# http://10.218.116.11/server/rest/api/videoTransitions
+# http://10.218.116.11/server/rest/api/customControls
+# http://10.218.116.11/server/rest/api/switcherModels
+
+# http://10.218.116.11/server/rest/api/keywords
+# http://10.218.116.11/server/rest/api/mosgateway/overDriveServer
+# http://10.218.116.11/server/rest/api/mosgateway/mosId
+# http://10.218.116.11/server/rest/api/mosgateway/buddyMosId/1
+# http://10.218.116.11/server/rest/api/licensing/check/nrcsPlugin
+# http://10.218.116.11/server/rest/api/server/configuration
+# http://10.218.116.11/server/rest/api/licensing/check/features/?featureIds=40,100,50
+# http://10.218.116.11/server/rest/api/featureToggle/getAll/?
+# http://10.218.116.11/server/rest/api/mosgateway/nrcsConfigName/1
+# http://10.218.116.11/server/rest/api/masterTemplates
+# http://10.218.116.11/server/rest/api/audioChannels
+# http://10.218.116.11/server/rest/api/audioVariable
+# http://10.218.116.11/server/rest/api/quickAudio
+# http://10.218.116.11/server/rest/api/quickTurnSegments
+# http://10.218.116.11/server/rest/api/customControls
+# http://10.218.116.11/server/rest/api/switcherModels
+# http://10.218.116.11/server/rest/api/crosspoints
+# http://10.218.116.11/server/rest/api/keywords
+# http://10.218.116.11/server/rest/api/mosgateway/mosId/1
+# http://10.218.116.11/server/rest/api/mosgateway/buddyMosId/1
+
+
+
+
+
+
 connected = False
 app = application.Application()
+
+
 
 def readRundownLine():
 	#pyautogui.keyUp('windows')
@@ -76,12 +115,67 @@ def readRundownLine():
 	else:
 		print("Not in Dalet")
 
+def capture_keystroke_threaded():
+    global keystroke
+    lock = threading.Lock()
+    loop = True
+    while loop:
+        with lock:
+            time.sleep(.1)
+            keystroke = keyboard.read_key()
+            if keyboard.is_pressed(keystroke):
+
+            		if keystroke == "up":
+            			spy_window()
+            		elif keystroke == "down":
+            			spy_window()
+            		elif keystroke == "left":
+            			spy_window()
+            		elif keystroke == "right":
+            			spy_window()
+
+
+def spy_window():
+	
+
+
+	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
+
+	if "Dalet Galaxy" in active_window_text:
+
+		if connected:
+			dlg = app[active_window_text]
+			wrapper = dlg.wrapper_object()
+
+			for dalet_object in wrapper.children():
+				#dalet_object.draw_outline()
+				if dalet_object.has_keyboard_focus():
+
+					rundown = dalet_object
+					if len(rundown.children()) > 0:
+						elem = rundown.children()[-1]
+					else:
+						elem = rundown
+
+					#print(elem)
+					#print(elem.get_properties())
+					print(elem.style(),elem.class_name(),elem.user_data(),elem.texts()[0])
+					#print(str(len(pyperclip.paste())),pyperclip.paste())
+						
+
+
 class build_hotkeys():
 
 	def __init__(self): 
 		#//*** Initialize list of Hotkeys
 		self.hotkeys = []
 		self.input_delay = .5
+		self.style = {
+			1427151300 : "non_editor_window",
+			1427149252 : "edit_window",
+			1073807812 : "rundown",
+			1342243268 : "rundown_field"
+		}
 
 	def __str__(self):
 		out = ""
@@ -201,9 +295,7 @@ class build_hotkeys():
 		if alt:
 			keyboard.press("alt")
 
-	def do_hotkey_macros(self, ctrl, shift, win, alt, codes):
-		print("Firing Hotkey")
-
+	def get_focused_object(self):
 		active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
 		if "Dalet Galaxy" in active_window_text:
 			dlg = app[active_window_text]
@@ -215,62 +307,102 @@ class build_hotkeys():
 			for dalet_object in wrapper.children():
 				
 				if dalet_object.has_keyboard_focus():
-				#	dalet_object.draw_outline()
+					return dalet_object
+
+		return None
+
+	def get_element_type(self,elem):
+
+		if elem.style() in self.style.keys():
+			return self.style[elem.style()]
+		
+		print("Unknown Element Style: ",str(elem.style()))
+		return None
+
+	#def enter_exit_script(self):
+
+	def enter_script(self,elem):
+		keyboard.press_and_release('f7')
+		time.sleep(.1)
+
+		#//*** Wait for Edit window
+		while self.get_element_type(elem) != "edit_window":
+
+			print("Waiting for edit window"self.get_element_type(self.get_element_type(elem)))
+
+
+
+
+	def do_hotkey_macros(self, ctrl, shift, win, alt, codes):
+		print("Firing Hotkey")
+
+		dalet_object = self.get_focused_object()
+
+		if dalet_object == None:
+			print("Not in Dalet")
+			return
+
 					
-					
-					if len(dalet_object.children()) > 0:
-
-						elem = dalet_object.children()[-1]
-						print(elem)	
-						print(elem.texts())
-					else:
-						print("=====")
-						if dalet_object.class_name() == "RICHEDIT50W":
-							print("in_editor")
-							print(f"Starting Length: {len(dalet_object.texts()[0])}")
-
-							text_length = len(dalet_object.texts()[0])
-
-							#self.block_all_modifiers()
-
-							#//*** Codes is a list within a llist, bc that's how keyboard needs it.
-							codes = codes[0]
-							for code in codes:
-								#print(type(code))
-								#print(code)
-								#print("=====")
-								pyperclip.copy(code['mos'])
-								
-								while pyperclip.paste() != code['mos']:
-									pyperclip.copy(code['mos'])
-									time.sleep(.05) 
-									print("Waiting for clipboard")
-
-								#pywinauto.keyboard.send_keys('^v')
-								#self.block_all_modifiers()
-								keyboard.press_and_release('ctrl + v')
-
-								print(f"1 waiting: {text_length} == {len(dalet_object.texts()[0])}")
-								#self.wait_for_text_update(text_length,dalet_object)
-								#//*** Wait for Input to be accepted.
-								while text_length == len(dalet_object.texts()[0]):
-									time.sleep(.1)
-									print(f"2 waiting: {text_length} == {len(dalet_object.texts()[0])}")
-
-								keyboard.press_and_release('\n')
-								print(f"3 waiting: {text_length} == {len(dalet_object.texts()[0])}")
-								
-								#pywinauto.keyboard.send_keys('{ENTER}')
-								print(f"Done waiting: {text_length} == {len(dalet_object.texts()[0])}")
-
-						#self.press_modifier_keys(ctrl, shift, win, alt)
+							
+		if len(dalet_object.children()) > 0:
+			#//*** If focused Object has children, the last one is the keyboard control
+			elem = dalet_object.children()[-1]
 		else:
-			print("Not in Dalet ... Skipping")
-							#//** Add Test to see if Editor is active
+			#//*** If no children, then keep the object
+			elem = dalet_object
 
+		
+		#//*** Return a known element type
+		elem_type = self.get_element_type(elem)
+
+		print("elem_type:", elem_type)
+
+		if elem_type == "rundown" or elem_type == "rundown_field":
+			self.enter_script(elem)
+		return
+
+		#self.block_all_modifiers()
+
+		#//*** Codes is a list within a llist, bc that's how keyboard needs it.
+		codes = codes[0]
+		for code in codes:
+			#print(type(code))
+			#print(code)
+			#print("=====")
+			pyperclip.copy(code['mos'])
+			
+			while pyperclip.paste() != code['mos']:
+				pyperclip.copy(code['mos'])
+				time.sleep(.05) 
+				print("Waiting for clipboard")
+
+			#pywinauto.keyboard.send_keys('^v')
+			#self.block_all_modifiers()
+			text_length = len(dalet_object.texts()[0])
+
+			keyboard.press_and_release('ctrl + v')
+
+			self.wait_for_update(text_length,dalet_object)
+
+			text_length = len(dalet_object.texts()[0])
+			keyboard.press_and_release('\n')
+
+								
+
+	def wait_for_update(self,text_length,dalet_object, initial_delay=.1):
+		time.sleep(initial_delay)
+		print(f"1 waiting: {text_length} == {len(dalet_object.texts()[0])}")
+		#//*** Wait for Input to be accepted.
+		while text_length == len(dalet_object.texts()[0]):
+			time.sleep(.1)
+			print(f"2 waiting: {text_length} == {len(dalet_object.texts()[0])}")
 
 
 		#self.press_modifier_keys(ctrl, shift, win, alt)
+
+keeb = threading.Thread(target = capture_keystroke_threaded)
+keeb.daemon = True
+keeb.start()
 
 base_hotkey = {
 	"keystroke" : {
@@ -296,6 +428,7 @@ sotvo_hotkey = {
 		"win" : True,
 		"key" : "z"
 	},
+	"function" : "macro",
 	"label" : "SOTVO",
 	"codes" : [
 	{
