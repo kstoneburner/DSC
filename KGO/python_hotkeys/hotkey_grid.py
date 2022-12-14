@@ -99,7 +99,6 @@ class widget_builder():
 		width = -1
 		check_value = False
 		padx = 0
-		side = LEFT
 		
 		#//*** Assign values based on input_obj key.
 		#//*** Items NOT listed in verify_key list will not be proccessed.
@@ -141,9 +140,6 @@ class widget_builder():
 
 			if verify_key == "padx":
 				padx = input_obj["padx"]
-
-			if verify_key == "side":
-				side = input_obj["side"]
 
 		if row == -1:
 			print("QUITTING widget: Widget missing Row attribute")
@@ -205,7 +201,7 @@ class widget_builder():
 
 
 				if hook == None:
-					ttk.Button(win, text=options["text"], width=width, command=options['command']).pack(side=side)
+					ttk.Button(win, text=options["text"], width=width, command=options['command']).grid(grid)
 				else:
 					#//*** Build Hooked Button
 					self.widget_holder[hook] = ttk.Button(win, 
@@ -215,7 +211,7 @@ class widget_builder():
 						)
 
 					#//*** Draw Hooked Button
-					self.widget_holder[hook].pack(side=side)
+					self.widget_holder[hook].grid(grid)
 
 			if input_obj["type"] == "rule_checkbox":
 
@@ -228,8 +224,7 @@ class widget_builder():
 				self.widget_holder[hook] = Checkbutton(win, text=text, variable=var, width=width)
 				#print(win.getvar(name=hook))
 				
-				#self.widget_holder[hook].grid(grid)
-				self.widget_holder[hook].pack(side=side)
+				self.widget_holder[hook].grid(grid)
 
 			if input_obj["type"] == "label":
 
@@ -241,8 +236,7 @@ class widget_builder():
 				var = BooleanVar(win, name=hook,value=check_value)
 
 				#//*** Build a Unique Variable name based Hook, row and Col values
-				#Entry(win, width=width).grid(grid)
-				Entry(win, width=width).pack(side=side)
+				Entry(win, width=width).grid(grid)
 				
 			
 			if input_obj["type"] == "mos_variable_listbox":
@@ -257,7 +251,7 @@ class widget_builder():
 					    win,
 					    #state="readonly",
 					    values = list(self.mos_variables.keys())
-					).pack(side=side)
+					).grid(grid)
 
 		else:
 			#//*** No type in keys, kinda can't do anything
@@ -296,7 +290,6 @@ class widget_builder():
 		"column" : col,
 		"hook" : f"tran_{col}",
 		"width" : 1,
-		"side" : LEFT,
 		},win)
 
 		col += 1
@@ -306,7 +299,6 @@ class widget_builder():
 		"column" : col,
 		"hook" : f"mos_var__{col}",
 		"width" : 100,
-		"side" : LEFT,
 		},win)
 
 		
@@ -449,56 +441,6 @@ def build_rule_row(row):
 	},rule_row)
 	return rule_row
 
-x_coord = {
-	"name" : 0,
-	"ctrl" : 60,
-	"win" : 90,
-	"shift" : 120,
-	"alt" : 160,
-	"key" : 200,
-}
-
-win.resizable(1,1)
-
-y = 0
-label_row = Frame(win).place(x=0,y=0)
-Label(label_row, text="name" ).place(x=x_coord['name'],y=y)
-Label(label_row, text="CTRL" ).place(x=x_coord['ctrl'],y=y)
-Label(label_row, text="WIN" ).place(x=x_coord['win'],y=y)
-Label(label_row, text="SHIFT" ).place(x=x_coord['shift'],y=y)
-Label(label_row, text="ALT" ).place(x=x_coord['alt'],y=y)
-Label(label_row, text="Key" ).place(x=x_coord['key'],y=y)
-
-y = y +50
-label_row = Frame(win).place(x=0,y=y)
-Entry(label_row, width=20 ).place(x=x_coord['name'],y=y)
-Checkbutton(label_row, name="ctrl" ).place(x=x_coord['ctrl'],y=y)
-Checkbutton(label_row, name="win" ).place(x=x_coord['win'],y=y)
-Checkbutton(label_row, name="shift" ).place(x=x_coord['shift'],y=y)
-Checkbutton(label_row, name="alt" ).place(x=x_coord['alt'],y=y)
-Entry(label_row, name="key", width =50 ).place(x=x_coord['key'],y=y)
-
-y = y +50
-label_row = Frame(win).place(x=0,y=y)
-Entry(label_row, width=20 ).place(x=x_coord['name'],y=y)
-Checkbutton(label_row, name="ctrl" ).place(x=x_coord['ctrl'],y=y)
-Checkbutton(label_row, name="win" ).place(x=x_coord['win'],y=y)
-Checkbutton(label_row, name="shift" ).place(x=x_coord['shift'],y=y)
-Checkbutton(label_row, name="alt" ).place(x=x_coord['alt'],y=y)
-Entry(label_row, name="key", width =50 ).place(x=x_coord['key'],y=y)
-
-
-
-
-#rule_row = Frame(win).place(x=0,y=100)
-
-#hook = f"{row}_{hook}_{column}"
-#var = BooleanVar(rule_row, name="ctrl")
-#Entry(rule_row).pack(side=BOTTOM)
-#Checkbutton(rule_row,variable=var).pack(side=LEFT)
-
-
-
 
 #Label(win, text=options["text"]).grid(grid)
 
@@ -507,17 +449,17 @@ Entry(label_row, name="key", width =50 ).place(x=x_coord['key'],y=y)
 #Label(widget_row, text="2").grid(column=1, row=0)
 #Label(widget_row, text="3").grid(column=2, row=0)
 #Label(widget_row, text="4").grid(column=3, row=0)
-#row=0
-#build_first_rule_row().grid(column=0, row=row, sticky="w")
-#row +=1
+row=0
+build_first_rule_row().grid(column=0, row=row, sticky="w")
+row +=1
 
-#build_rule_row(row).grid(column=0, row=row, sticky="w")
-#row +=1
-#col=0
-#build_rule_row(row).grid(column=0, row=row, sticky="w")
-#row +=1
-#col=0
-#build_rule_row(row).grid(column=0, row=row, sticky="w")
+build_rule_row(row).grid(column=0, row=row, sticky="w")
+row +=1
+col=0
+build_rule_row(row).grid(column=0, row=row, sticky="w")
+row +=1
+col=0
+build_rule_row(row).grid(column=0, row=row, sticky="w")
 #win.update()
 #//*** Run the GUI
 win.mainloop()
