@@ -49,7 +49,8 @@ connected = False
 app = application.Application()
 hk = None
 key_director = None
-
+global key_str
+key_str = ""
 
 def readRundownLine():
 	#pyautogui.keyUp('windows')
@@ -121,6 +122,7 @@ def readRundownLine():
 
 def capture_keystroke_threaded():
     global keystroke
+    global key_str
     lock = threading.Lock()
     loop = True
     while loop:
@@ -129,44 +131,67 @@ def capture_keystroke_threaded():
             keystroke = keyboard.read_key()
             #print(keystroke, keyboard.is_pressed("ctrl"),keyboard.is_pressed("shift"),keyboard.is_pressed("win"),keyboard.is_pressed("alt"))
             
-        
+            print("handling", keystroke)
+
+           
+
+            
+
+            if not keyboard.is_pressed(keystroke):
+            	if keystroke != "esc":
+            		key_str += f"'{keystroke.lower()}' ,"	
+            	else:
+            		print(key_str)
+	            	
+	            	with open("myfile.txt", "w") as file1:
+	            		# Writing data to a file
+	            		file1.write(key_str)
+	            	
+            		
+
+
             if keystroke in key_director.keys():
             	#//*** Test only on key Release
-            	if not keyboard.is_pressed(keystroke):
+            	print("handling", keystroke)
 
-            		print("handling", keystroke)
+            	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
+            	if "Dalet Galaxy" in active_window_text:
+            		if connected:
+            			print("In Dalet: Do Something here")
+            			
+            			#//*** Test For Valid Hotkeys
+            			for hotkey in key_director[keystroke]:
+            				print(hotkey.keys())
+            				print(hotkey['keystroke'])
 
-	            	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
-	            	if "Dalet Galaxy" in active_window_text:
-	            		if connected:
-	            			print("In Dalet: Do Something here")
-	            			
-	            			#//*** Test For Valid Hotkeys
-	            			for hotkey in key_director[keystroke]:
-	            				print(hotkey.keys())
-	            				print(hotkey['keystroke'])
+            				execute_hotkey = True
+            				for modifier in ['ctrl','shift','alt','win']:
+            					print(modifier, hotkey['keystroke'][modifier],keyboard.is_pressed(modifier),hotkey['keystroke'][modifier] == keyboard.is_pressed(modifier))
 
-	            				execute_hotkey = True
-	            				for modifier in ['ctrl','shift','alt','win']:
-	            					print(modifier, hotkey['keystroke'][modifier],keyboard.is_pressed(modifier),hotkey['keystroke'][modifier] == keyboard.is_pressed(modifier))
+            					#//*** If any modifier does not match, then move to next element
+            					if hotkey['keystroke'][modifier] != keyboard.is_pressed(modifier):
+            						execute_hotkey = False
+            						break
 
-	            					#//*** If any modifier does not match, then move to next element
-	            					if hotkey['keystroke'][modifier] != keyboard.is_pressed(modifier):
-	            						execute_hotkey = False
-	            						break
+            				if not execute_hotkey:
+            					print("Invalid modifier, test next macro")
+            					continue
 
-	            				if not execute_hotkey:
-	            					print("Invalid modifier, test next macro")
-	            					continue
+            			if not execute_hotkey:
+            				print("Skipping Macro")
+            			else:
+            				print("Let's Do a Macro")
 
-	            			if not execute_hotkey:
-	            				print("Skipping Macro")
-	            			else:
-	            				print("Let's Do a Macro")
-	            				determine_hotkey_action(hotkey,app)
+            				if keyboard.is_pressed(keystroke):
+            					#//*** Block Key
+            					pass
+            				else:
+            					#keyboard.block_key(keystroke)
+            					determine_hotkey_action(hotkey,app)
+            					#keyboard.release(keystroke)
 
-	            	else:
-	            		print("Not in Dalet")
+            	else:
+            		print("Not in Dalet")
 
             if keyboard.is_pressed(keystroke):
             	if keystroke == "up":
@@ -181,7 +206,7 @@ def capture_keystroke_threaded():
 
 def spy_window():
 	
-
+	return
 
 	active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
 
@@ -303,6 +328,7 @@ while True:
 			app.connect(handle=win32gui.GetForegroundWindow())
 			connected = True
 			dlg = app[active_window_text]
-			print(dir(dlg))
+			#print(dir(dlg))
+			print("connected to Dalet")
 	time.sleep(.1)
 	pass
