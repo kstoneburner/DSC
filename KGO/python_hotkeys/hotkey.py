@@ -1,7 +1,7 @@
 #//*** Check Box
 #https://www.pythontutorial.net/tkinter/tkinter-checkbox/
 #import keyboard #pip install keyboard
-import win32gui, os, sys
+import win32gui, os, sys,io
 #//*** Options are 0 or 2
 #sys.coinit_flags = 2
 
@@ -30,6 +30,8 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from tkinter.filedialog import askopenfile
 from tkinter import dnd
+
+from PIL import Image,ImageTk
 
 import pywinauto 
 from pywinauto import application
@@ -158,17 +160,6 @@ class widget_builder():
 			if verify_key == "name":
 				name = input_obj["name"]
 
-		#if row == -1:
-		#	print("QUITTING widget: Widget missing Row attribute")
-		#	print(input_obj)
-		#	return
-
-		#if column == -1 and columnspan == -1:
-		#	print(column,columnspan)
-		#	print("QUITTING widget: Widget missing Column attribute")
-		#	print(input_obj)
-		#	return
-
 		if obj_type == None:
 			print("QUITTING widget: Widget missing type attribute")
 			print(input_obj)
@@ -200,15 +191,15 @@ class widget_builder():
 
 				if hook == None:
 					#//*** No Hook, just draw the label
-					Label(win,options).grid(grid)
-
+					#Label(win,options).grid(grid)
+					Label(win,options).pack(side=side, padx=padx)
 				else:
 					#//*** Build Label
 					self.widget_holder[hook] = Label(win,options)
 
 					#//*** Draw Label
-					self.widget_holder[hook].grid(grid)
-
+					#self.widget_holder[hook].grid(grid)
+					self.widget_holder[hook].pack(side=side, padx=padx)
 
 			if input_obj["type"] == "button":
 
@@ -261,10 +252,10 @@ class widget_builder():
 				#self.widget_holder[hook].grid(grid)
 				self.widget_holder[hook].pack(side=side)
 
-			if input_obj["type"] == "label":
+			#if input_obj["type"] == "label":
 
 				#//*** Build a Unique Variable name based Hook, row and Col values
-				Label(win, text=options["text"], name=name, padx=padx).grid(grid)
+			#	Label(win, text=options["text"], name=name, padx=padx).grid(grid)
 				
 			if input_obj["type"] == "textbox":
 				hook = f"{row}_{hook}_{column}"
@@ -290,7 +281,10 @@ class widget_builder():
 					    win,
 					    #state="readonly",
 					    values = list(self.mos_variables.keys()),name="mos_variable"
-					).pack(side=side)
+					)
+				self.widget_holder[hook].pack(side=side)
+				self.widget_holder[hook].bind("<<ComboboxSelected>>", self.select_mos_variable)
+				self.widget_holder[hook].mode = "coded"
 
 			elif input_obj["type"] == "mos_transition_listbox":
 				hook = f"{row}_{hook}_{column}"
@@ -328,7 +322,7 @@ class widget_builder():
 				
 				self.widget_holder[hook].pack(side=side)
 				self.widget_holder[hook].bind("<<ComboboxSelected>>", self.select_key_filter)
-				self.widget_holder[hook].current(0)
+				self.widget_holder[hook].current(1)
 				self.widget_holder[hook].mode = self.widget_holder[hook].get()
 
 			
@@ -362,9 +356,6 @@ class widget_builder():
 				self.widget_holder[hook].pack(side=side)
 
 
-#show_mode_listbox
-#show_modes
-#alt_modes
 		else:
 			#//*** No type in keys, kinda can't do anything
 			pass
@@ -417,6 +408,28 @@ class widget_builder():
 		"side" : LEFT,
 		},codes)
 
+
+		col += 1
+		wb.add_widgets({
+			"type" : "label",
+			"text" : None,
+			"name" : "name_shoticon",
+			"hook" : f"shoticon__{col}",
+			"row" : row,
+			"column" : col,
+			"padx" : 20
+		},codes)
+		col += 1
+		wb.add_widgets({
+			"type" : "label",
+			"text" : None,
+			"name" : "name_shotname",
+			"hook" : f"shotname__{col}",
+			"row" : row,
+			"column" : col,
+			"padx" : 20
+		},codes)
+
 		codes.pack(side=LEFT)
 		
 		win.update()
@@ -427,36 +440,100 @@ class widget_builder():
 		#//*** Changes the mos_variables dropdown between codes and actions
 
 		#//*** Get Combobox element based on the event
-		combo = event.widget
+		tran_combo = event.widget
 
 		#//*** If Coded, check for ACTION elements
-		if combo.mode == "coded":
-			if combo.get() == "ACTION":
+		if tran_combo.mode == "coded":
+			if tran_combo.get() == "ACTION":
 				#//*** Coded Section is switched to Action Section
 				#//*** Update the mos_variable list with actions
-				combo.mode = "action"
+				tran_combo.mode = "action"
 
 				#//*** Loop through the parent element to find mos_variable
-				for elem in combo.master.winfo_children():
+				for elem in tran_combo.master.winfo_children():
 
 					if elem.winfo_name() == "mos_variable":
 						elem['values'] = hotkey_actions
-
 						elem.set("")
 
+					if elem.winfo_name() == "name_shotname":
+						elem.configure(text="")
+						elem.mode = "action"
+
+
 		#//*** If action element, check for non-action element						
-		if combo.mode == "action":
-			if combo.get() != "ACTION":
+		if tran_combo.mode == "action":
+
+			if tran_combo.get() != "ACTION":
 				#//*** Action Section is switched to Coded Section
 				#//*** Update the mos_variable list with Codes
-				combo.mode = "coded"
+				tran_combo.mode = "coded"
 
 				#//*** Loop through the parent element to find mos_variable
-				for elem in combo.master.winfo_children():
+				for elem in tran_combo.master.winfo_children():
 
 					if elem.winfo_name() == "mos_variable":
 						elem['values'] = list(mos_variables.keys())
 						elem.set("")
+						
+
+		
+
+	def select_mos_variable(self,event):
+		print("BANG!")
+		mos_combo = event.widget
+
+		parent = event.widget.master
+
+		rule_row = parent.master
+
+
+
+		tran_combo = None
+		shotname_label = None
+		for elem in parent.winfo_children():
+			if elem.winfo_name() == "transition":
+				tran_combo = elem
+
+			if elem.winfo_name() == "name_shotname":
+				shotname_label = elem
+
+			if elem.winfo_name() == "name_shoticon":
+				name_shoticon = elem
+
+		print(tran_combo)
+		print(shotname_label)
+		print(mos_combo.mode)
+
+		print(mos_combo.get())
+
+		selection = mos_combo.get()
+
+
+		print(dir(Image))
+
+		#//*** Only update the interface if a valid mos_variable is selected
+		if selection in mos_variables.keys():
+			shotName = mos_variables[mos_combo.get()]['shotName']
+			if shotname_label != None:
+
+				#//*** Update the Image
+				image = Image.open( io.BytesIO(mos_variables[mos_combo.get()]['image']) )
+				image = ImageTk.PhotoImage(image.resize((50,50)))
+				name_shoticon.configure(image=image)
+				name_shoticon.image=image
+
+				#//*** Update the Shotname Label text
+				shotname_label.configure(text=shotName)
+
+
+				name_shoticon.update()
+				return
+		else:
+			return
+		
+
+
 
 	def select_key_filter(self,event):
 		print("Handle key filters")
@@ -520,7 +597,7 @@ def build_first_rule_row(row=0):
 		"text" : "CTRL",
 		"row" : row,
 		"column" : col,
-		"padx" : -10
+		"padx" : 10
 	},rule_row)
 	col+=1
 
@@ -540,7 +617,7 @@ def build_first_rule_row(row=0):
 		"text" : "SHIFT",
 		"row" : row,
 		"column" : col,
-		"padx" : 0
+		"padx" : 5
 	},rule_row)
 	col+=1
 
@@ -550,7 +627,7 @@ def build_first_rule_row(row=0):
 		"text" : "ALT",
 		"row" : row,
 		"column" : col,
-		"padx" : 10
+		"padx" : 0
 	},rule_row)
 	col+=1
 
@@ -560,19 +637,27 @@ def build_first_rule_row(row=0):
 		"text" : "Key",
 		"row" : row,
 		"column" : col,
-		"padx" : 20
+		"padx" : 0
 	},rule_row)
 	col+=1
 
+	wb.add_widgets({
+		"type" : "label",
+		"name" : "mode_label",
+		"text" : "Mode",
+		"row" : row,
+		"column" : col,
+		"padx" : 5
+	},rule_row)
+	col+=1
 	wb.add_widgets({
 		"type" : "label",
 		"name" : "code_label",
 		"text" : "Codes",
 		"row" : row,
 		"column" : col,
-		"padx" : 10
+		"padx" : 50
 	},rule_row)
-	col+=1
 	return rule_row
 
 def build_rule_row(row,options={}):
@@ -601,7 +686,7 @@ def build_rule_row(row,options={}):
 			"type" : "rule_checkbox",
 			"row" : row,
 			"column" : col,
-			#"hook" : hook,
+			"hook" : hook,
 			"name" : hook,
 			"width" : 1,
 		},rule_row)
@@ -737,16 +822,11 @@ def build_base_rules_from_selected_keys(row=2):
 
 	return
 
-x_coord = {
-	"name" : 0,
-	"ctrl" : 60,
-	"win" : 90,
-	"shift" : 120,
-	"alt" : 160,
-	"key" : 200,
-}
+
 
 def save_macros(win):
+	win.destroy()
+	sys.exit()
 	rule = {}
 	for rule_frame in win.winfo_children():
 		first_row = False
@@ -766,6 +846,7 @@ def save_macros(win):
 			#	print(elem.winfo_name())
 			#	print("Entry:", elem.get())
 
+
 			if elem.winfo_name() == "name":
 				rule['name'] = elem.get()
 
@@ -784,10 +865,6 @@ def save_macros(win):
 			elif elem.winfo_name() == "key":
 				rule['key'] = elem.get() 
 				
-
-
-
-			print(elem.winfo_cells())
 		if first_row:
 			continue
 			

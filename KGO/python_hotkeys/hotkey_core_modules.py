@@ -1,7 +1,9 @@
-import requests, json
+import requests, json, re, sys
+
 overdrive_server_ip = "10.218.116.11"
 transition_filename = "transitions.json"
 mos_variables_filename = "l:\\tools\\Scripts\\ross\\Dalet\\Define.BaseShots"
+mos_variables_filename = "config.codes"
 alt_modes = ['base','alt1']
 show_modes = ['desk_studio']
 hotkey_actions = ['enter_exit_script','autocode']
@@ -42,7 +44,37 @@ def load_mos_object_variables():
 				#//*** Trim Trailing Newline Character
 				value = line.split("=")[1][:-1]
 
-				out[key] = value
+				findvals = re.findall("<shotName>.+</shotName>",value)
+				
+				shotName = ""
+				if len(findvals) > 0:
+					shotName = findvals[0].replace("<shotName>","").replace("</shotName>","")
+				
+
+				findvals = re.findall("<imageURL>.+</imageURL>",value)
+				imageURL = ""
+				if len(findvals) > 0:
+					imageURL = f"http://{overdrive_server_ip}"
+					imageURL += findvals[0].replace("<imageURL>","").replace("</imageURL>","")
+
+
+				
+				out[key] = {
+				
+					"mos" : value,
+					"shotName" : shotName,
+					"imageURL" : imageURL
+
+				}
+
+		for key,value in out.items():
+			imageURL = value['imageURL']
+			print("Downloading image",imageURL)
+			response = requests.get(imageURL)
+			
+			#//*** If good response, parse and save data
+			if response.status_code == 200:
+				out[key]['image'] = response.content
 
 		return out
 				
