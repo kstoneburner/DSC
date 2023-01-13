@@ -6,7 +6,8 @@ mos_variables_filename = "l:\\tools\\Scripts\\ross\\Dalet\\Define.BaseShots"
 mos_variables_filename = "config.codes"
 alt_modes = ['base','alt1']
 show_modes = ['desk_studio']
-hotkey_actions = ['enter_exit_script','autocode']
+hotkey_actions = ['enter_exit_script','autocode','assign_default_transition','assign_transition']
+transition_actions = ['assign_default_transition','assign_transition']
 def load_transitions(overdrive_server_ip=overdrive_server_ip):
 	#//*** Download video Transitions from Overdrive Server
 	response = requests.get(f'http://{overdrive_server_ip}/server/rest/api/videoTransitions')
@@ -29,7 +30,7 @@ def load_transitions(overdrive_server_ip=overdrive_server_ip):
 		with open(transition_filename, "r") as infile:
 			transitions = json.loads(infile.read())
 	
-	return transitions
+	return transitions,transition_actions
 
 def load_mos_object_variables():
 	out = {}
@@ -110,6 +111,15 @@ def load_keyboard_key_list():
 
 	#out["all"] = list(set(out["all"]))
 	return out
+
+def load_master_rules(filename):
+	with open(filename, 'r') as openfile:
+		# Reading from json file
+		return json.load(openfile)
+
+
+
+
 
 if __name__ == '__main__':
 	print(load_mos_object_variables().keys())

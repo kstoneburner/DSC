@@ -1,0 +1,276 @@
+{
+    "q": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "VO",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "q"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "vo",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>VO - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Video Only</mosAbstract><objSlug>VO - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Video Only</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f086f69d2e55</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>34097</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1101</templateNumber><shotName>VO</shotName><imageURL>/icons/KGO/v2 Server/v2 VO.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>38329</id></mleList><afvLevel>-3</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>36841</id><name>BRIO STUV##ME##0##BUS##program</name><type>DEVICE</type></audio><customLevel>50</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Server/v2 VO.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base"
+            },
+            "alt1": {
+                "keystroke": {
+                    "name": "VO Mics Ancs",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "q"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "vo_mics_ancs",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3a VO w/Anc Mics - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled</mosAbstract><objSlug>v3a VO w/Anc Mics - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5df3d45769de1</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>34097</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1101</templateNumber><shotName>v3a VO w/Anc Mics</shotName><imageURL>/icons/KGO/v2 Server/v2 VO.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>38329</id></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>36841</id><name>BRIO STUV##ME##0##BUS##program</name><type>DEVICE</type></audio><customLevel>50</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>3</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Server/v2 VO.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "alt1"
+            }
+        }
+    },
+    "w": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "G1 Auto",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "w"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "g1_auto",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3g G1 Auto In xp - Ross Video - Audio AFV: Video Only - Custom Controls: KXG1A (Bank:3 Btn:31); </mosAbstract><objSlug>v3g G1 Auto In xp - Ross Video - Audio AFV: Video Only - Custom Controls: KXG1A (Bank:3 Btn:31); </objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f0872f5cdc9b</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33824</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>9997</templateNumber><shotName>v3g G1 Auto In xp</shotName><description>XPression Ready</description><imageURL>/icons/KGO/v2 Xpression/v2 G1 Auto In.png</imageURL><transition><id>55</id><name>Audio Only</name></transition><customControlList><ordinal>0</ordinal><delayRunPreview>true</delayRunPreview><customControl><bank>3</bank><button>31</button></customControl></customControlList><customControlList><ordinal>3</ordinal></customControlList><customControlList><ordinal>4</ordinal></customControlList><customControlList><ordinal>5</ordinal></customControlList><afvLevel>-3</afvLevel><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Xpression/v2 G1 Auto In.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base"
+            }
+        }
+    },
+    "e": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "VO + G1",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "e"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "vo",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>VO - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Video Only</mosAbstract><objSlug>VO - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Video Only</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f086f69d2e55</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>34097</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1101</templateNumber><shotName>VO</shotName><imageURL>/icons/KGO/v2 Server/v2 VO.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>38329</id></mleList><afvLevel>-3</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>36841</id><name>BRIO STUV##ME##0##BUS##program</name><type>DEVICE</type></audio><customLevel>50</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Server/v2 VO.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    },
+                    {
+                        "transition": "stored_transition",
+                        "mos_variable": "g1_auto",
+                        "use_tran": false,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3g G1 Auto In xp - Ross Video - Audio AFV: Video Only - Custom Controls: KXG1A (Bank:3 Btn:31); </mosAbstract><objSlug>v3g G1 Auto In xp - Ross Video - Audio AFV: Video Only - Custom Controls: KXG1A (Bank:3 Btn:31); </objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f0872f5cdc9b</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33824</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>9997</templateNumber><shotName>v3g G1 Auto In xp</shotName><description>XPression Ready</description><imageURL>/icons/KGO/v2 Xpression/v2 G1 Auto In.png</imageURL><transition><id>55</id><name>Audio Only</name></transition><customControlList><ordinal>0</ordinal><delayRunPreview>true</delayRunPreview><customControl><bank>3</bank><button>31</button></customControl></customControlList><customControlList><ordinal>3</ordinal></customControlList><customControlList><ordinal>4</ordinal></customControlList><customControlList><ordinal>5</ordinal></customControlList><afvLevel>-3</afvLevel><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Xpression/v2 G1 Auto In.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base"
+            },
+            "alt1": {
+                "keystroke": {
+                    "name": "VO Mics + G1",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "e"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "vo_mics_ancs",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3a VO w/Anc Mics - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled</mosAbstract><objSlug>v3a VO w/Anc Mics - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5df3d45769de1</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>34097</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1101</templateNumber><shotName>v3a VO w/Anc Mics</shotName><imageURL>/icons/KGO/v2 Server/v2 VO.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>38329</id></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>36841</id><name>BRIO STUV##ME##0##BUS##program</name><type>DEVICE</type></audio><customLevel>50</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>3</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Server/v2 VO.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    },
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "g1_auto",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3g G1 Auto In xp - Ross Video - Audio AFV: Video Only - Custom Controls: KXG1A (Bank:3 Btn:31); </mosAbstract><objSlug>v3g G1 Auto In xp - Ross Video - Audio AFV: Video Only - Custom Controls: KXG1A (Bank:3 Btn:31); </objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f0872f5cdc9b</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33824</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>9997</templateNumber><shotName>v3g G1 Auto In xp</shotName><description>XPression Ready</description><imageURL>/icons/KGO/v2 Xpression/v2 G1 Auto In.png</imageURL><transition><id>55</id><name>Audio Only</name></transition><customControlList><ordinal>0</ordinal><delayRunPreview>true</delayRunPreview><customControl><bank>3</bank><button>31</button></customControl></customControlList><customControlList><ordinal>3</ordinal></customControlList><customControlList><ordinal>4</ordinal></customControlList><customControlList><ordinal>5</ordinal></customControlList><afvLevel>-3</afvLevel><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Xpression/v2 G1 Auto In.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "alt1"
+            }
+        }
+    },
+    "enter": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Enter/Exit Script",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "enter"
+                },
+                "codes": [
+                    {
+                        "transition": "ACTION",
+                        "mos_variable": "enter_exit_script",
+                        "use_tran": false
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base",
+                "function": "enter_exit_script",
+                "key": "f7"
+            }
+        }
+    },
+    "f1": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Cut Clr G1",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "f1"
+                },
+                "codes": [
+                    {
+                        "transition": "ACTION",
+                        "mos_variable": "assign_default_transition",
+                        "transition_secondary": "1_CUT ",
+                        "use_tran": false
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base",
+                "function": "assign_default_transition"
+            }
+        }
+    },
+    "f2": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Dis Clr G1",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "f2"
+                },
+                "codes": [
+                    {
+                        "transition": "ACTION",
+                        "mos_variable": "assign_transition",
+                        "transition_secondary": "2_DIS CLR G1",
+                        "use_tran": false
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base",
+                "function": "assign_transition"
+            }
+        }
+    },
+    "f3": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Bar Clr G1",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "f3"
+                },
+                "codes": [
+                    {
+                        "transition": "ACTION",
+                        "mos_variable": "assign_transition",
+                        "transition_secondary": "3_BAR_CLR_G1",
+                        "use_tran": false
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base",
+                "function": "assign_transition"
+            }
+        }
+    },
+    "f4": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Int Clr G1",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "f4"
+                },
+                "codes": [
+                    {
+                        "transition": "ACTION",
+                        "mos_variable": "assign_transition",
+                        "transition_secondary": "4__INT_CLR G1",
+                        "use_tran": false
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base",
+                "function": "assign_transition"
+            }
+        }
+    },
+    "f5": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Fast Clr G1",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "f5"
+                },
+                "codes": [
+                    {
+                        "transition": "ACTION",
+                        "mos_variable": "assign_transition",
+                        "transition_secondary": "5_FAST_CLR G1",
+                        "use_tran": false
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base",
+                "function": "assign_transition"
+            }
+        }
+    }
+}

@@ -1,7 +1,7 @@
 #//*** Check Box
 #https://www.pythontutorial.net/tkinter/tkinter-checkbox/
 #import keyboard #pip install keyboard
-import win32gui, os, sys,io
+import win32gui, os, sys,io, json
 #//*** Options are 0 or 2
 #sys.coinit_flags = 2
 
@@ -57,15 +57,23 @@ app = application.Application(backend="uia")
 
 all_cols = ['icon','float','lock','page','slug','segment','brio5','brio6','brio7','brio8','anchor','cam','dur','stage','gfx','changes']
 cols = ['page','slug','segment','anchor','cam','stage','gfx','changes']
-base_vo = "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3 VO - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Video Only</mosAbstract><objSlug>v3 VO - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Video Only</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5bc956d2910de</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33135</shotID><dbAppVersion><major>18</major><minor>4</minor><revision>11</revision><build>6170</build></dbAppVersion><dbTemplate><templateNumber>1101</templateNumber><shotName>v3 VO</shotName><imageURL>/icons/KGO/v2 Server/v2 VO.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37741</id></mleList><afvLevel>-3</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>35975</id><name>BRIO STUV##ME##0##BUS##program</name><type>DEVICE</type></audio><customLevel>50</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled></dbTemplate><icon>/icons/KGO/v2 Server/v2 VO.png</icon></mosPayload></mosExternalMetadata></mos>"
+master_hotkey_filename = "master_hotkeys.json"
 connected = False
 quit=False
-transitions = load_transitions()
+transitions,transition_actions = load_transitions()
 mos_variables = load_mos_object_variables()
 alt_modes = load_alt_modes()
 show_modes = load_show_modes()
 hotkey_actions = load_hotkey_actions()
 kl = load_keyboard_key_list()
+enter_script_key = 'f7'
+master_rules = load_master_rules(master_hotkey_filename)
+colors = {
+	"bg_error" : "#f99290",
+	"bg_normal" : 'SystemButtonFace'
+}
+checkbox_names = ['ctrl','win','shift','alt']
+default_filter_key_index = 1
 
 print(kl)
 
@@ -81,6 +89,15 @@ class widget_builder():
 		self.widget_holder = {}
 		self.mos_variables = mos_variables
 		self.transitions = transitions
+		self.unique_id = 0
+
+	def get_id(self):
+		out = self.unique_id
+		self.unique_id = self.unique_id + 1
+		return out
+
+	def reset_widgets(self):
+		self.widget_holder = {}
 
 	def add_widgets(self,input_obj,win=win):
 
@@ -100,7 +117,7 @@ class widget_builder():
 		column = -1
 		columnspan = -1
 		obj_type = None
-		hook = None
+		#hook = None
 		action = None
 		target = None
 		text = ""
@@ -129,8 +146,8 @@ class widget_builder():
 			if verify_key == "type":
 				obj_type = input_obj[verify_key]
 
-			if verify_key == "hook":
-				hook = input_obj["hook"]
+			#if verify_key == "hook":
+			#	hook = input_obj["hook"]
 
 			if verify_key == "action":
 				action = input_obj["action"]
@@ -165,16 +182,9 @@ class widget_builder():
 			print(input_obj)
 			return
 
-		#//*** Build Grid Object to handle row, column, columspan values
-		grid = { "sticky" : "W"}
 
-		if row != -1:
-			grid["row"] = row
-
-		if column != -1:
-			grid["column"] = column
-		else:
-			grid["columnspan"] = columnspan
+		#//*** Get a unique ID for the hook
+		hook = self.get_id()
 
 		#//*** Process the object types: Labels, buttons, etc
 		if "type" in input_obj.keys():
@@ -188,18 +198,12 @@ class widget_builder():
 
 				options['name'] = name
 
+				#//*** Build Label
+				self.widget_holder[hook] = Label(win,options)
 
-				if hook == None:
-					#//*** No Hook, just draw the label
-					#Label(win,options).grid(grid)
-					Label(win,options).pack(side=side, padx=padx)
-				else:
-					#//*** Build Label
-					self.widget_holder[hook] = Label(win,options)
-
-					#//*** Draw Label
-					#self.widget_holder[hook].grid(grid)
-					self.widget_holder[hook].pack(side=side, padx=padx)
+				#//*** Draw Label
+				#self.widget_holder[hook].grid(grid)
+				self.widget_holder[hook].pack(side=side, padx=padx)
 
 			if input_obj["type"] == "button":
 
@@ -211,37 +215,33 @@ class widget_builder():
 					#//***destroy parent Frame
 					options['command'] =win.destroy
 
-				if hook == None:
-					ttk.Button(win, text=options["text"], width=width, command=options['command']).pack(side=side)
-				else:
+				
+				if action == "delete_code":
+					#//*** Build Hooked Button
+					self.widget_holder[hook] = ttk.Button(win, 
+						text=options["text"], 
+						width=width, 
+						command=partial(options['command']) ,
+						)
 					
-					if action == "delete_code":
-						#//*** Build Hooked Button
-						self.widget_holder[hook] = ttk.Button(win, 
-							text=options["text"], 
-							width=width, 
-							command=partial(options['command']) ,
-							)
+				else:
+					#//*** Build Hooked Button
+					self.widget_holder[hook] = ttk.Button(win, 
+						text=options["text"], 
+						width=width, 
+						command=partial(options['command'],win) ,
+						)
 						
-					else:
-						#//*** Build Hooked Button
-						self.widget_holder[hook] = ttk.Button(win, 
-							text=options["text"], 
-							width=width, 
-							command=partial(options['command'],win) ,
-							)
 						
-
-						
-					#//*** Draw Hooked Button
-					self.widget_holder[hook].pack(side=side)
+				#//*** Draw Hooked Button
+				self.widget_holder[hook].pack(side=side)
 
 			if input_obj["type"] == "rule_checkbox":
 
 				#//*** Build a Unique Variable name based Hook, row and Col values
-				hook = f"{row}_{hook}_{column}"
+				#hook = f"{row}_{hook}_{column}"
 
-				var = BooleanVar(win, name=hook,value=check_value)
+				var = BooleanVar(win, name=str(hook),value=check_value)
 
 				#print("Check Hook:",hook)
 				
@@ -252,34 +252,22 @@ class widget_builder():
 				#self.widget_holder[hook].grid(grid)
 				self.widget_holder[hook].pack(side=side)
 
-			#if input_obj["type"] == "label":
-
-				#//*** Build a Unique Variable name based Hook, row and Col values
-			#	Label(win, text=options["text"], name=name, padx=padx).grid(grid)
 				
 			if input_obj["type"] == "textbox":
-				hook = f"{row}_{hook}_{column}"
-
-				#var = BooleanVar(win, name=name,value=check_value)
-
-				#//*** Build a Unique Variable name based Hook, row and Col values
-				#Entry(win, width=width).grid(grid)
 				
-				entry = Entry(win, width=width, name=name)
-				entry.insert(0,text)
-				entry.pack(side=side)
+				self.widget_holder[hook] = Entry(win, width=width, name=name)
+				self.widget_holder[hook].insert(0,text)
+				self.widget_holder[hook].pack(side=side)
 				
 			if input_obj["type"] == "mos_variable_listbox":
-
-				hook = f"{row}_{hook}_{column}"
 
 				print("mos_variable_listbox")
 				
 				height = 10
-				list_items = Variable(value=list(self.mos_variables.keys()), name=hook)
+				list_items = Variable(value=list(self.mos_variables.keys()), name=str(hook))
 				self.widget_holder[hook] = ttk.Combobox(
 					    win,
-					    #state="readonly",
+					    state="readonly",
 					    values = list(self.mos_variables.keys()),name="mos_variable"
 					)
 				self.widget_holder[hook].pack(side=side)
@@ -287,15 +275,14 @@ class widget_builder():
 				self.widget_holder[hook].mode = "coded"
 
 			elif input_obj["type"] == "mos_transition_listbox":
-				hook = f"{row}_{hook}_{column}"
 				
-				tran_choices = ["stored_transition","selected_transition","ACTION"] +list( self.transitions.keys())
+				tran_choices = ["selected_transition","stored_transition","ACTION"] +list( self.transitions.keys())
 
 				list_items = Variable(value=tran_choices, name="transition")
 				combo_holder = ttk.Combobox(
 					    win,
 					    #state="readonly",
-					    values = tran_choices,name="transition",width=width
+					    values = tran_choices,name="transition",width=width, state='readonly'
 					)
 
 				self.widget_holder[hook] = combo_holder
@@ -303,9 +290,24 @@ class widget_builder():
 				self.widget_holder[hook].pack(side=side)
 				self.widget_holder[hook].bind("<<ComboboxSelected>>", self.select_transition_combo)
 				self.widget_holder[hook].mode = "coded"
+
+			elif input_obj["type"] == "mos_transition_secondary_listbox":
+				
+				tran_choices = list( self.transitions.keys() )
+
+				list_items = Variable(value=tran_choices, name=str(hook))
+				combo_holder = ttk.Combobox(
+					    win,
+					    #state="readonly",
+					    values = tran_choices,name="transition_secondary",width=width, state='readonly'
+					)
+
+				self.widget_holder[hook] = combo_holder
+				self.widget_holder[hook].current(0)
+				self.widget_holder[hook].pack(side=side)
+
 			
 			elif input_obj["type"] == "key_filter_listbox":
-				hook = f"{row}_{hook}_{column}"
 				
 				#tran_choices = ["stored_transition","selected_transition","ACTION"] +list( self.transitions.keys())
 
@@ -314,7 +316,7 @@ class widget_builder():
 				#list_items = Variable(value=tran_choices, name="transition")
 				combo_holder = ttk.Combobox(
 					    win,
-					    #state="readonly",
+					    state="readonly",
 					    values = choices,name="key_filter",width=width
 					)
 
@@ -322,39 +324,40 @@ class widget_builder():
 				
 				self.widget_holder[hook].pack(side=side)
 				self.widget_holder[hook].bind("<<ComboboxSelected>>", self.select_key_filter)
-				self.widget_holder[hook].current(1)
+				self.widget_holder[hook].current(default_filter_key_index)
 				self.widget_holder[hook].mode = self.widget_holder[hook].get()
 
 			
 			elif input_obj["type"] == "show_mode_listbox":
-				hook = f"{row}_{hook}_{column}"
 				
 								
-				list_items = Variable(value=['desk_studio'], name=hook,)
+				list_items = Variable(value=['desk_studio'], name=str(hook),)
 				
 				self.widget_holder[hook] = ttk.Combobox(
 					    win,
 					    #state="readonly",
 					    values = ['desk_studio'],
 					    name="show_mode_listbox",
-					    width=width
+					    width=width,
+					    state='readonly'
 					)
 				self.widget_holder[hook].current(0)
 				self.widget_holder[hook].pack(side=side)
 
 			elif input_obj["type"] == "alt_mode_listbox":
-				hook = f"{row}_{hook}_{column}_alt_mode"
+				#hook = f"{row}_{hook}_{column}_alt_mode"
 				#list_items = Variable(value= ['base','alt1'], name="alt_mode_variable")
 				self.widget_holder[hook] = ttk.Combobox(
 					    win,
-					    #state="readonly",
+					    state="readonly",
 					    values = alt_modes,
 					    name="alt_mode_listbox",
 					    width=width
 					)
 				self.widget_holder[hook].current(0)
 				self.widget_holder[hook].pack(side=side)
-
+				self.widget_holder[hook].bind("<<ComboboxSelected>>", self.select_alt_mode_filtering)
+				self.widget_holder[hook].mode = self.widget_holder[hook].get()
 
 		else:
 			#//*** No type in keys, kinda can't do anything
@@ -363,23 +366,17 @@ class widget_builder():
 		def updateField(self,txt):
 			lb.delete("1.0", "end") 
 			lb.insert(tk.END,txt) 
-			print(lb.get("1.0", "end"))
+			#print(lb.get("1.0", "end"))
 
 	def add_code(self,win):
 
 		codes = Frame(win)
-		print("Add Code")
-		print((win.params))
-		win.params["elems"] += 1
-		row = win.params["elems"] +1
-		col = 6
-
+		#print("Add Code")
+		#print((win.params))
+		
 
 		self.add_widgets({
 		"type" : "button",
-		"row" : row,
-		"column" : col,
-		"hook" : "delete_code",
 		"width" : 5,
 		"action" : "delete_code",
 		"text" : "X",
@@ -387,46 +384,31 @@ class widget_builder():
 		},codes)
 
 
-		col += 1
 		self.add_widgets({
 		"type" : "mos_transition_listbox",
-		"row" : row,
-		"column" : col,
-		"hook" : f"tran_var__{col}",
 		"width" : 20,
 		"side" : LEFT,
 		},codes)
 
 
-		col += 1
 		self.add_widgets({
 		"type" : "mos_variable_listbox",
-		"row" : row,
-		#"column" : col,
-		"hook" : f"mos_var__{col}",
 		"width" : 20,
 		"side" : LEFT,
 		},codes)
 
 
-		col += 1
 		wb.add_widgets({
 			"type" : "label",
 			"text" : None,
 			"name" : "name_shoticon",
-			"hook" : f"shoticon__{col}",
-			"row" : row,
-			"column" : col,
 			"padx" : 20
 		},codes)
-		col += 1
+
 		wb.add_widgets({
 			"type" : "label",
 			"text" : None,
 			"name" : "name_shotname",
-			"hook" : f"shotname__{col}",
-			"row" : row,
-			"column" : col,
 			"padx" : 20
 		},codes)
 
@@ -442,6 +424,8 @@ class widget_builder():
 		#//*** Get Combobox element based on the event
 		tran_combo = event.widget
 
+		parent = tran_combo.master
+
 		#//*** If Coded, check for ACTION elements
 		if tran_combo.mode == "coded":
 			if tran_combo.get() == "ACTION":
@@ -449,8 +433,9 @@ class widget_builder():
 				#//*** Update the mos_variable list with actions
 				tran_combo.mode = "action"
 
+				
 				#//*** Loop through the parent element to find mos_variable
-				for elem in tran_combo.master.winfo_children():
+				for elem in parent.winfo_children():
 
 					if elem.winfo_name() == "mos_variable":
 						elem['values'] = hotkey_actions
@@ -459,6 +444,51 @@ class widget_builder():
 					if elem.winfo_name() == "name_shotname":
 						elem.configure(text="")
 						elem.mode = "action"
+						
+
+					#//*** Remove Any Image associated with the shot
+					if elem.winfo_name() == "name_shoticon":
+						elem.image=None
+
+					if elem.winfo_name() == "transition_secondary":
+						elem.destroy()
+
+
+				#//*** Destroy Every other rule element.
+				#//*** There can only be a single action per Macro
+				for rule_elem in parent.master.winfo_children():
+					#//*** Only Process Frames
+					if rule_elem.winfo_class() == "Frame":
+
+						not_found = True
+					
+					
+						for elem in rule_elem.winfo_children():
+							#//*** Combo Found, Keep this element
+							if elem == tran_combo:
+								not_found = False
+								break
+
+						if not_found:
+							rule_elem.destroy()
+
+			else:
+				#//*** Coded Selected Remove and Action Comboboxes
+
+				#//*** Destroy any other Action Element in Rule
+				#//*** Destroy Every other rule element.
+				#//*** There can only be a single action per Macro
+				for rule_elem in parent.master.winfo_children():
+					#//*** Only Process Frames
+					if rule_elem.winfo_class() == "Frame":
+						for elem in rule_elem.winfo_children():
+							if elem.winfo_name() == "transition":
+								if elem.mode == "action":
+									rule_elem.destroy()
+								break
+
+
+
 
 
 		#//*** If action element, check for non-action element						
@@ -475,19 +505,17 @@ class widget_builder():
 					if elem.winfo_name() == "mos_variable":
 						elem['values'] = list(mos_variables.keys())
 						elem.set("")
-						
 
-		
 
 	def select_mos_variable(self,event):
-		print("BANG!")
+
 		mos_combo = event.widget
 
 		parent = event.widget.master
 
 		rule_row = parent.master
 
-
+		parent.configure(bg='SystemButtonFace')
 
 		tran_combo = None
 		shotname_label = None
@@ -501,16 +529,13 @@ class widget_builder():
 			if elem.winfo_name() == "name_shoticon":
 				name_shoticon = elem
 
-		print(tran_combo)
-		print(shotname_label)
-		print(mos_combo.mode)
+		#print(tran_combo)
+		#print(shotname_label)
+		#print(mos_combo.mode)
 
-		print(mos_combo.get())
+		#print(mos_combo.get())
 
 		selection = mos_combo.get()
-
-
-		print(dir(Image))
 
 		#//*** Only update the interface if a valid mos_variable is selected
 		if selection in mos_variables.keys():
@@ -529,7 +554,21 @@ class widget_builder():
 
 				name_shoticon.update()
 				return
-		else:
+
+		#//*** Check if a Transition Action is selected
+		elif selection in transition_actions:
+
+			for key,value in self.widget_holder.items():
+				if value == mos_combo:
+					print("Key:",key)
+					break
+			
+			self.add_widgets({
+			"type" : "mos_transition_secondary_listbox",
+			"width" : 20,
+			"side" : LEFT,
+			},parent)
+				
 			return
 		
 
@@ -561,7 +600,20 @@ class widget_builder():
 			
 
 
+	def select_alt_mode_filtering(self,event):
+		print("Handle Alt Mode filtering")
+		combo = event.widget
 
+		#//*** Check for newly selected alt mode selection
+
+		if combo.mode != combo.get():
+			print("New Mode Selected")
+
+			combo.mode = combo.get()
+
+			parent = combo.master.master
+
+			build_base_rules_from_selected_keys()
 
 
 
@@ -585,8 +637,6 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"text" : "Name",
 		"name" : "name_label",
-		"row" : row,
-		"column" : col,
 		"padx" : 20
 	},rule_row)
 	col+=1
@@ -595,8 +645,6 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"name" : "ctrl_label",
 		"text" : "CTRL",
-		"row" : row,
-		"column" : col,
 		"padx" : 10
 	},rule_row)
 	col+=1
@@ -605,8 +653,6 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"name" : "win_label",
 		"text" : "WIN",
-		"row" : row,
-		"column" : col,
 		"padx" : 0
 	},rule_row)
 	col+=1
@@ -615,8 +661,6 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"name" : "shift_label",
 		"text" : "SHIFT",
-		"row" : row,
-		"column" : col,
 		"padx" : 5
 	},rule_row)
 	col+=1
@@ -625,8 +669,6 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"name" : "alt_label",
 		"text" : "ALT",
-		"row" : row,
-		"column" : col,
 		"padx" : 0
 	},rule_row)
 	col+=1
@@ -635,8 +677,6 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"name" : "first_row",
 		"text" : "Key",
-		"row" : row,
-		"column" : col,
 		"padx" : 0
 	},rule_row)
 	col+=1
@@ -645,8 +685,6 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"name" : "mode_label",
 		"text" : "Mode",
-		"row" : row,
-		"column" : col,
 		"padx" : 5
 	},rule_row)
 	col+=1
@@ -654,94 +692,56 @@ def build_first_rule_row(row=0):
 		"type" : "label",
 		"name" : "code_label",
 		"text" : "Codes",
-		"row" : row,
-		"column" : col,
 		"padx" : 50
 	},rule_row)
 	return rule_row
 
 def build_rule_row(row,options={}):
 
-	col = 0
 
-	rule_row = Frame(win, name=f"rule_row_{row}")
-	widget_row = widget_builder()
+	rule_row = Frame(options["win"], name=f"rule_row_{row}")
 	
-	rule_row.params = {
-		"elems" : 0
-	}
 	
-	widget_row.add_widgets({
+
+	wb.add_widgets({
 		"type" : "textbox",
-		"row" : row,
-		"column" : col,
-		#"hook" : "name",
 		"name" : "name",
 		"width" : 15,
 	},rule_row)
 
 	for hook in ["ctrl","win","shift","alt"]:
-		col = col + 1
+		
 		wb.add_widgets({
 			"type" : "rule_checkbox",
-			"row" : row,
-			"column" : col,
-			"hook" : hook,
 			"name" : hook,
 			"width" : 1,
 		},rule_row)
 
-	col = col + 1
+	
 	text = ""
 	if 'key_assign' in options.keys():
 		text = options['key_assign']
-	print(options,text)
+
+	#print(options,text)
+
 	wb.add_widgets({
-		"type" : "textbox",
-		"row" : row,
-		"column" : col,
-		"hook" : "key",
+		"type" : "label",
 		"name" : "key",
 		"text" : text,
 		"width" : 5,
 	},rule_row)
 
-	print(rule_row.winfo_children())
+	#print(rule_row.winfo_children())
 
-	"""
-	col += 1
-	wb.add_widgets({
-	"type" : "show_mode_listbox",
-	#"row" : row,
-	#"column" : col,
-	"hook" : f"mode_var__{col}",
-	"width" : 13,
-	"side" : LEFT,
-	},rule_row)
-	"""
-
-	col += 1
-	wb.add_widgets({
-	"type" : "alt_mode_listbox",
-	#"row" : row,
-	#"column" : col,
-	"hook" : f"alt_mode_var__{col}",
-	"width" : 5,
-	"side" : LEFT,
-	},rule_row)
-
-
-	col = col + 1
+	
 	wb.add_widgets({
 		"type" : "button",
-		"row" : row,
-		"column" : col,
-		"hook" : "add_rule",
 		"width" : 5,
 		"action" : "add_code",
 		"text" : "+",
 		"padx" : 10,
 	},rule_row)
+
 	return rule_row
 
 def build_first_control_row(row=0):
@@ -751,20 +751,20 @@ def build_first_control_row(row=0):
 	col = 0
 	wb.add_widgets({
 	"type" : "show_mode_listbox",
-	#"row" : row,
-	#"column" : col,
-	"hook" : f"mode_var__{col}",
 	"width" : 13,
 	"side" : LEFT,
 	},rule_row)
 
 	col += 1
+	wb.add_widgets({
+	"type" : "alt_mode_listbox",
+	"width" : 5,
+	"side" : LEFT,
+	},rule_row)
 
+	col += 1
 	wb.add_widgets({
 	"type" : "key_filter_listbox",
-	#"row" : row,
-	#"column" : col,
-	"hook" : f"key_filter_var__{col}",
 	"width" : 5,
 	"side" : LEFT,
 	},rule_row)
@@ -781,114 +781,477 @@ def build_base_rules_from_selected_keys(row=2):
 				print(elem.winfo_name())
 				if elem.winfo_name() == "key_filter":
 					key_filter_elem = elem
-					break
+
+				if elem.winfo_name() == "alt_mode_listbox":
+					alt_mode_elem = elem
+
+				if elem.winfo_name() == "show_mode_listbox":
+					show_mode_elem = elem
 
 
-			break
+				#if key_filter_elem != None and alt_mode_elem != None:
+				#	break
 
 	if key_filter_elem == None:
 		print("Can't find the key filter element")
 		return
 
+	wb.reset_widgets()
+
 	keys_to_display = kl[key_filter_elem.get()]
-	print(keys_to_display)
+	
+	#print(keys_to_display)
 
-	all_rule_frame = Frame(win,name="all_rules_frame")
+	alt_mode = alt_mode_elem.get()
+	show_mode = show_mode_elem.get()
 
+	
+
+	all_rule_canvas = Canvas(win,
+		name="all_rules_frame",
+		bg='#4A7A8C',
+    	width=500,
+    	height=100,
+    	scrollregion=(0,0,1000,1000)
+
+
+    	)
+
+	all_rule_frame = Frame(all_rule_canvas)
+
+	row=1
 	for key in keys_to_display:
 		row+=1
 		options = {
-			'key_assign' : key
+			'key_assign' : key,
+			'show_mode' : show_mode,
+			'alt_mode' : alt_mode,
+			'win' : all_rule_frame
 		}
 
-		print("BUILDING RULE")
+		#print("BUILDING RULE")
 
 		rule_row = build_rule_row(row,options)
 		rule_row.grid(column=0, row=row, sticky="w")
+
+		print(key, key in master_rules.keys(),show_mode,alt_mode)
+
+		if key in master_rules.keys():
+
+			print("Key Found")
+
+
+			#//*** Determine if Rule exists for current show mode 
+			if show_mode in master_rules[key].keys():
+				print("Show Mode Found")
+
+				if alt_mode in master_rules[key][show_mode].keys():
+
+					current_rule = master_rules[key][show_mode][alt_mode]
+
+					print(current_rule)
+
+					for elem in rule_row.winfo_children():
+
+						if elem.winfo_name() == "name":
+							elem.delete(0,END)
+							elem.insert(0,current_rule['keystroke']['name'])
+						elif elem.winfo_name() == "ctrl":
+							
+							#//*** Click on Checkbox if True							
+							if current_rule['keystroke']['ctrl']:
+								elem.invoke()
+
+						elif elem.winfo_name() == "win":
+
+							#//*** Click on Checkbox if True							
+							if current_rule['keystroke']['win']:
+								elem.invoke()
+
+						elif elem.winfo_name() == "shift":
+
+							#//*** Click on Checkbox if True							
+							if current_rule['keystroke']['shift']:
+								elem.invoke()
+
+						elif elem.winfo_name() == "alt":
+
+							#//*** Click on Checkbox if True							
+							if current_rule['keystroke']['alt']:
+								elem.invoke()
 		
-		print(row)
+						elif "button" in elem.winfo_name():
+							
+							for code in current_rule['codes']:
+								#//*** Click Add Button for Code Element
+								elem.invoke()
+
+								#//*** Get Frame containing Last Child
+								code_element_frame = rule_row.winfo_children()[-1]
+								
+								
+								#//*** Rule is the Last Child Added
+								for rule_elem in code_element_frame.winfo_children():
+									print(rule_elem.winfo_name())
+									if rule_elem.winfo_name() == "transition":
+										rule_elem.set(code['transition'])
+
+									elif rule_elem.winfo_name() == "mos_variable":
+										rule_elem.set(code['mos_variable'])
+										#//*** Trigger Event Handling to Draw Images
+										rule_elem.event_generate("<<ComboboxSelected>>")
+
+								#//*** Rule is the Last Child Added
+								for rule_elem in code_element_frame.winfo_children():
+									print("Second Pass:", rule_elem.winfo_name())
+								
+									if rule_elem.winfo_name() == "transition_secondary":
+										rule_elem.set(code['transition_secondary'])
+							pass
+		#print(row)
+
+	
+	yscrollbar=Scrollbar(all_rule_canvas,orient=VERTICAL,command=all_rule_canvas.yview)
+	#yscrollbar.pack(side=RIGHT,expand=True,fill=BOTH)
+	
+	all_rule_canvas.pack(side=TOP)
+	all_rule_frame.pack(side=TOP,expand=True,fill=BOTH)
+	
+
+	#xscrollbar=Scrollbar(all_rule_canvas,orient=HORIZONTAL,command=all_rule_canvas.xview)
+	#xscrollbar.pack(side=BOTTOM,expand=True,fill=BOTH)
+	
+
+	all_rule_canvas.config(width=10,height=10)
+	all_rule_canvas.config(scrollregion=all_rule_canvas.bbox("all"))
+	#all_rule_canvas.config(scrollregion=all_rule_canvas.bbox("all"))
+	
+	#all_rule_canvas['yscrollcommand'] = yscrollbar.set
+	#all_rule_canvas.pack(side=TOP,expand=True, fill=BOTH)
+	
 
 
+	#yscrollbar.config(command=all_rule_canvas.yview)
+	all_rule_canvas.config( 
+		yscrollcommand=yscrollbar.set,
+		#xscrollcommand=xscrollbar.set,
+		)
+	#all_rule_frame.config(yscrollcommand = myscrollbar.set)
 	row+=1
+	row=5
 	col=0
 
 	saveButton = ttk.Button(win, 
 		text="Save", 
 		width=25, 
+		name="save_button",
 		command=partial(save_macros,win) ,
 		)
 
-	saveButton.grid(column=col,row=row,stick="w")
+	#saveButton.grid(column=col,row=row,stick="w")
+	saveButton.pack(side=LEFT)
+	quitButton = ttk.Button(win, 
+		text="Cancel", 
+		width=25,
+		name="quit_button", 
+		command=partial(quit_macros,win) ,
+		)
+	col=6
+	#quitButton.grid(column=col,row=row,stick="e")
+	quitButton.pack(side=RIGHT)
 
 	return
 
+def validate_rule(rule,rule_frame):
 
+	valid = True
+	error = {
+		"name" : False,
+		"modifier" : True,
+		"mos_variable" : False,
+	}
+
+	#//*** Test for Rule Name
+	rule_name = rule['keystroke']['name']
+
+	#//*** Remove all Spaces
+	rule_name = rule_name.replace(" ","")
+
+	if len(rule_name) == 0:
+		#//*** Needs Rule Name
+		valid = False
+		error["name"] = True
+
+	#//*** Test if Modifier is selected
+	for x in ['ctrl','win','shift','alt']:
+		#//*** If Any modifier is True, then this section passes
+		if rule['keystroke'][x]:
+			error["modifier"] = False
+			break
+
+	if error["modifier"]:
+		valid = False
+
+
+	#//*** Draw background Color for All Elements
+
+	#//*** Loop through each element
+	for elem in rule_frame.winfo_children():
+		
+		if elem.winfo_name() == 'name':
+
+			#//*** Draw Error Background
+			if error["name"]:
+				elem.configure(bg=colors["bg_error"])
+
+			#//*** Draw Normal Background
+			else:
+				elem.configure(bg=colors["bg_normal"])
+
+		#//*** Check if Checkbox Name
+		if elem.winfo_name() in checkbox_names:
+			if error["modifier"]:
+				elem.configure(bg=colors["bg_error"])
+
+			#//*** Draw Normal Background
+			else:
+				elem.configure(bg=colors["bg_normal"])
+
+
+		if "frame" in elem.winfo_name():
+
+			#//**** Check Each Codes Element in Frame
+			frame = elem
+
+			for rule_elem in frame.winfo_children():
+
+				if 'mos_variable' in rule_elem.winfo_name():
+
+					#//*** Check for Valid Value
+					#//*** Throw Error if Empty
+					if len(rule_elem.get()) == 0:
+						frame.configure(bg=colors["bg_error"])
+						valid = False
+
+					#//*** Draw Normal Background
+					else:
+						frame.configure(bg=colors["bg_normal"])
+
+
+
+
+
+
+	return valid
+
+def quit_macros(win):
+	win.destroy()
 
 def save_macros(win):
-	win.destroy()
-	sys.exit()
-	rule = {}
+	rules = []
+	
+
+	error_found = False
+	show_mode = ""
+	alt_mode = ""
 	for rule_frame in win.winfo_children():
+		
 		first_row = False
-		#print("Frame Level")
-		#print(rule_frame)
-		#print(rule_frame.winfo_children())
-		print("Row Level")
-		for elem in rule_frame.winfo_children():
-			#print(elem)
-			print("Name: ",elem.winfo_name())
-			if  "_label" in elem.winfo_name():
-				first_row = True
-				break
-			#print(dir(elem))
-			#print(elem.widgetName, elem.widgetName == 'checkbutton',elem.widgetName == 'ttk::button', elem.widgetName =='entry')
-			#if elem.widgetName == 'entry':
-			#	print(elem.winfo_name())
-			#	print("Entry:", elem.get())
 
+		print(rule_frame.winfo_name())
 
-			if elem.winfo_name() == "name":
-				rule['name'] = elem.get()
-
-			elif elem.winfo_name() == "ctrl":
-				rule['ctrl'] = elem.variable.get() 
+		if rule_frame.winfo_name() == "control_row":
+			for control_elem in rule_frame.winfo_children():
 				
-			elif elem.winfo_name() == "win":
-				rule['win'] = elem.variable.get() 
+				if control_elem.winfo_name() == "show_mode_listbox":
+					show_mode = control_elem.get()
+					#rule['show_mode'] = elem.get()
+				elif control_elem.winfo_name() == "alt_mode_listbox":
+					#rule['alt_mode'] = elem.get()
+					alt_mode = control_elem.get()
+		
 
-			elif elem.winfo_name() == "shift":
-				rule['shift'] = elem.variable.get() 
+		if rule_frame.winfo_name() == "all_rules_frame":
 
-			elif elem.winfo_name() == "alt":
-				rule['alt'] = elem.variable.get() 
 
-			elif elem.winfo_name() == "key":
-				rule['key'] = elem.get() 
+			#//*** Drill down to rule Lists
+			for rule_row in list(rule_frame.winfo_children())[0].winfo_children():
+
+				print(rule_row.winfo_name())
 				
-		if first_row:
-			continue
+				#if  "_label" in rule_row.winfo_name():
+				#	first_row = True
+				#	continue
+
+				if "rule_row" in rule_row.winfo_name():
+					rule = {
+
+						"keystroke" : {},
+						"codes" : [],
+						'show_mode' :show_mode,
+						"alt_mode" : alt_mode
+
+					}
+
+					for elem in rule_row.winfo_children():
+
+						if elem.winfo_name() == "name":
+							rule['keystroke']['name'] = elem.get()
+
+						elif elem.winfo_name() == "ctrl":
+							rule['keystroke']['ctrl'] = elem.variable.get() 
+							
+						elif elem.winfo_name() == "win":
+							rule['keystroke']['win'] = elem.variable.get() 
+
+						elif elem.winfo_name() == "shift":
+							rule['keystroke']['shift'] = elem.variable.get() 
+
+						elif elem.winfo_name() == "alt":
+							rule['keystroke']['alt'] = elem.variable.get() 
+
+						elif elem.winfo_name() == "key":
+							rule['keystroke']['key'] = elem.cget("text")
+
+						elif "frame" in elem.winfo_name():
+							#//*** Handle Rule Elements
+
+
+							#//*** Call elem frame for clarity
+							frame = elem
+
+							#//*** New Dictionary to handle the components. Maybe this should be a class?
+							rule_component = {}
+
+							#//*** Cycle through Rule elements and build rule_component dictionary
+							for rule_elem in frame.winfo_children():
+
+								#//*** Hard code Rule Values. Update this section when adding new Rules.
+								print("Rule_Elem Name: ", rule_elem.winfo_name() )
+								if rule_elem.winfo_name() == "transition":
+									rule_component["transition"] = rule_elem.get()
+								elif rule_elem.winfo_name() == "mos_variable":
+									rule_component["mos_variable"] = rule_elem.get()
+								elif rule_elem.winfo_name() == "transition_secondary":
+									rule_component["transition_secondary"] = rule_elem.get()
+
+							if rule_component["transition"] == "selected_transition":
+								rule_component["use_tran"] = True
+							else:
+								rule_component["use_tran"] = False
+
+
+							if rule_component["mos_variable"] in mos_variables.keys():
+								
+								rule_component["mos"] = mos_variables[ rule_component["mos_variable"] ]["mos"]
+
+								#//*** If value is hard coded transition, assign transition value
+								if rule_component["transition"] in list(transitions.keys()):
+									rule['transition'] = rule_component["transition"]
+
+							else:
+								#//*** Is an Item Selected?
+								if len(rule_component["mos_variable"]) == 0:
+									#//*** MOS Variable is empty, skip this element
+									continue
+
+								if rule_component["transition"] == "ACTION":
+									print("This is an Action ELement")
+									print(rule_component["transition"],rule_component["mos_variable"])
+									rule['function'] = rule_component["mos_variable"]
+
+									if rule_component["mos_variable"] == "enter_exit_script":
+										rule['key'] = enter_script_key
+
+									#//*** Check if assigning a transition
+									if rule_component["transition_secondary"] in rule_component.keys():
+										rule["transition_secondary"] = rule_component["transition_secondary"]
+
+								print(rule)
+
+							
+
+							
+							#//*** Rule component to rule elements
+							rule["codes"].append(rule_component)
+					
+
+
+							if len(rule["codes"]) == 0:
+								#//*** No Codes assigned, skip rule, treat it as empty.
+								continue
+								
+							valid_rule = validate_rule(rule,rule_frame)
+
+							if not valid_rule:
+								error_found = True
+
+
+							rules.append(rule)
+
+		#if first_row:
+		#	continue
+	#for rule in rules:
+	#	print(rule)
+	
+	#//*** Add Rules to Master_Rules
+	
+	if not error_found:
+		#//*** No Errors, Integrate into Master Rules
+
+		for rule in rules:
+
+			print(rule)
+
+			keyboard_key = rule['keystroke']['key']
+			show_mode = rule["show_mode"]
+			alt_mode = rule["alt_mode"]
+
+			#//*** Check if keyabord key exists in master_rules
+
+			#//*** Build New Key. Store Rule under Show mode and Alt mode dictionaries
+			if keyboard_key not in master_rules.keys():
+				master_rules[keyboard_key] = { }
 			
-		print(rule)
+			#//*** Check if Show Mode Entry exists
+			if show_mode not in master_rules[keyboard_key].keys():
+				master_rules[keyboard_key][ show_mode ] = { }
+				 
+			#//*** Assign rule to alt mode value, overwriting existing
+			master_rules[keyboard_key][ show_mode ][ alt_mode ] = rule
 
-	win.destroy()
 
+		#//*** Save Master Rules to Disk
+
+		with open(master_hotkey_filename, "w") as outfile:
+			outfile.write(json.dumps(master_rules, indent=4))
+
+		
 
 win.resizable(1,1)
 
 
 row = 0
-build_first_control_row(row).grid(column=0, row=row, sticky="w")
+#//*** Build First Row Containing basic Controls
+#build_first_control_row(row).grid(column=0, row=row, sticky="w")
+
+build_first_control_row(row).pack(side=TOP, anchor=W)
 row+=1
 
-build_first_rule_row(row).grid(column=0, row=row, sticky="w")
+
+#//*** Build the First Rule Rule which Contain Labels
+#build_first_rule_row(row).grid(column=0, row=row, sticky="w")
+build_first_rule_row(row).pack(side=TOP,anchor=W)
 row +=1
 
-
-
+#//*** Draw Rules based on Default Filters
 build_base_rules_from_selected_keys(2)
 
 
 
 win.overrideredirect(False)
 win.attributes('-topmost',True)
+
+#ADDING A SCROLLBAR
+
 win.mainloop()

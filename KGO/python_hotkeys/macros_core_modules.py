@@ -1,6 +1,9 @@
 import win32gui,keyboard,time
 from pywinauto import application
 
+import socket,threading,sys
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
 def determine_hotkey_action(hotkey,input_app):
 	global app 
 	app = input_app
@@ -211,6 +214,21 @@ def do_hotkey_macro(hotkey):
 
 		release_modifier_keys(hotkey)
 
+def capture_keystroke_threaded():
+    global keystroke
+    lock = threading.Lock()
+    while True:
+        with lock:
+            time.sleep(.1)
+            keystroke = keyboard.read_key()
+            #print("Keystroke:",keystroke)
+            if keyboard.is_pressed(keystroke):
+
+                if keystroke == "esc":
+                    #keep_going = False
+                    print("Quitting")
+                    sys.exit()
+    
 
 
 
