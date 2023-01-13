@@ -9,7 +9,7 @@ from tkinter.filedialog import askopenfile
 from functools import partial
 import json,sys,os,gzip,tarfile,shutil,time
 
-debug_mode = True
+debug_mode = False
 
 # Create an instance of tkinter frame
 win = Tk()
@@ -278,6 +278,8 @@ class widget_builder():
 
 		finalTar = tarfile.open(destFilename,"w:gz")
 
+		base_dir = os.getcwd()
+
 		os.chdir(tempFolderName)
 
 		current_dir = os.getcwd()
@@ -308,10 +310,11 @@ class widget_builder():
 				self.draw_response("Delete Temp File:"+name)
 				print(name)
 
-		time.sleep(1)
-		print("Deletng Temp Folder")
+		
+		print("Deletng Temp Folder",tempFolderName)
 		self.draw_response("Deletng Temp Folder")
-		#shutil.rmtree(current_dir)
+		os.chdir(base_dir)
+		shutil.rmtree(tempFolderName)
 
 		self.draw_response("Merged file saved to:\n"+destFilename)
 
