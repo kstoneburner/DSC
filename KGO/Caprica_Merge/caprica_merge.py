@@ -9,7 +9,7 @@ from tkinter.filedialog import askopenfile
 from functools import partial
 import json,sys,os,gzip,tarfile,shutil,time
 
-debug_mode = False
+debug_mode = True
 
 # Create an instance of tkinter frame
 win = Tk()
@@ -179,10 +179,15 @@ class widget_builder():
 		print("Target:" ,self.merge_target_filename)
 
 
+		current_dir = os.getcwd()
+		working_dir = current_dir.replace("\\","/")
 
 		#### Build the Export Folder Path
 		if not os.path.exists(export_folder):
-			os.mkdir("." + export_folder)
+			os.mkdir("./" + export_folder)
+		
+		#print(f"{working_dir}/{tempFolderName}")
+		#export_folder = f"{working_dir}/{tempFolderName}"
 
 		#### Build the Temporary Folder Path
 		if not os.path.exists(tempFolderName):
@@ -253,19 +258,43 @@ class widget_builder():
 							f.write(sourceCC.read())
 							f.close()
 
-		destFilename = "./"+export_folder + "merged_"+self.merge_target_filename
+		
+		destFilename = self.merge_target_filename
+
+		if "/" in destFilename or "\\" in destFilename:
+			print(f"Cleaning up {destFilename}")
+			
+			if "/" in destFilename:
+				destFilename = destFilename.split("/")[-1]
+
+			if "\\" in destFilename:
+				destFilename = destFilename.split("\\")[-1]
+
+		destFilename = "./"+export_folder + "merged_"+destFilename
 
 		print("Building New File: " + destFilename)
+
 		self.draw_response("Building New File: " + destFilename)
+
 		finalTar = tarfile.open(destFilename,"w:gz")
 
-		for root, dirs, files in os.walk(tempFolderName + "\\"):
-			for file in files:
-				finalTar.add(os.path.join(root, file),arcname=file)
-				print("Adding: " + os.path.join(root, file))
-				self.draw_response("Adding: " + os.path.join(root, file))
-		finalTar.close()
+		os.chdir(tempFolderName)
 
+		current_dir = os.getcwd()
+
+		for root, dirs, files in os.walk(current_dir):
+			for file in files:
+
+				#//*** arcname is the folder structure to add
+				#//*** Which is root + file, minus the current working directory
+				arcname = os.path.join(root, file).replace(current_dir,"")
+				finalTar.add(os.path.join(root, file),arcname=arcname)
+
+				print( ) 
+				print("Adding: " + os.path.join(root, file), "as",arcname )
+				self.draw_response("Adding: " + arcname)
+		finalTar.close()
+		
 		################################################
 		################################################
 		#### File Cleanup
@@ -274,13 +303,15 @@ class widget_builder():
 		#### Delete Files in temporary Directory
 		################################################
 		print("Deleting Temp Files")
-		for root, dirs, files in os.walk(tempFolderName + "/"):
+		for root, dirs, files in os.walk(current_dir ):
 			for name in dirs:
 				self.draw_response("Delete Temp File:"+name)
 				print(name)
+
+		time.sleep(1)
 		print("Deletng Temp Folder")
 		self.draw_response("Deletng Temp Folder")
-		shutil.rmtree(tempFolderName)
+		#shutil.rmtree(current_dir)
 
 		self.draw_response("Merged file saved to:\n"+destFilename)
 
@@ -294,9 +325,9 @@ if __name__ == '__main__':
 	config_filename = "settings.config"
 	export_folder = "merged/"
 	banks = []
-	tempFolderName = "exaction_temp/"
+	tempFolderName = "./exaction_temp/"
 
-	tempFolderName = "./" + export_folder + tempFolderName
+	#tempFolderName = "./" + export_folder + tempFolderName
 
 
 
@@ -364,12 +395,12 @@ if __name__ == '__main__':
 
 	#//*** Automatically assign source and target files if in debug mode
 	if debug_mode:
-		filename = "WLS_CAPRICA NEW GFX 7-13-22.tgz"
+		filename = "C:\\Users\\stonk013\\DSC\\KGO\\Caprica_Merge\\WLS_CAPRICA NEW GFX 7-13-22.tgz"
 		wb.merge_source_filename = filename
 		wb.widget_holder["merge_source_label"]["text"] = filename
 
 
-		filename = "KGO_Caprica-Diskset-2022-10-06T21 40 18PCR2_Launch_Candidate_9.tgz"
+		filename = "C:\\Users\\stonk013\\DSC\\KGO\\Caprica_Merge\\KGO_Caprica-Diskset-2022-10-06T21 40 18PCR2_Launch_Candidate_9.tgz"
 		wb.merge_target_filename = filename
 		wb.widget_holder["merge_target_label"]["text"] = filename
 

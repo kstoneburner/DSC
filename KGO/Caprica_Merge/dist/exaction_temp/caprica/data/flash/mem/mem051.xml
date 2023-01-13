@@ -1,0 +1,21 @@
+<capmem>
+<name>
+FR 1-1</name>
+<keyInfo>
+<key id="0">
+<keybusname>
+<keybus id="0">
+LEFT BOX K1</keybus>
+</keybusname>
+</key>
+<key id="1">
+<keybusname>
+<keybus id="0">
+RIGHT BOX k2</keybus>
+</keybusname>
+</key>
+</keyInfo>
+<version>
+459376
+</version>
+</capmem>

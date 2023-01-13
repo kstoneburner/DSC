@@ -1,0 +1,36 @@
+<shotbox>
+<ref>
+<bttn id="0">
+1280
+</bttn>
+<bttn id="1">
+1281
+</bttn>
+<bttn id="2">
+1282
+</bttn>
+<bttn id="3">
+1283
+</bttn>
+<bttn id="4">
+1284
+</bttn>
+<bttn id="5">
+1285
+</bttn>
+<bttn id="6">
+1286
+</bttn>
+</ref>
+<version>
+459376
+</version>
+<mnem_style>
+<colour>
+1
+</colour>
+<reserved>
+8
+</reserved>
+</mnem_style>
+</shotbox>
