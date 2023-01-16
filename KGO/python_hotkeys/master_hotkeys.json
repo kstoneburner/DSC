@@ -163,7 +163,7 @@
                     {
                         "transition": "ACTION",
                         "mos_variable": "assign_default_transition",
-                        "transition_secondary": "1_CUT ",
+                        "transition_secondary": "1_CUT _CLRG1",
                         "use_tran": false
                     }
                 ],

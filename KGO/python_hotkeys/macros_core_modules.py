@@ -1,4 +1,4 @@
-import win32gui,keyboard,time
+import win32gui,keyboard,time,requests
 from pywinauto import application
 
 import socket,threading,sys
@@ -229,6 +229,11 @@ def capture_keystroke_threaded():
                     print("Quitting")
                     sys.exit()
     
+
+def doQuit(win):
+	win.destroy()
+
+	sys.exit()
 
 
 
