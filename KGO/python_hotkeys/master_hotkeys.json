@@ -272,5 +272,153 @@
                 "function": "assign_transition"
             }
         }
+    },
+    "1": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "2Shot AD",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "1"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "4x",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>Cam4 2shot - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled - 4 Clip: IGNITE:2SHOT</mosAbstract><objSlug>Cam4 2shot - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled - 4 Clip: IGNITE:2SHOT</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f086fbd32042</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33348</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>203</templateNumber><shotName>Cam4 2shot</shotName><imageURL>/icons/KGO/v2 Cam 4/v2 Cam4 2shot.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37697</id><busList><busType><id>0</id></busType><device><id>32</id><name>4</name></device><primaryClip><clipValue>IGNITE:2SHOT</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 4/v2 Cam4 2shot.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base"
+            },
+            "alt1": {
+                "keystroke": {
+                    "name": "alt 2Shot AD",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "1"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "5x_adh_g5",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3c Cam5 2Shot ADH XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 5 Clip: IGNITE:ANC 2MON</mosAbstract><objSlug>v3c Cam5 2Shot ADH XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 5 Clip: IGNITE:ANC 2MON</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f087119071db</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33374</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1611</templateNumber><shotName>v3c Cam5 2Shot ADH XPT</shotName><imageURL>/icons/KGO/v2 Cam 5/v2 Cam5 2Shot XPT.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37724</id><busList><busType><id>0</id></busType><device><id>1</id><name>Crosspoint</name></device><primaryClip><xpt>14</xpt></primaryClip></busList><busList><busType><id>30</id></busType><device><id>33</id><name>5</name></device><primaryClip><clipValue>IGNITE:ANC 2MON</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 5/v2 Cam5 2Shot XPT.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    },
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "5x_adh_vo",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3c Cam5 2Shot ADH SRV - Ross Video - Audio AFV: Disabled - 5 Clip: IGNITE:ANC 2MON</mosAbstract><objSlug>v3c Cam5 2Shot ADH SRV - Ross Video - Audio AFV: Disabled - 5 Clip: IGNITE:ANC 2MON</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f08716617d44</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33373</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1610</templateNumber><shotName>v3c Cam5 2Shot ADH SRV</shotName><imageURL>/icons/KGO/v2 Cam 5/v2 Cam5 2Shot ADH SRV.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37722</id><busList><busType><id>30</id></busType><device><id>33</id><name>5</name></device><primaryClip><clipValue>IGNITE:ANC 2MON</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 5/v2 Cam5 2Shot ADH SRV.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "alt1"
+            }
+        }
+    },
+    "2": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Anchor AD",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "2"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "4a",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>Cam4 Anchor - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled - 4 Clip: IGNITE:ANCHOR</mosAbstract><objSlug>Cam4 Anchor - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled - 4 Clip: IGNITE:ANCHOR</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f08705f42c54</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33352</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>203</templateNumber><shotName>Cam4 Anchor</shotName><imageURL>/icons/KGO/v2 Cam 4/v2 Cam4 Anch.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37701</id><busList><busType><id>0</id></busType><device><id>32</id><name>4</name></device><primaryClip><clipValue>IGNITE:ANCHOR</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 4/v2 Cam4 Anch.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base"
+            },
+            "alt1": {
+                "keystroke": {
+                    "name": "alt Anchor AD",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "2"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "5a_adh_g5",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3f Cam5 ADH XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 5 Clip: IGNITE:ANC MON</mosAbstract><objSlug>v3f Cam5 ADH XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 5 Clip: IGNITE:ANC MON</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f08719293ed1</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33376</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1611</templateNumber><shotName>v3f Cam5 ADH XPT</shotName><imageURL>/icons/KGO/v2 Cam 5/v2 Cam5 ADH XPT.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37726</id><busList><busType><id>0</id></busType><device><id>1</id><name>Crosspoint</name></device><primaryClip><xpt>14</xpt></primaryClip></busList><busList><busType><id>30</id></busType><device><id>33</id><name>5</name></device><primaryClip><clipValue>IGNITE:ANC MON</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 5/v2 Cam5 ADH XPT.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    },
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "5a_adh_srv",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3f Cam5 ADH SRV - Ross Video - Audio AFV: Disabled - 5 Clip: IGNITE:ANC MON</mosAbstract><objSlug>v3f Cam5 ADH SRV - Ross Video - Audio AFV: Disabled - 5 Clip: IGNITE:ANC MON</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f0871b4af505</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33375</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1610</templateNumber><shotName>v3f Cam5 ADH SRV</shotName><imageURL>/icons/KGO/v2 Cam 5/v2 Cam5 ADH SRV.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37725</id><busList><busType><id>30</id></busType><device><id>33</id><name>5</name></device><primaryClip><clipValue>IGNITE:ANC MON</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 5/v2 Cam5 ADH SRV.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "alt1"
+            }
+        }
+    },
+    "3": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "CoAnchor AD",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "3"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "4c",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3i Cam4 Co-Anch - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled - 4 Clip: IGNITE:CO-ANCHOR</mosAbstract><objSlug>v3i Cam4 Co-Anch - Ross Video - Transition: 1_CUT _CLRG1 - Audio AFV: Disabled - 4 Clip: IGNITE:CO-ANCHOR</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f08707d78170</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33353</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>203</templateNumber><shotName>v3i Cam4 Co-Anch</shotName><imageURL>/icons/KGO/v2 Cam 4/v2 Cam4 Co-Anch.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37702</id><busList><busType><id>0</id></busType><device><id>32</id><name>4</name></device><primaryClip><clipValue>IGNITE:CO-ANCHOR</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>1</id><name>ANCH</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio><additionalAudio><id>-1</id><order>2</order><audio><id>2</id><name>COAN</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 4/v2 Cam4 Co-Anch.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base"
+            }
+        }
+    },
+    "4": {
+        "desk_studio": {
+            "base": {
+                "keystroke": {
+                    "name": "Sports",
+                    "ctrl": true,
+                    "win": true,
+                    "shift": false,
+                    "alt": false,
+                    "key": "4"
+                },
+                "codes": [
+                    {
+                        "transition": "selected_transition",
+                        "mos_variable": "4sp",
+                        "use_tran": true,
+                        "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3n Cam4 Sports XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 4 Clip: IGNITE:SPORTS</mosAbstract><objSlug>v3n Cam4 Sports XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 4 Clip: IGNITE:SPORTS</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f0870c466dfa</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33360</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1609</templateNumber><shotName>v3n Cam4 Sports XPT</shotName><imageURL>/icons/KGO/v2 Cam 4/v2 Cam4 Sports XPT.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37709</id><busList><busType><id>0</id></busType><device><id>1</id><name>Crosspoint</name></device><primaryClip><xpt>14</xpt></primaryClip></busList><busList><busType><id>30</id></busType><device><id>32</id><name>4</name></device><primaryClip><clipValue>IGNITE:SPORTS</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>21</id><name>SPRT</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 4/v2 Cam4 Sports XPT.png</icon></mosPayload></mosExternalMetadata></mos>"
+                    }
+                ],
+                "show_mode": "desk_studio",
+                "alt_mode": "base"
+            }
+        }
     }
 }

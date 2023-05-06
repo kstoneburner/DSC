@@ -1,4 +1,8 @@
-import sys,re,multiprocessing
+#//**** Keyboard...Call Later:
+#//**** https://github.com/boppreh/keyboard/issues/492
+
+
+import sys,re,multiprocessing,pyperclip
 import socket,threading,keyboard,time,subprocess,winreg
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -21,6 +25,8 @@ from pywinauto import application
 import win32gui
 from pywinauto.controls.uiawrapper import UIAWrapper
 
+global keystroke
+keystroke = None
 
 win = Tk()
 win.title("Dalet Hotkeys")
@@ -48,6 +54,10 @@ transitions,transition_actions = load_transitions()
 alt_modes = load_alt_modes()
 show_modes = load_show_modes()
 
+global display_help 
+
+display_help = True
+
 enter_exit_script_key = 'f7'
 connected = False
 
@@ -60,7 +70,7 @@ global quit
 
 quit = False
 
-
+hotkey_hooks = {}
 
 default = {
     
@@ -70,7 +80,7 @@ default = {
 selected = {
 
     "studio_mode" : "desk_studio",
-    "alt_mode" : 'base',
+    "alt_modes" : 'base',
     "transition" : default['transition'],
     "anc1" : "ANC1",
     "anc2" : "ANC2",
@@ -94,71 +104,18 @@ def updateSelectedValues(event=None):
     for key in ['alt_modes', 'transition', 'studio_modes','anc1','anc2','initials']:
         selected[key] = widgets[key].get()
 
+    selected['transition_id'] = transitions[ selected['transition'] ]
+
     print("updateSelectedValues: ",selected)
 
 
-def listen_for_ahk(input_port):   
-    print("Xx")
-    soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    h_name = socket.gethostname()
-    HOST = socket.gethostbyname(h_name)
-    HOST = "127.0.0.1"
-
-    PORT = input_port
-
-    #//**** Custom Reponse Class
-    #//**** Assumes a single variable and value is sent
-    class CustomHandler(BaseHTTPRequestHandler):
-        def do_GET(self):
-            #print(dir(self))
-            
-
-
-            #//*** Send a Basic Response to keep the hotkey COM server object happy.            
-            self.send_response(200)
-            self.send_header('content-type','text/html')
-            self.end_headers()
-            self.wfile.write('Python HTTP Webserver Tutorial'.encode())
-
-            for x in self.requestline.split(" "):
-                if "?" in x:
-                    response = x.replace("/?","")
-
-                    if "action=quit" not in response:
-
-                            handleAHK_inputs(response)
-
-            if "action=quit" in self.requestline:
-                
-                print("Quitting LIstener")
-
-                return
-    
-    #//*** Spin up HTTP Server
-    srv = HTTPServer(('',PORT), CustomHandler)
-    print('Server started on port %s' %PORT)
-    srv.serve_forever()
-
-
-def capture_keystroke_threaded():
-    global keystroke
-    lock = threading.Lock()
-    keep_going = True
-    while keep_going:
-        time.sleep(.1)
-        keystroke = keyboard.read_key()
-        #print("Keystroke:",keystroke)
-        if keyboard.is_pressed(keystroke):
-
-            if keystroke == "esc":
-                #keep_going = False
-                print("Quitting")
-                keep_going = False
-                doQuit()
-                    
 def doQuit():
-
+    print("doQuit()")
+    keyboard.unhook_all()
+    win.destroy()
+    sys.exit()
+    return
     #//*** Kill Autohotkey
     tasks = subprocess.getoutput('tasklist /FI "IMAGENAME eq Autohotkey.exe" /v /nh').split('\n')
 
@@ -185,183 +142,12 @@ def doQuit():
     sys.exit()
 
 
-def launchAHKScript(ahk_path):
-    subprocess.run([ahk_path,master_ahk_triggers_filename])
+def in_dalet():
+    active_window_text = win32gui.GetWindowText (win32gui.GetForegroundWindow())
+    if "Dalet Galaxy" in active_window_text:
+        return True
+    return False
 
-
-#//**** Build AHK file from Master Rules
-def buildAHKFile(master_rules):
-
-    def build_AHK_trigger(selected_key,keystroke):
-
-        out = ""
-
-        for key,value in keystroke.items():
-            if key == 'ctrl' and value:
-                out += "^"
-            if key == 'win' and value:
-                out += "#"
-            if key == 'shift' and value:
-                out += "+"
-            if key == 'alt' and value:
-                out += "!"
-        out +=f"{selected_key}"
-
-        return out
-
-    def build_AHK_text(trigger,selected_key,keystroke):
-        out=""
-
-        out+=f"{trigger}::\n"
-
-        key_text = ""
-        key_text += f"keyaction={selected_key}"
-
-        key_text += "&ctrl="
-        if keystroke['ctrl']:
-            key_text += "1"
-        else:
-            key_text += "0"
-
-        key_text += "&win="
-        if keystroke['win']:
-            key_text += "1"
-        else:
-            key_text += "0"
-
-        key_text += "&shift="
-        if keystroke['shift']:
-            key_text += "1"
-        else:
-            key_text += "0"
-
-        key_text += "&alt="
-        if keystroke['alt']:
-            key_text += "1"
-        else:
-            key_text += "0"
-
-        out += '\toWhr := ComObjCreate("WinHttp.WinHttpRequest.5.1")\n'
-        out += f'\toWhr.Open("GET", "http://127.0.0.1:9999?{key_text}", false)\n'
-        out += '\toWhr.Send()\n'
-        out += '\toWhr.Abort()\n'
-        out += "RETURN\n\n"
-    
-
-        return out
-
-    print("BUILD AHK")
-    
-
-
-    trigger_list = []
-
-    ahk_trigger_text = "#SingleInstance Force\n\n"
-    for key,top_level_rule in master_rules.items():
-
-        
-        for rule_key,rule_studio_mode in top_level_rule.items():
-            
-            
-            for rule_alt_mode_key, rule_value in rule_studio_mode.items():
-                print(key, rule_key,rule_alt_mode_key,rule_value['keystroke'])
-                ahk_trigger = build_AHK_trigger(key, rule_value['keystroke'])
-                if ahk_trigger not in trigger_list:
-                    trigger_list.append(ahk_trigger)
-
-                    ahk_trigger_text += build_AHK_text(ahk_trigger,key,rule_value['keystroke'])
-                    
-
-    ahk_trigger_text += "^#!r::\n\tmsgbox reloading\n\treload\nRETURN\n"
-    #print(ahk_trigger_text)
-
-    #//*** Write AHK file Text to File
-    with open(master_ahk_triggers_filename, "w") as outfile:
-        outfile.write(ahk_trigger_text)
-
-                    
-    #//*** Get Path to Autohotkey Executable from Regsitry
-    access_registry = winreg.ConnectRegistry(None,winreg.HKEY_CLASSES_ROOT)
-    access_key = winreg.OpenKey(access_registry,r"AutoHotkeyScript\\Shell\\Open\\Command")
-    reg_value = winreg.EnumValue(access_key,0)[1]
-    ahk_path = None
-
-    if ".exe" in reg_value:
-
-        results = re.findall('\\".+?\\"',reg_value)
-        for result in results:
-            if ".exe" in result:
-
-                #//*** Launch Autohotkey script 
-                ahk_path = result.replace('"','')
-                ahk_process = threading.Thread(target = launchAHKScript, args=[ahk_path])
-                ahk_process.daemon = True
-                ahk_process.start() 
-                print(dir(ahk_process))
-                print("===")
-                print(ahk_process._native_id)
-
-def handleAHK_inputs(response):
-
-    current_input = {} 
-
-    #//*** Validate inputs
-    for x in ["keyaction=","ctrl=","win=","shift=","alt="]:
-        if x not in response:
-            print("AHK response missing ",x)
-            return
-    
-    #//*** Split Response
-    
-    for response_value in response.split("&"):
-
-        key,value = response_value.split("=")
-        #print(key,value)
-
-        if key == "keyaction":
-            current_input["key"] = value
-            continue
-
-        if key == "ctrl":
-            if value == "1":
-                current_input['ctrl'] = True
-            else:
-                current_input['ctrl'] = False
-            continue
-
-        if key == "win":
-            if value == "1":
-                current_input['win'] = True
-            else:
-                current_input['win'] = False
-            continue
-
-        if key == "shift":
-            if value == "1":
-                current_input['shift'] = True
-            else:
-                current_input['shift'] = False
-            continue
-
-        if key == "alt":
-            if value == "1":
-                current_input['alt'] = True
-            else:
-                current_input['alt'] = False
-            continue
-      
-    #//*** Hard Verify all necessary keys are in current Input
-    for x in ['key','ctrl','win','shift','alt']:
-         if x not in current_input.keys():
-            print(f"Invalid AHK Command Missing {x} key")
-            return
-    rule = getRule_based_on_inputs(current_input)
-
-    #//*** Have Valid Rule
-    if rule != None:
-        
-        for code in rule['codes']:
-            handleCode(code)
 
 def assignVariable(action,value):
     if action == 'transition':
@@ -405,7 +191,7 @@ def get_focused_object():
 def get_element_type(elem):
 
     out = None
-
+    print("get_elem_type ",elem)
     if len(elem.children()) > 0:
         #//*** If focused Object has children, the last one is the keyboard control
         elem = elem.children()[-1]
@@ -524,6 +310,16 @@ def exit_script(key):
             print("Timeout on Entering Script")
             return
 
+def wait_for_update(elem,target):
+    count = 0
+    while len(elem.texts()[0]) < target:
+        print("Waiting for update:",len(elem.texts()[0]),":",target)
+        time.sleep(.1)
+        count += 1
+
+        if count >= 50:
+            print("Wait Loop Timed Out")
+            return
 
 def handleCode(code):
 
@@ -537,13 +333,19 @@ def handleCode(code):
         "alt" : False
     }
 
-    for mod in ['ctrl','win','shift','alt']:
-        reset[mod] = keyboard.is_pressed(mod)
+    print("Handling:",code)
+    #keyboard_state = keyboard.stash_state()
 
-    for key,value in reset.items():
+    #print( keyboard_state )
+    #for mod in ['ctrl','win','shift','alt']:
         
-        if value:
-            keyboard.release(key)
+        #keyboard.unblock_key(mod)
+    #    reset[mod] = keyboard.is_pressed(mod)
+    #    if reset[mod]:
+    #        keyboard.release(mod)
+    #        keyboard.block_key(mod)
+            
+
 
     #//*** Handle codes
     if code['transition'] == "ACTION":
@@ -563,49 +365,102 @@ def handleCode(code):
         pass
     elif code['transition'] == "selected_transition":
         print("PROCESS Selected Transistsion")
+
+        elem = get_focused_object()
+        print("Focused Object")
+        print(elem)
+        
+        
+        if elem != None:
+            
+            error = False
+
+            elem_type = get_element_type(elem)
+
+            if elem_type == "rundown" or elem_type == "rundown_field":
+                enter_script(enter_exit_script_key)   
+
+            print(selected['transition'])
+            print(code)  
+
+            mos = code['mos']  
+
+            pattern = "<transition>.+</transition>"
+
+            values = re.findall(pattern,mos)
+            
+            if len(values) == 0:
+                error = True
+
+            if not error:
+                find_tran = values[0]
+                replace_tran = f"<transition><id>{selected['transition_id']}</id><name>{selected['transition']}</name></transition>"
+                print(find_tran)
+                print(replace_tran)
+
+                pattern = "<name>.+</name>"
+                find_name = re.findall(pattern,find_tran)[0].replace("<name>","").replace("</name>","")
+                print("Find Name:", find_name)
+
+
+                mos = mos.replace(find_tran,replace_tran)
+                mos = mos.replace(find_name,selected['transition'])
+
+                pyperclip.copy(mos)
+
+                time.sleep(.2)
+
+            
+            keyboard.press('ctrl')
+            keyboard.press_and_release('v')
+            keyboard.release('ctrl')
+            wait_for_update(elem,len(elem.texts()[0]))
+            
+            
+            keyboard.press_and_release('enter')
+            wait_for_update(elem,len(elem.texts()[0]))
+            
+            
+
+
+
+
+            
+
     else:
         print("Handle Transition:", code['transition'])
         print(code)
         print(transitions)
+    
+    
+    
+    #keyboard.restore_modifiers(keyboard_state)
+    #print(reset)
+    #for mod in ['ctrl','win','shift','alt']:
+    #    if reset[mod]:
+    #        keyboard.unblock_key(mod)
+    #        keyboard.press(key_to_scan_codes(mod))
+    #    print(mod,keyboard.key_to_scan_codes(mod),keyboard_state,keyboard.is_pressed(mod))
 
+def toggleHelp(input_help):
+    
+    input_help = not input_help
 
-    #//*** Restore Modifier Keys
-    for key,value in reset.items():
-        
-        if value:
-            keyboard.press(key)
+    display_help = input_help
+    print( input_help, display_help)
 
-def getRule_based_on_inputs(valid_input):
-
-
-    #//*** Validate Key. It should all be linked, but paranoia.
-    if valid_input['key'] in master_rules.keys():
-        
-        
-        key_level_rule = master_rules[ valid_input['key'] ]
-        
-        #//*** Check if Studio Mode is associated with the key:
-        if selected["studio_mode"] in key_level_rule.keys():
-            studio_mode_level_rule = key_level_rule[ selected["studio_mode"] ]
-
-            #//*** Check if Selected Alt Mode is defined in  studio_mode_level_rule keys
-            if selected[ "alt_mode" ] in studio_mode_level_rule.keys():
-                
-                rule = studio_mode_level_rule[ selected[ "alt_mode" ] ]
-
-                #//*** Validate Input Keypress, match rule keypress
-                #//*** Should be equal, in version #1. Could change with time.
-                for x in ['ctrl','win','shift','alt']:
-                    if not valid_input[x] == rule['keystroke'][x]:
-                        #//*** Return None if if Input Keystrokes don't match rule Keystrokes.
-                        return None
-
-                #//*** Rule is Valid as far as we can tell
-                return rule
+    print(master_rules)
+    layout = {
+        'F-Row' : ['f1' ,'f2' ,'f3' ,'f4' ,'f5' ,'f6' ,'f7' ,'f8' ,'f9' ,'f10' ,'f11' ,'f12','print screen' ,'scroll lock' ,'pause'],
+        'tilde' : ['`' ,'1' ,'2' ,'3' ,'4' ,'5' ,'6' ,'7' ,'8' ,'9' ,'0' ,'-' ,'=' ,'backspace','insert' ,'home' ,'page up' ,'num lock' ,'/' ,'*' ,'-'],
+        'tab' : ['tab' ,'q' ,'w' ,'e' ,'r' ,'t' ,'y' ,'u' ,'i' ,'o' ,'p' ,'[' ,']' ,'\\','delete' ,'end' ,'page down','7' ,'8' ,'9','+'],
+        'caps lock' : ['caps lock' ,'a' ,'s' ,'d' ,'f' ,'g' ,'h' ,'j' ,'k' ,'l' ,';' ,'\'','enter' ,'4' ,'5' ,'6'],
+        'shift' : ['z' ,'x' ,'c' ,'v' ,'b' ,'n' ,'m' ,',' ,'.' ,'/', 'enter' ,'0','1' ,'2' ,'3' ,'decimal'],
+    }
 
 
 
-    return None
+
 
 def buildGui():
     print(show_modes)
@@ -619,7 +474,7 @@ def buildGui():
     #//*** Build Alt Mode drop-down
     #//*******************************
     #//*******************************
-    widgets['alt_modes'] = ttk.Combobox(win,values=alt_modes,width=bw,state='readonly')
+    widgets['alt_modes'] = ttk.Combobox(win,values=alt_modes,width=bw,state='readonly',name='alt_modes')
     widgets['alt_modes'].current(0)
     widgets['alt_modes'].pack(side=LEFT)
     #//*** Update all Selected Values when Combois selected
@@ -699,55 +554,167 @@ def buildGui():
     #//***********************************
 
 
+    #//*******************************
+    #//*** Build HELP Button
+    #//*******************************
+    Button(win, text="Help", command=lambda: toggleHelp(display_help)).pack( side = LEFT ) 
+
 
     #//*******************************
     #//*** Build Quit Button
     #//*******************************
     Button(win, text="Quit", command=doQuit).pack( side = LEFT ) 
 
-def connect_to_dalet():
+                    
+  
+#//**** Build & Launch Authotkey File from master_rules
+#buildAHKFile(master_rules)
 
-    elem = get_focused_object()
+#//*** Parse master Rules (Loaded From JSON)
+#//*** Register Hotkeys based on the Unique Rule Triggers.
+#//*** Triggers are used to determine which Hotkey is active.
+def register_hotkeys(master_rules):
+
+    #//*** Builds the Hotkey Keystroke Value to register.
+    def build_hotkey_trigger(selected_key,keystroke):
+
+        out = ""
+
+        for key,value in keystroke.items():
+            if key == 'ctrl' and value:
+                out += "ctrl + "
+            if key == 'win' and value:
+                out += "win + "
+            if key == 'shift' and value:
+                out += "shift + "
+            if key == 'alt' and value:
+                out += "alt + "
+        
+        #print(out)
+        #if out[-3:] == " + ":
+        #    out = out[:-3]
+        #    out += ", "
+        #print(out)
+            
+        out +=f"{selected_key}"
+        #print("Trigger: ",out)
 
 
-    if elem != None:
-        print(get_element_type(elem) )
+        return out
+
+    print("register_hotkeys")
+    
+
+
+    trigger_list = []
+
+    
+    for key,top_level_rule in master_rules.items():
 
         
-     
-    time.sleep(1)
+        for rule_key,rule_studio_mode in top_level_rule.items():
+            
+            
+            for rule_alt_mode_key, rule_value in rule_studio_mode.items():
+                #print(key, rule_key,rule_alt_mode_key,rule_value['keystroke'])
+                hotkey_trigger = build_hotkey_trigger(key, rule_value['keystroke'])
+                
+                if hotkey_trigger not in trigger_list:
+                    trigger_list.append(hotkey_trigger)
+                    keystroke = rule_value['keystroke']
+                    print("Adding: ", hotkey_trigger, ":",rule_key,rule_alt_mode_key,keystroke)
 
+                    #//*** Add the Complete Hotkey Trigger
+                    keyboard.add_hotkey(hotkey_trigger, handle_hotkey_inputs,args=[keystroke], suppress=True,trigger_on_release=True)
+                    
+                    #//*** Add a trigger for just the key. This trigger is intended to activate if keys are pressed in sequence.
+                    #//*** The Complete Hotkey Triggers only once with the Modifier keys pressed.
+                    #//*** This generates a lot of base key triggers, which should exit quickly if modifiers are not pressed.
+                    print("Adding: ", key, ":",rule_key,rule_alt_mode_key,keystroke)
+                    keyboard.add_hotkey(key, handle_hotkey_inputs,args=[keystroke], suppress=True,trigger_on_release=True)
+
+                #    ahk_trigger_text += build_AHK_text(ahk_trigger,key,rule_value['keystroke'])
+
+def handle_hotkey_inputs(input_keystroke):
     
-
     
-
-    connect_to_dalet()
-    
-#//*** Launch Keyboard and HTTP server as threads    
-listener = threading.Thread(target = listen_for_ahk, args=[9999])
-listener.daemon = True
-listener.start()
+    print("Handle Inputs")
+    print(input_keystroke)
 
 
-keeb = threading.Thread(target = capture_keystroke_threaded)
-keeb.daemon = True
-keeb.start()
 
-#//*** USe this to monitor the Dalet Interface, good for testing/debugging
-#dalet_mon = threading.Thread(target = connect_to_dalet)
-#dalet_mon.daemon = True
-#dalet_mon.start()
+    rule = getRule_based_on_inputs(input_keystroke)
 
 
-#print(dir(keeb))
+    print("RULE:",rule)
 
-    
-#//**** Build & Launch Authotkey File from master_rules
-buildAHKFile(master_rules)
+
+    #//*** If Valid Rule Process Each Code individually
+    if rule != None:
+
+        for code in rule['codes']:
+            handleCode(code)
+    else:
+        keyboard.press_and_release(input_keystroke['key'])
+
+
+def getRule_based_on_inputs(valid_input):
+
+
+    print("GET RULE")
+
+    #//*** Validate Key. It should all be linked, but paranoia.
+    if valid_input['key'] in master_rules.keys():
+        
+        
+        key_level_rule = master_rules[ valid_input['key'] ]
+        
+        #//*** Check if Studio Mode is associated with the key:
+        if selected["studio_mode"] in key_level_rule.keys():
+            studio_mode_level_rule = key_level_rule[ selected["studio_mode"] ]
+
+            #//*** Check if Selected Alt Mode is defined in  studio_mode_level_rule keys
+            if selected[ "alt_modes" ] in studio_mode_level_rule.keys():
+                
+                print(selected[ "alt_modes" ], list(studio_mode_level_rule.keys()))
+                print("Valid Input:",valid_input)
+                rule = studio_mode_level_rule[ selected[ "alt_modes" ] ]
+
+                #//*** Validate Input Keypress, match rule keypress
+                #//*** Should be equal, in version #1. Could change with time.
+                for x in ['ctrl','win','shift','alt']:
+                    print(x,":",valid_input[x] == keyboard.is_pressed(x))
+                    if not valid_input[x] == keyboard.is_pressed(x):
+                        #//*** Return None if if Input Keystrokes don't match rule Keystrokes.
+                        return None
+
+                #//*** Rule is Valid as far as we can tell
+                return rule
+
+
+
+    return None
+
+
 
 buildGui()
 
 
+#//*** Close Windows on ESC
+keyboard.add_hotkey('ctrl + esc',lambda: doQuit(),suppress=True)
+#keyboard.add_hotkey('win', lambda: print("DING"), trigger_on_release=False)
+#keyboard.add_hotkey('q',lambda: handle_raw_hotkey("q"),suppress=True)
+#skeyboard.hook(handle_raw_hotkey,suppress=True)
+#keyboard.hook_key("shift",ignore_key, suppress=False )
+#keyboard.add_hotkey("ctrl + win+ q",lambda: call_rule("q"),suppress=Truee,trigger_on_release=True)
+#keyboard.add_hotkey("ctrl + win + w",lambda: call_rule("w"),suppress=True,trigger_on_release=True)
+#for key in master_rules.keys():
+#    keyboard.hook_key(key, handle_raw_hotkey,suppress=True)
+#keyboard.on_press_key()
+
+register_hotkeys(master_rules)
+
+print( master_rules.keys() )
 
 #//*** Update selected Values When win loses focus
 win.bind("<FocusOut>", on_focus_out)

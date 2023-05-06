@@ -1,10 +1,22 @@
 #SingleInstance Force
+#menumaskkey Lwin
 
 ^#q::
-	oWhr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-	oWhr.Open("GET", "http://127.0.0.1:9999?keyaction=q&ctrl=1&win=1&shift=0&alt=0", false)
-	oWhr.Send()
-	oWhr.Abort()
+	
+	
+	
+	;Send {ctrl UP}
+	;Send {lwin UP}
+	
+	
+	
+	
+	
+	GetKeyState, state, ctrl
+	GetKeyState, state2, lwin
+
+	msgbox,%state% %state2%
+	
 RETURN
 
 ^#w::

@@ -129,9 +129,12 @@ def capture_keystroke_threaded():
         with lock:
             #time.sleep(.1)
             keystroke = keyboard.read_key()
+            event = keyboard.read_event()
             #print(keystroke, keyboard.is_pressed("ctrl"),keyboard.is_pressed("shift"),keyboard.is_pressed("win"),keyboard.is_pressed("alt"))
             
             print("handling", keystroke)
+            print("Event:", event.to_json())
+            print(keyboard.key_to_scan_codes(keystroke))
 
            
 

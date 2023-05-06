@@ -38,6 +38,9 @@ def load_mos_object_variables():
 	with open(mos_variables_filename, "r") as infile:
 		for line in infile.readlines():
 			
+			if "//" in line:
+				continue
+
 			if "=" in line:
 				#//*** Split Line[0] and strip any Spaces 
 				key = line.split("=")[0].replace(" ","")
