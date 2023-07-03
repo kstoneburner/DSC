@@ -410,14 +410,15 @@
                 },
                 "codes": [
                     {
-                        "transition": "selected_transition",
+                        "transition": "1_CUT K2 CLRG1",
                         "mos_variable": "4sp",
-                        "use_tran": true,
+                        "use_tran": false,
                         "mos": "<mos><mosID>kgo.pcr2.ovd.mos</mosID><itemID>0</itemID><mosAbstract>v3n Cam4 Sports XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 4 Clip: IGNITE:SPORTS</mosAbstract><objSlug>v3n Cam4 Sports XPT - Ross Video - Audio AFV: Disabled - Xpt 14: G5 X - 4 Clip: IGNITE:SPORTS</objSlug><mosPlugInID>Ross.Inception</mosPlugInID><objID>5f0870c466dfa</objID><mosItemEditorProgID>RossClem.RossEditor</mosItemEditorProgID><objDur>1</objDur><objTB>60</objTB><abstract/><itemSlug/><mosExternalMetadata><mosScope>PLAYLIST</mosScope><mosSchema>http:'rossvideo.com/schemas/MOS/external/1.0</mosSchema><mosPayload><shotID>33360</shotID><dbAppVersion><major>20</major><minor>2</minor><revision>10</revision><build>7869</build></dbAppVersion><dbTemplate><templateNumber>1609</templateNumber><shotName>v3n Cam4 Sports XPT</shotName><imageURL>/icons/KGO/v2 Cam 4/v2 Cam4 Sports XPT.png</imageURL><transition><id>39</id><name>1_CUT _CLRG1</name></transition><mleList><id>37709</id><busList><busType><id>0</id></busType><device><id>1</id><name>Crosspoint</name></device><primaryClip><xpt>14</xpt></primaryClip></busList><busList><busType><id>30</id></busType><device><id>32</id><name>4</name></device><primaryClip><clipValue>IGNITE:SPORTS</clipValue></primaryClip></busList></mleList><afvLevel>-2</afvLevel><additionalAudioList><additionalAudio><id>-1</id><order>1</order><audio><id>21</id><name>SPRT</name><type>CHANNEL</type></audio><customLevel>-1</customLevel><overrideState>OVERRIDE_ON</overrideState></additionalAudio></additionalAudioList><floorDirectorCueNote/><floorDirectorCueNoteEnabled>false</floorDirectorCueNoteEnabled><secondaryEvent>false</secondaryEvent></dbTemplate><icon>/icons/KGO/v2 Cam 4/v2 Cam4 Sports XPT.png</icon></mosPayload></mosExternalMetadata></mos>"
                     }
                 ],
                 "show_mode": "desk_studio",
-                "alt_mode": "base"
+                "alt_mode": "base",
+                "transition": "1_CUT K2 CLRG1"
             }
         }
     }

@@ -622,7 +622,10 @@ def register_hotkeys(master_rules):
                 if hotkey_trigger not in trigger_list:
                     trigger_list.append(hotkey_trigger)
                     keystroke = rule_value['keystroke']
+                    
                     print("Adding: ", hotkey_trigger, ":",rule_key,rule_alt_mode_key,keystroke)
+                    print("KeySTROKE:",keystroke)
+                    print("hotkey_trigger:",hotkey_trigger)
 
                     #//*** Add the Complete Hotkey Trigger
                     keyboard.add_hotkey(hotkey_trigger, handle_hotkey_inputs,args=[keystroke], suppress=True,trigger_on_release=True)
@@ -630,24 +633,25 @@ def register_hotkeys(master_rules):
                     #//*** Add a trigger for just the key. This trigger is intended to activate if keys are pressed in sequence.
                     #//*** The Complete Hotkey Triggers only once with the Modifier keys pressed.
                     #//*** This generates a lot of base key triggers, which should exit quickly if modifiers are not pressed.
-                    print("Adding: ", key, ":",rule_key,rule_alt_mode_key,keystroke)
-                    keyboard.add_hotkey(key, handle_hotkey_inputs,args=[keystroke], suppress=True,trigger_on_release=True)
+                    #print("Adding: ", key, ":",rule_key,rule_alt_mode_key,keystroke)
+                    #keyboard.add_hotkey(key, handle_hotkey_inputs,args=[keystroke], suppress=True,trigger_on_release=True)
 
                 #    ahk_trigger_text += build_AHK_text(ahk_trigger,key,rule_value['keystroke'])
 
 def handle_hotkey_inputs(input_keystroke):
     
     
+    print("=====================================")
     print("Handle Inputs")
-    print(input_keystroke)
-
+    print("Key:",input_keystroke)
+    print("=====================================")
 
 
     rule = getRule_based_on_inputs(input_keystroke)
 
 
     print("RULE:",rule)
-
+    print("=====================================")
 
     #//*** If Valid Rule Process Each Code individually
     if rule != None:
@@ -662,6 +666,8 @@ def getRule_based_on_inputs(valid_input):
 
 
     print("GET RULE")
+    #print("Valid_input:",valid_input)
+    #print("Master Rules:",master_rules)
 
     #//*** Validate Key. It should all be linked, but paranoia.
     if valid_input['key'] in master_rules.keys():
