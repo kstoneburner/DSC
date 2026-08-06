@@ -1,8 +1,8 @@
 import requests, json, re, sys
 
-overdrive_server_ip = "10.218.116.11"
+overdrive_server_ip = "10.218.116.25"
 transition_filename = "transitions.json"
-mos_variables_filename = "l:\\tools\\Scripts\\ross\\Dalet\\Define.BaseShots"
+
 mos_variables_filename = "config.codes"
 alt_modes = ['base','alt1']
 show_modes = ['desk_studio']

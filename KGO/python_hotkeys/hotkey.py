@@ -912,14 +912,14 @@ def build_base_rules_from_selected_keys(row=2):
 
 	
 	yscrollbar=Scrollbar(all_rule_canvas,orient=VERTICAL,command=all_rule_canvas.yview)
-	#yscrollbar.pack(side=RIGHT,expand=True,fill=BOTH)
+	yscrollbar.pack(side=RIGHT,expand=True,fill=BOTH)
 	
 	all_rule_canvas.pack(side=TOP)
 	all_rule_frame.pack(side=TOP,expand=True,fill=BOTH)
 	
 
-	#xscrollbar=Scrollbar(all_rule_canvas,orient=HORIZONTAL,command=all_rule_canvas.xview)
-	#xscrollbar.pack(side=BOTTOM,expand=True,fill=BOTH)
+	xscrollbar=Scrollbar(all_rule_canvas,orient=HORIZONTAL,command=all_rule_canvas.xview)
+	xscrollbar.pack(side=BOTTOM,expand=True,fill=BOTH)
 	
 
 	all_rule_canvas.config(width=10,height=10)
@@ -934,7 +934,7 @@ def build_base_rules_from_selected_keys(row=2):
 	#yscrollbar.config(command=all_rule_canvas.yview)
 	all_rule_canvas.config( 
 		yscrollcommand=yscrollbar.set,
-		#xscrollcommand=xscrollbar.set,
+		xscrollcommand=xscrollbar.set,
 		)
 	#all_rule_frame.config(yscrollcommand = myscrollbar.set)
 	row+=1

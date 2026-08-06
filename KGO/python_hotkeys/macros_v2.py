@@ -42,6 +42,8 @@ win.overrideredirect(True)
 
 
 
+
+
 #app = application.Application(backend="uia")
 
 
@@ -74,7 +76,7 @@ hotkey_hooks = {}
 
 default = {
     
-    "transition" : '1_CUT _CLRG1'    
+    "transition" : '(AT)_CUT_CLRG1'    
 
 }
 selected = {
@@ -559,6 +561,11 @@ def buildGui():
     #//*******************************
     Button(win, text="Help", command=lambda: toggleHelp(display_help)).pack( side = LEFT ) 
 
+    #//*******************************
+    #//*** Build RELOAD Button
+    #//*******************************
+    #Button(win, text="Reload", command=lambda: reload_hotkeys() ).pack( side = LEFT ) 
+
 
     #//*******************************
     #//*** Build Quit Button
@@ -608,6 +615,8 @@ def register_hotkeys(master_rules):
 
     trigger_list = []
 
+    keyboard.unhook_all_hotkeys()
+
     
     for key,top_level_rule in master_rules.items():
 
@@ -637,6 +646,12 @@ def register_hotkeys(master_rules):
                     #keyboard.add_hotkey(key, handle_hotkey_inputs,args=[keystroke], suppress=True,trigger_on_release=True)
 
                 #    ahk_trigger_text += build_AHK_text(ahk_trigger,key,rule_value['keystroke'])
+
+def reload_hotkeys():
+    master_rules = load_master_rules(master_hotkey_filename)
+    register_hotkeys( load_master_rules(master_hotkey_filename) )
+    print("Wazoo")
+
 
 def handle_hotkey_inputs(input_keystroke):
     
